@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+<<<<<<< Updated upstream
 import cors from "cors";
 import morgan from "morgan";
 import productRouter from "./routers/products/products";
@@ -23,5 +24,27 @@ app.use(`/api`, colorRouter);
 app.use(`/api`, userRouter);
 // Kết nối tới MongoDB
 mongoose.connect("mongodb://localhost:27017/DATN");
+=======
+import router from "./routers/index.js";
+
+const app = express();
+const port = 3000;
+
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+
+app.use(express.json());
+
+mongoose.connect('mongodb://localhost:27017/do_an_tot_nghiep')
+    .then(result => {
+        app.use("", router)
+        app.listen(port, () => {
+            console.log(`Server is running in port ${port}`);
+        })
+    })
+>>>>>>> Stashed changes
 
 export const viteNodeApp = app;
