@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SizeController from "../controllers/SizeController.js";
+import SizeController from "../../controllers/sizes/SizeController.js";
 
 const sizeRouter = Router();
 const sizeControl = new SizeController();
