@@ -38,6 +38,12 @@ class CategoryController {
 					message: error.details.map((item) => item.message),
 				});
 			}
+            const existedCate = await Category.findOne({name: req.body.name});
+            if(existedCate) {
+                return res.status(400).json({
+					message: "Danh mục đã tồn tại",
+				});
+            }
 			const category = await Category.create(req.body);
 			return res.status(200).json({
 				message: "Thêm mới danh mục thành công",
@@ -58,6 +64,12 @@ class CategoryController {
 					message: error.details.map((item) => item.message),
 				});
 			}
+            const existedCate = await Category.findOne({name: req.body.name});
+            if(existedCate) {
+                return res.status(400).json({
+					message: "Danh mục đã tồn tại",
+				});
+            }
 			const category = await Category.findByIdAndUpdate(req.params.id, req.body);
 			return res.status(200).json({
 				message: "Cập nhật danh mục thành công",

@@ -16,6 +16,6 @@ app.use(
 // routers
 app.use("", router);
 // Kết nối tới MongoDB
-mongoose.connect("mongodb://localhost:27017/DATN");
+mongoose.connect("mongodb://localhost:27017/do_an_tot_nghiep");
 
 export const viteNodeApp = app;
