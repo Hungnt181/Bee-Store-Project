@@ -31,6 +31,12 @@ class SizeController {
 
 	async create(req, res) {
 		try {
+            const existedSize = await Size.findOne({name: req.body.name});
+            if(existedSize) {
+                return res.status(400).json({
+					message: "Tên size đã tồn tại",
+				});
+            }
 			const size = await Size.create(req.body);
 			return res.status(200).json({
 				message: "Thêm mới kích cỡ thành công",
@@ -45,6 +51,12 @@ class SizeController {
 
 	async edit(req, res) {
 		try {
+            const existedSize = await Size.findOne({name: req.body.name});
+            if(existedSize) {
+                return res.status(400).json({
+					message: "Tên size đã tồn tại",
+				});
+            }
 			const size = await Size.findByIdAndUpdate(req.params.id, req.body);
 			return res.status(200).json({
 				message: "Cập nhật kích cỡ thành công",
