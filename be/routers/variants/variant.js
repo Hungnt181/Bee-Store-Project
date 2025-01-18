@@ -6,7 +6,11 @@ const variantRouter = Router();
 
 // Get All Variants
 variantRouter.get("/variants", variantsController.getAllVariants);
-
+// Get All Variants có status = true
+variantRouter.get(
+  "/variants/statusTrue",
+  variantsController.getAllVariantsByStatusTrue
+);
 // Get All Variants by id_cate
 variantRouter.get(
   "/variants/category/:id_cate",
@@ -32,5 +36,10 @@ variantRouter.get(
 variantRouter.post("/variants", variantsController.createVariant);
 // Create a new variant
 variantRouter.put("/variants/:id", variantsController.updateVariant);
+// Update Status Variant
+variantRouter.patch(
+  "/variants/status/:id",
+  variantsController.updateStatusVariant
+);
 
 export default variantRouter;
