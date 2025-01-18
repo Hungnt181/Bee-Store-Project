@@ -29,13 +29,39 @@ class ProductController {
     }
   }
 
+  // Get all products có Status = true
+  async getAllProductsStatusTrue(req, res) {
+    try {
+      const { _page = 1, _limit = 10 } = req.query;
+      const options = {
+        page: parseInt(_page, 10),
+        limit: parseInt(_limit, 10),
+      };
+      let query = Product.findOne({ status: true }).populate({
+        path: "id_cate",
+        select: "name -_id",
+      });
+      const result = await Product.paginate(query, options);
+      const { docs, ...paginationData } = result;
+
+      return res.status(StatusCodes.OK).json({
+        products: docs,
+        ...paginationData,
+      });
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+
   // Get product detail by id
   async getProducDetail(req, res) {
     try {
       const { id } = req.params;
-      console.log("1");
+      // console.log("1");
       const product = await Product.findById(id).populate("id_cate");
-      console.log("products" + product);
+      // console.log("products" + product);
 
       if (!product) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -147,6 +173,36 @@ class ProductController {
       res.status(StatusCodes.OK).json(product);
     } catch (error) {
       return res.status(StatusCodes.BAD_REQUEST).json({
+        message: error.message,
+      });
+    }
+  }
+
+  // Cập nhật status của product
+  async updateStatusProduct(req, res) {
+    try {
+      const { status } = req.body;
+      const { id } = req.params;
+      // console.log(id);
+      // console.log(status);
+
+      const product = await Product.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true } // Trả về tài liệu đã cập nhật
+      );
+
+      if (!product) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "Không tìm thấy sản phẩm",
+        });
+      }
+      return res.status(StatusCodes.OK).json({
+        message: "Cập nhật trạng thái sản phẩm thành công",
+        data: product,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: error.message,
       });
     }

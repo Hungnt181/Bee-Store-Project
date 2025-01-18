@@ -1,6 +1,6 @@
 import Order from "../models/orders/Order.js";
 
-import ItemsOrder from "" //bang itemOrder
+import ItemsOrder from "../models/itemOrder/product.js" //bang itemOrder
 
 class OrderController {
 
