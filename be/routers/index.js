@@ -6,6 +6,9 @@ import { paymentRouter } from "./payments/payment.js";
 import { colorRouter } from "./colors/color.js";
 import userRouter from "./users/user.js";
 import variantRouter from "./variants/variant.js";
+import voucherApiRouter from "./vouchers/voucherApi.js";
+import orderApiRouter from "./orders/orderApi.js";
+import itemOrderRouter from "./itemOrder/itemOrder.js";
 
 const router = Router();
 
@@ -16,5 +19,8 @@ router.use(`/api`, paymentRouter);
 router.use(`/api`, colorRouter);
 router.use(`/api`, userRouter);
 router.use(`/api`, variantRouter);
+router.use(`/api`, voucherApiRouter);
+router.use(`/api`, orderApiRouter);
+router.use(`/api`, itemOrderRouter);
 
 export default router;

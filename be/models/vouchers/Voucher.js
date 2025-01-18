@@ -8,6 +8,11 @@ const VoucherSchema = new Schema(
             type: String,
             required: true
         },
+        codeName:{
+            type: String,
+            required: true,
+            unique: true
+        },
         value:{
             type: Number,
             required: true
