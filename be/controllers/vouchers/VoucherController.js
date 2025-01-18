@@ -3,7 +3,7 @@ import Voucher from "../models/vouchers/Voucher.js";
 class VoucherController {
 
     //API controllers
-    async apiList(req,res) {
+    async apiList(req, res) {
         try {
             //truy vấn danh sách sản phẩm
             const vouchers = await Voucher.find();
@@ -19,7 +19,7 @@ class VoucherController {
         };
     }
 
-    async apiDetail(req,res) {
+    async apiDetail(req, res) {
         try {
             //B1: lấy id bản ghi cần xem chi tiết
             const id = req.params.id;
@@ -66,8 +66,16 @@ class VoucherController {
     //     }
     // }
 
-    async apiCreate(req,res) {
+    async apiCreate(req, res) {
         try {
+
+            // Kiểm tra unique
+            const { codeName } = req.body;
+            const existingCodeName = await Product.findOne({ codeName });
+            if (existingCodeName) {
+                return res.status(400).json({ message: "CodeName này đã tồn tại" });
+            }
+
             //B1: lấy dữ liệu người dùng gửi lên
             const data = req.body;
             //B2: đẩy dữ liệu lên, lưu vào DB
@@ -84,14 +92,14 @@ class VoucherController {
         }
     }
 
-    async apiUpdate(req,res) {
+    async apiUpdate(req, res) {
         try {
             //B1: lấy id bản ghi cần sửa
             const id = req.params.id;
             //B2: lấy dữ liệu mới
             const data = req.body;
             //B3: đẩy dữ liệu lưu vào DB
-            const voucher = await Voucher.findByIdAndUpdate(id,data);
+            const voucher = await Voucher.findByIdAndUpdate(id, data);
             //B4: trả về dữ liệu
             res.status(200).json({
                 'message': 'Chỉnh sửa thành công',
