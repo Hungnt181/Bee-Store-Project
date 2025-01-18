@@ -5,6 +5,7 @@ import productRouter from "./products/products.js";
 import { paymentRouter } from "./payments/payment.js";
 import { colorRouter } from "./colors/color.js";
 import userRouter from "./users/user.js";
+import variantRouter from "./variants/variant.js";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use(`/api`, productRouter);
 router.use(`/api`, paymentRouter);
 router.use(`/api`, colorRouter);
 router.use(`/api`, userRouter);
+router.use(`/api`, variantRouter);
 
 export default router;

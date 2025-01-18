@@ -25,10 +25,10 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // id_cate: {
-    //   type: moose.Schema.Types.ObjectId,
-    //   ref: "Category",
-    // },
+    id_cate: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
     slug: {
       type: String,
       unique: true,

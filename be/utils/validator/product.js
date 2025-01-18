@@ -6,6 +6,7 @@ const productValidator = Joi.object({
   description: Joi.string().optional(),
   about: Joi.string().required(),
   status: Joi.boolean().default(true),
+  id_cate: Joi.string().required(),
 });
 
 export { productValidator };

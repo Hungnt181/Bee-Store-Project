@@ -6,19 +6,15 @@ class ProductController {
   // Get all products
   async getAllProducts(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { _page = 1, _limit = 10 } = req.query;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-      let query = Product.find();
-      if (_embed) {
-        const embeds = _embed.split(",");
-        // console.log(embeds);
-        embeds.forEach((embed) => {
-          query = query.populate(embed);
-        });
-      }
+      let query = Product.find().populate({
+        path: "id_cate",
+        select: "name -_id",
+      });
       const result = await Product.paginate(query, options);
       const { docs, ...paginationData } = result;
 
@@ -37,17 +33,48 @@ class ProductController {
   async getProducDetail(req, res) {
     try {
       const { id } = req.params;
+      console.log("1");
+      const product = await Product.findById(id).populate("id_cate");
+      console.log("products" + product);
 
-      const product = await Product.findById(id);
       if (!product) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Không tìm thấy sản phẩm",
         });
       }
-
-      return res.status(StatusCodes.OK).json(product);
+      return res.status(StatusCodes.OK).json({
+        message: "Lấy thông tin sản phẩm thành công",
+        data: product,
+      });
     } catch (error) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+  // Get products by id_cate
+  async getprodcutsbyCate_id(req, res) {
+    try {
+      const { _page = 1, _limit = 10 } = req.query;
+      const { id_cate } = req.params;
+      // console.log(`id_cate: ${id_cate}`);
+      const options = {
+        page: parseInt(_page, 10),
+        limit: parseInt(_limit, 10),
+      };
+      let query = Product.find({ id_cate: id_cate }).populate(
+        "id_cate",
+        "name"
+      );
+
+      const result = await Product.paginate(query, options);
+      const { docs, ...paginationData } = result;
+      return res.status(StatusCodes.OK).json({
+        products: docs,
+        ...paginationData,
+      });
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: error.message,
       });
     }
@@ -99,7 +126,15 @@ class ProductController {
       const { id } = req.params;
       // Tạo slug từ name nếu name có trong dữ liệu cập nhật
       if (value.name) {
-        value.slug = slugify(value.name, { lower: true });
+        const existingProduct = await Product.findOne({
+          name: value.name,
+          _id: { $ne: id }, // Loại trừ sản phẩm hiện tại khỏi kết quả tìm kiếm
+        });
+        if (existingProduct) {
+          return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ message: "Tên sản phẩm đã tồn tại" });
+        }
       }
       const product = await Product.findByIdAndUpdate(id, value, {
         new: true, // Trả về sản phẩm sau khi update

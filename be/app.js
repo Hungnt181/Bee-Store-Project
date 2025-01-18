@@ -9,9 +9,9 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(
-	express.urlencoded({
-		extended: true,
-	})
+  express.urlencoded({
+    extended: true,
+  })
 );
 // routers
 app.use("", router);
