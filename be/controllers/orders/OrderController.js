@@ -1,6 +1,5 @@
-import Order from "../models/orders/Order.js";
-
-import ItemsOrder from "../models/itemOrder/product.js" //bang itemOrder
+import Order from "../models/orders/Order.js"; 
+import itemOrderRouter from "../../routers/itemOrder/itemOrder.js";
 
 class OrderController {
 
@@ -9,7 +8,7 @@ class OrderController {
             const { orderItemsOrder } = req.body;
 
             // Kiểm tra so item order
-            const itemsOrders = await ItemsOrder.find({ _id: { $in: orderItemsOrder } });
+            const itemsOrders = await itemOrderRouter.find({ _id: { $in: orderItemsOrder } });
             if (itemsOrders.length !== itemsOrders.length) {
                 return res.status(400).json({ message: "Một hoặc nhiều itemOrder không tìm thấy" });
             }

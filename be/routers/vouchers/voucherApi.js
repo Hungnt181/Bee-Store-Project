@@ -1,5 +1,5 @@
 import { Router } from "express";
-import VoucherController from "../controllers/VoucherController.js";
+import VoucherController from "../../controllers/vouchers/VoucherController";
 // import { checkPermission } from "../middlewares/index.js"; 
 
 const voucherApiRouter = Router();

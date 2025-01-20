@@ -1,4 +1,5 @@
-import Voucher from "../models/vouchers/Voucher.js";
+import Voucher from "../../models/vouchers/voucher";
+
 
 class VoucherController {
 
