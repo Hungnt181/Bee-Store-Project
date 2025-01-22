@@ -1,5 +1,5 @@
 import StatusCodes from "http-status-codes";
-import ItemOrder from "../../models/itemOrder/product";
+import ItemOrder from "../../models/itemOrder/itemOrder";
 class ItemOrderController {
   // Get all items in the order
   async getAllItemOrder(req, res) {

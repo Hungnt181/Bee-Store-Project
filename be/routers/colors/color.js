@@ -5,7 +5,7 @@ import {
   edit,
   list,
   remove,
-} from "./controllers/colors/ColorController";
+} from "../../controllers/colors/ColorController";
 
 export const colorRouter = Router();
 colorRouter.post("/colors", add);
