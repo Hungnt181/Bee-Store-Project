@@ -9,7 +9,7 @@ const ItemOrderSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    quantitytity: {
+    quantity: {
       type: Number,
       required: true,
     },

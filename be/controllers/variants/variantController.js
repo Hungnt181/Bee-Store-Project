@@ -7,29 +7,38 @@ class VariantController {
   // Get All Variants
   async getAllVariants(req, res) {
     try {
-      const { _page = 1, _limit = 10 } = req.query;
+      // api/variants?_embed=id_product,id_size,id_color
+      const { _page = 1, _limit = 10, _embed } = req.query;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-      let query = Variant.find().populate([
-        {
-          path: "id_product",
-          select: "name price about description status id_cate slug -_id",
-          populate: {
-            path: "id_cate",
-            select: "name -_id",
-          },
-        },
-        {
-          path: "id_color",
-          select: "name -_id",
-        },
-        {
-          path: "id_size",
-          select: "name -_id",
-        },
-      ]);
+      let query = Variant.find();
+
+      if (_embed) {
+        const embeds = _embed.split(",");
+        embeds.forEach((embed) => {
+          query = query.populate(embed);
+        });
+      }
+      // let query = Variant.find().populate([
+      //   {
+      //     path: "id_product",
+      //     select: "name price about description status id_cate slug -_id",
+      //     populate: {
+      //       path: "id_cate",
+      //       select: "name -_id",
+      //     },
+      //   },
+      //   {
+      //     path: "id_color",
+      //     select: "name -_id",
+      //   },
+      //   {
+      //     path: "id_size",
+      //     select: "name -_id",
+      //   },
+      // ]);
       const result = await Variant.paginate(query, options);
       const { docs, ...paginationData } = result;
 
@@ -44,33 +53,27 @@ class VariantController {
     }
   }
 
-  // Get All Variants  có Status = true "Dùng cho bên client"
-  async getAllVariantsByStatusTrue(req, res) {
+  // Get variant by id_variant
+  async getAllVariantById_Variant(req, res) {
     try {
-      const { _page = 1, _limit = 10 } = req.query;
+      // api/1?_embed=id_product,id_size,id_color
+      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { id_variant } = req.params;
+
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-      let query = Variant.findOne({ status: true }).populate([
-        {
-          path: "id_product",
-          select: "name price about description status id_cate slug -_id",
-          populate: {
-            path: "id_cate",
-            select: "name -_id",
-          },
-        },
-        {
-          path: "id_color",
-          select: "name -_id",
-        },
-        {
-          path: "id_size",
-          select: "name -_id",
-        },
-      ]);
+      let query = Variant.findById(id_variant);
+
+      if (_embed) {
+        const embeds = _embed.split(",");
+        embeds.forEach((embed) => {
+          query = query.populate(embed);
+        });
+      }
       const result = await Variant.paginate(query, options);
+
       const { docs, ...paginationData } = result;
 
       return res.status(StatusCodes.OK).json({
@@ -87,13 +90,12 @@ class VariantController {
   // Get variant by id_cate
   async getVariantsByCateID(req, res) {
     try {
-      const { _page = 1, _limit = 10 } = req.query;
+      const { _page = 1, _limit = 10, _embed } = req.query;
       const { id_cate } = req.params;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-
       // Tìm tất cả các products có id_cate tương ứng
       const products = await Product.find({ id_cate: id_cate }, "_id");
       const productIds = products.map((product) => product._id);
@@ -127,77 +129,6 @@ class VariantController {
       });
     } catch (error) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
-    }
-  }
-  // Get variant by id_product
-  async getVariantsByProductID(req, res) {
-    try {
-      const { _page = 1, _limit = 10 } = req.query;
-      const { id_product } = req.params;
-      const options = {
-        page: parseInt(_page, 10),
-        limit: parseInt(_limit, 10),
-      };
-      let query = Variant.find({ id_product }).populate("id_product");
-      const result = await Variant.paginate(query, options);
-      const { docs, ...paginationData } = result;
-
-      return res.status(StatusCodes.OK).json({
-        variants: docs,
-        ...paginationData,
-      });
-    } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
-    }
-  }
-
-  // Get variants by id_size
-  async getVariantsBySizeID(req, res) {
-    try {
-      const { _page = 1, _limit = 10 } = req.query;
-      const { id_size } = req.params;
-      const options = {
-        page: parseInt(_page, 10),
-        limit: parseInt(_limit, 10),
-      };
-      let query = Variant.find({ id_size }).populate("id_size");
-      const result = await Variant.paginate(query, options);
-      const { docs, ...paginationData } = result;
-
-      return res.status(StatusCodes.OK).json({
-        variants: docs,
-        ...paginationData,
-      });
-    } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
-    }
-  }
-
-  // get variants by id_color
-  async getVariantsByColorID(req, res) {
-    try {
-      const { _page = 1, _limit = 10 } = req.query;
-      const { id_color } = req.params;
-      const options = {
-        page: parseInt(_page, 10),
-        limit: parseInt(_limit, 10),
-      };
-      let query = Variant.find({ id_color }).populate("id_color");
-      const result = await Variant.paginate(query, options);
-      const { docs, ...paginationData } = result;
-
-      return res.status(StatusCodes.OK).json({
-        variants: docs,
-        ...paginationData,
-      });
-    } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: error.message,
       });
     }

@@ -7,14 +7,14 @@ const productRouter = Router();
 // Get All Products
 productRouter.get("/products", productsController.getAllProducts);
 // Get All Products có status True
-productRouter.get(
-  "/products/statusTrue",
-  productsController.getAllProductsStatusTrue
-);
+// productRouter.get(
+//   "/products/statusTrue",
+//   productsController.getAllProductsStatusTrue
+// );
 // Get product theo categories : Không phải là tất cả biến thể mà đơn giản chỉ là product chính
 productRouter.get(
   "/products/category/:id_cate",
-  productsController.getprodcutsbyCate_id
+  productsController.getproductsbyCate_id
 );
 // Get product detail
 productRouter.get("/products/:id", productsController.getProducDetail);
