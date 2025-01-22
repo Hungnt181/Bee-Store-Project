@@ -5,7 +5,7 @@ import {
   edit,
   list,
   remove,
-} from "./controllers/payments/PaymentController";
+} from "../../controllers/payments/PaymentController";
 
 export const paymentRouter = Router();
 paymentRouter.post("/payments", add);
