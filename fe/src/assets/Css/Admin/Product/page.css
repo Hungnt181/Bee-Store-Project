@@ -1,0 +1,6 @@
+.status-tag {
+    min-height: 40px;
+    display: flex;
+    justify-items: center !important;
+    align-items: center;
+}

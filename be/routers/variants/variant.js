@@ -16,7 +16,11 @@ variantRouter.get(
   "/variants/category/:id_cate",
   variantsController.getVariantsByCateID
 );
-
+// Get All Variants by id_product
+variantRouter.get(
+  "/variants/product/:id_product",
+  variantsController.getVariantsByProID
+);
 // Create a new variant
 variantRouter.post("/variants", variantsController.createVariant);
 // Create a new variant

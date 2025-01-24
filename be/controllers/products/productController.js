@@ -165,22 +165,20 @@ class ProductController {
   // Cập nhật status của product
   async updateStatusProduct(req, res) {
     try {
-      const { status } = req.body;
+      // const { status } = req.body;
       const { id } = req.params;
       // console.log(id);
       // console.log(status);
 
-      const product = await Product.findByIdAndUpdate(
-        id,
-        { status },
-        { new: true } // Trả về tài liệu đã cập nhật
-      );
-
+      const product = await Product.findById(id);
       if (!product) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Không tìm thấy sản phẩm",
         });
       }
+      product.status = !product.status;
+      await product.save();
+
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái sản phẩm thành công",
         data: product,
