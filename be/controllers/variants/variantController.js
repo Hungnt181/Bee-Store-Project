@@ -90,7 +90,7 @@ class VariantController {
   // Get variant by id_cate
   async getVariantsByCateID(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { _page = 1, _limit = 10 } = req.query;
       const { id_cate } = req.params;
       const options = {
         page: parseInt(_page, 10),
@@ -102,6 +102,49 @@ class VariantController {
 
       // Lấy tất cả các variants có id_product thuộc các products tìm được
       let query = Variant.find({ id_product: { $in: productIds } }).populate([
+        {
+          path: "id_product",
+          select: "name price about description status id_cate slug -_id",
+          populate: {
+            path: "id_cate",
+            select: "name -_id",
+          },
+        },
+        {
+          path: "id_color",
+          select: "name -_id",
+        },
+        {
+          path: "id_size",
+          select: "name -_id",
+        },
+      ]);
+
+      const result = await Variant.paginate(query, options);
+      const { docs, ...paginationData } = result;
+
+      return res.status(StatusCodes.OK).json({
+        variants: docs,
+        ...paginationData,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+
+  // Get variant by id_product
+  async getVariantsByProID(req, res) {
+    try {
+      const { _page = 1, _limit = 10 } = req.query;
+      const { id_product } = req.params;
+      const options = {
+        page: parseInt(_page, 10),
+        limit: parseInt(_limit, 10),
+      };
+
+      let query = Variant.find({ id_product: id_product }).populate([
         {
           path: "id_product",
           select: "name price about description status id_cate slug -_id",
