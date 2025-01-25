@@ -1,4 +1,5 @@
 .status-tag {
+    width: 60px;
     min-height: 40px;
     display: flex;
     justify-items: center !important;

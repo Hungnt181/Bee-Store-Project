@@ -27,7 +27,7 @@ const AdminProductList = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: async (id) => {
+    mutationFn: async (id: object) => {
       await axios.patch(`http://localhost:3000/api/products/status/${id}`);
     },
     onSuccess: () => {
@@ -67,11 +67,13 @@ const AdminProductList = () => {
       title: "Giới thiệu",
       dataIndex: "about",
       key: "about",
+      ellipsis: true,
     },
     {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
+      ellipsis: true,
     },
     {
       title: "Trạng thái",
@@ -93,7 +95,7 @@ const AdminProductList = () => {
       title: "Danh mục",
       dataIndex: "id_cate",
       key: "id_cate",
-      render: (object: any, _: any) => {
+      render: (object: any) => {
         return <h3>{object.name}</h3>;
       },
     },
@@ -113,12 +115,12 @@ const AdminProductList = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button danger style={{ minWidth: "80px" }}>
+              <Button danger style={{ minWidth: "60px", padding: "5px" }}>
                 {item.status ? "Ẩn" : "Mở bán"}
               </Button>
             </Popconfirm>
 
-            <Link to={`/products/${item._id}/edit`}>
+            <Link to={`/admin/product/${item._id}/edit`}>
               <Button type="primary">Sửa</Button>
             </Link>
           </Space>

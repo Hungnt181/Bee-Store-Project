@@ -18,8 +18,6 @@ import Variant from "../../interface/Variant";
 const AdminVariantList = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
-  console.log("id: " + id);
-  console.log("Type of id:", typeof id);
   const { data, isLoading } = useQuery({
     queryKey: ["variants", id],
     queryFn: async () => {
@@ -27,8 +25,6 @@ const AdminVariantList = () => {
         const { data } = await axios.get(
           `http://localhost:3000/api/variants/product/${id}`
         );
-        console.log(data);
-
         return data.variants.map((item: Variant) => ({
           ...item,
           key: item._id,
@@ -40,13 +36,13 @@ const AdminVariantList = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: async (id) => {
-      await axios.patch(`http://localhost:3000/api/products/status/${id}`);
+    mutationFn: async (id: object) => {
+      await axios.patch(`http://localhost:3000/api/variants/status/${id}`);
     },
     onSuccess: () => {
       message.success("Cập nhật trạng thái sản phẩm thành công");
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["variants"],
       });
     },
   });
@@ -56,7 +52,7 @@ const AdminVariantList = () => {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      render: (text: string, _: any) => {
+      render: (text: string) => {
         return <Image src={text} width={50} height={50}></Image>;
       },
     },
@@ -64,7 +60,7 @@ const AdminVariantList = () => {
       title: "Tên sản phẩm",
       dataIndex: "id_product",
       key: "id_product",
-      render: (object: any, _: any) => {
+      render: (object: any) => {
         return <h3>{object.name}</h3>;
       },
     },
@@ -72,7 +68,7 @@ const AdminVariantList = () => {
       title: "Kích cỡ",
       dataIndex: "id_size",
       key: "id_size",
-      render: (object: any, _: any) => {
+      render: (object: any) => {
         return <h3>{object.name}</h3>;
       },
     },
@@ -80,8 +76,25 @@ const AdminVariantList = () => {
       title: "Màu sắc",
       dataIndex: "id_color",
       key: "id_color",
-      render: (object: any, _: any) => {
-        return <h3>{object.name}</h3>;
+      render: (object: any) => {
+        console.log(object);
+        return (
+          <>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <p style={{ minWidth: "40px" }}>{object.name}</p>
+              <div
+                style={{
+                  marginLeft: "5px",
+                  backgroundColor: object.hexcode,
+                  width: "20px",
+                  height: "20px",
+                  border:
+                    object.hexcode == "#ffffff" ? "1px solid gray" : "none",
+                }}
+              ></div>
+            </div>
+          </>
+        );
       },
     },
     {
@@ -122,7 +135,7 @@ const AdminVariantList = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button danger style={{ minWidth: "80px" }}>
+              <Button danger style={{ minWidth: "60px", padding: "5px" }}>
                 {item.status ? "Ẩn" : "Mở bán"}
               </Button>
             </Popconfirm>

@@ -155,7 +155,7 @@ class VariantController {
         },
         {
           path: "id_color",
-          select: "name -_id",
+          select: "name hexcode -_id",
         },
         {
           path: "id_size",
@@ -267,17 +267,14 @@ class VariantController {
       const { status } = req.body;
       const { id } = req.params;
 
-      const variant = await Variant.findByIdAndUpdate(
-        id,
-        { status },
-        { new: true } // Trả về tài liệu đã cập nhật
-      );
-
+      const variant = await Variant.findById(id);
       if (!variant) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Không tìm thấy variant",
         });
       }
+      variant.status = !variant.status;
+      await variant.save();
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái variant thành công",
         data: variant,
