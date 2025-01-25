@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "6784cd87a0dcf097b49a6445"
+  },
+  "name": "red",
+  "hexcode": "#ff0000",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6784cd9ba0dcf097b49a6448"
+  },
+  "name": "white",
+  "hexcode": "#ffffff",
+  "__v": 0
+}]

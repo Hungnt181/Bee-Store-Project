@@ -90,7 +90,7 @@ class VariantController {
   // Get variant by id_cate
   async getVariantsByCateID(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { _page = 1, _limit = 10 } = req.query;
       const { id_cate } = req.params;
       const options = {
         page: parseInt(_page, 10),
@@ -113,6 +113,49 @@ class VariantController {
         {
           path: "id_color",
           select: "name -_id",
+        },
+        {
+          path: "id_size",
+          select: "name -_id",
+        },
+      ]);
+
+      const result = await Variant.paginate(query, options);
+      const { docs, ...paginationData } = result;
+
+      return res.status(StatusCodes.OK).json({
+        variants: docs,
+        ...paginationData,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+
+  // Get variant by id_product
+  async getVariantsByProID(req, res) {
+    try {
+      const { _page = 1, _limit = 10 } = req.query;
+      const { id_product } = req.params;
+      const options = {
+        page: parseInt(_page, 10),
+        limit: parseInt(_limit, 10),
+      };
+
+      let query = Variant.find({ id_product: id_product }).populate([
+        {
+          path: "id_product",
+          select: "name price about description status id_cate slug -_id",
+          populate: {
+            path: "id_cate",
+            select: "name -_id",
+          },
+        },
+        {
+          path: "id_color",
+          select: "name hexcode -_id",
         },
         {
           path: "id_size",
@@ -224,17 +267,14 @@ class VariantController {
       const { status } = req.body;
       const { id } = req.params;
 
-      const variant = await Variant.findByIdAndUpdate(
-        id,
-        { status },
-        { new: true } // Trả về tài liệu đã cập nhật
-      );
-
+      const variant = await Variant.findById(id);
       if (!variant) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Không tìm thấy variant",
         });
       }
+      variant.status = !variant.status;
+      await variant.save();
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái variant thành công",
         data: variant,
