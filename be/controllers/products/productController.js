@@ -6,41 +6,25 @@ class ProductController {
   // Get all products
   async getAllProducts(req, res) {
     try {
-      const { _page = 1, _limit = 10 } = req.query;
+      const { _page = 1, _limit = 10, _embed } = req.query;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-      let query = Product.find().populate({
-        path: "id_cate",
-        select: "name -_id",
-      });
-      const result = await Product.paginate(query, options);
-      const { docs, ...paginationData } = result;
 
-      return res.status(StatusCodes.OK).json({
-        products: docs,
-        ...paginationData,
-      });
-    } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
-    }
-  }
+      let query = Product.find();
 
-  // Get all products có Status = true
-  async getAllProductsStatusTrue(req, res) {
-    try {
-      const { _page = 1, _limit = 10 } = req.query;
-      const options = {
-        page: parseInt(_page, 10),
-        limit: parseInt(_limit, 10),
-      };
-      let query = Product.findOne({ status: true }).populate({
-        path: "id_cate",
-        select: "name -_id",
-      });
+      if (_embed) {
+        const embeds = _embed.split(",");
+        embeds.forEach((embed) => {
+          query = query.populate(embed);
+        });
+      }
+
+      // let query = Product.find().populate({
+      //   path: "id_cate",
+      //   select: "name -_id",
+      // });
       const result = await Product.paginate(query, options);
       const { docs, ...paginationData } = result;
 
@@ -79,7 +63,7 @@ class ProductController {
     }
   }
   // Get products by id_cate
-  async getprodcutsbyCate_id(req, res) {
+  async getproductsbyCate_id(req, res) {
     try {
       const { _page = 1, _limit = 10 } = req.query;
       const { id_cate } = req.params;
@@ -181,22 +165,20 @@ class ProductController {
   // Cập nhật status của product
   async updateStatusProduct(req, res) {
     try {
-      const { status } = req.body;
+      // const { status } = req.body;
       const { id } = req.params;
       // console.log(id);
       // console.log(status);
 
-      const product = await Product.findByIdAndUpdate(
-        id,
-        { status },
-        { new: true } // Trả về tài liệu đã cập nhật
-      );
-
+      const product = await Product.findById(id);
       if (!product) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Không tìm thấy sản phẩm",
         });
       }
+      product.status = !product.status;
+      await product.save();
+
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái sản phẩm thành công",
         data: product,

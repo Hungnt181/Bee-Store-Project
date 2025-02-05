@@ -1,0 +1,69 @@
+[{
+  "_id": {
+    "$oid": "67935eba4e9891e401940465"
+  },
+  "image": "link pic",
+  "quantity": 100,
+  "status": true,
+  "id_color": {
+    "$oid": "6784cd9ba0dcf097b49a6448"
+  },
+  "id_size": {
+    "$oid": "6784cde1a0dcf097b49a644b"
+  },
+  "id_product": {
+    "$oid": "67832e6cfa9cb63c22b31da5"
+  },
+  "createdAt": {
+    "$date": "2025-01-24T09:34:50.491Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-25T14:02:50.449Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67935ee04e9891e401940468"
+  },
+  "image": "link pic",
+  "quantity": 100,
+  "status": true,
+  "id_color": {
+    "$oid": "6784cd87a0dcf097b49a6445"
+  },
+  "id_size": {
+    "$oid": "6784cde1a0dcf097b49a644b"
+  },
+  "id_product": {
+    "$oid": "67832e6cfa9cb63c22b31da5"
+  },
+  "createdAt": {
+    "$date": "2025-01-24T09:35:28.518Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-25T07:32:13.962Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67935eeb4e9891e40194046b"
+  },
+  "image": "link pic",
+  "quantity": 100,
+  "status": true,
+  "id_color": {
+    "$oid": "6784cde1a0dcf097b49a644b"
+  },
+  "id_size": {
+    "$oid": "6784cde1a0dcf097b49a644b"
+  },
+  "id_product": {
+    "$oid": "6783363bfa9cb63c22b31db7"
+  },
+  "createdAt": {
+    "$date": "2025-01-24T09:35:39.832Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-24T09:35:39.832Z"
+  }
+}]

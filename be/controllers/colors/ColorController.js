@@ -1,5 +1,5 @@
-import color from "./models/colors/color";
-import { colorJoi } from "./utils/validator/color";
+import color from "../../models/colors/color";
+import { colorJoi } from "../../utils/validator/color";
 //them
 export const add = async (req, res) => {
   try {

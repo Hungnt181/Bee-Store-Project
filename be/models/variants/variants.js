@@ -7,9 +7,9 @@ const VariantSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    stock: {
-      type: Boolean,
-      default: true,
+    quantity: {
+      type: Number,
+      required: true,
     },
     status: {
       type: Boolean,
