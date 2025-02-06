@@ -6,7 +6,7 @@ class ProductController {
   // Get all products
   async getAllProducts(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { _page = 1, _limit = 10, _embed, _sort = "id_cate" } = req.query;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
@@ -25,6 +25,8 @@ class ProductController {
       //   path: "id_cate",
       //   select: "name -_id",
       // });
+      // Thêm điều kiện sắp xếp vào truy vấn
+      query = query.sort(_sort);
       const result = await Product.paginate(query, options);
       const { docs, ...paginationData } = result;
 

@@ -144,24 +144,26 @@ class VariantController {
         limit: parseInt(_limit, 10),
       };
 
-      let query = Variant.find({ id_product: id_product }).populate([
-        {
-          path: "id_product",
-          select: "name price about description status id_cate slug -_id",
-          populate: {
-            path: "id_cate",
+      let query = Variant.find({ id_product: id_product })
+        .populate([
+          {
+            path: "id_product",
+            select: "name price about description status id_cate slug -_id",
+            populate: {
+              path: "id_cate",
+              select: "name -_id",
+            },
+          },
+          {
+            path: "id_color",
+            select: "name hexcode -_id",
+          },
+          {
+            path: "id_size",
             select: "name -_id",
           },
-        },
-        {
-          path: "id_color",
-          select: "name hexcode -_id",
-        },
-        {
-          path: "id_size",
-          select: "name -_id",
-        },
-      ]);
+        ])
+        .sort({ "id_size.name": 1, "id_color.name": 1 });
 
       const result = await Variant.paginate(query, options);
       const { docs, ...paginationData } = result;
