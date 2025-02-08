@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Form,
@@ -7,38 +7,26 @@ import {
   InputNumber,
   message,
   Select,
-  Skeleton,
   Switch,
 } from "antd";
-import { useForm } from "antd/es/form/Form";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import Category from "../../../interface/Category";
+import useGetAllNotArray from "../../hooks/useGetAllNotArray";
+import TextArea from "antd/es/input/TextArea";
+import "../../../assets/Css/Admin/Product/page.css";
+const AdminProductAdd = () => {
+  const url = `http://localhost:3000/api/categories`;
+  const key = "categories";
+  const { data: data_Cate } = useGetAllNotArray<Category>(url, key);
 
-const ProductEditPage = () => {
-  const nav = useNavigate();
-  const { id } = useParams();
-  const [form] = useForm();
-  const { data, isLoading } = useQuery({
-    queryKey: ["PRODUCTS", id],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/products/${id}`
-      );
-      return data.data;
-    },
-  });
+  const queryClient = useQueryClient();
+  const [form] = Form.useForm();
 
-  const { data: data_Cate } = useQuery({
-    queryKey: ["Categories"],
-    queryFn: async () => {
-      const { data } = await axios.get(`http://localhost:3000/api/categories`);
-      return data.data;
-    },
-  });
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
       try {
-        await axios.put(`http://localhost:3000/api/products/${id}`, formData);
+        await axios.post(`http://localhost:3000/api/products`, formData);
+        form.resetFields();
       } catch (error: any) {
         if (
           error.response &&
@@ -55,18 +43,18 @@ const ProductEditPage = () => {
     },
 
     onSuccess: () => {
-      message.success("Cập nhật sản phẩm thành công");
-      nav("/admin/product");
+      message.success("Thêm thành công");
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
-  if (isLoading) return <Skeleton></Skeleton>;
   return (
     <div>
       <Form
         form={form}
-        initialValues={data}
         labelCol={{
-          span: 4,
+          span: 6,
         }}
         wrapperCol={{
           span: 14,
@@ -108,7 +96,7 @@ const ProductEditPage = () => {
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
 
         <Form.Item
@@ -118,15 +106,15 @@ const ProductEditPage = () => {
             { required: true, message: "Vui lòng nhập mô tả của sản phẩm" },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
 
         <Form.Item label="Trạng thái" name="status">
-          <Switch defaultValue={data.status} />
+          <Switch defaultChecked />
         </Form.Item>
 
-        <Form.Item label="Select" name="id_cate">
-          <Select defaultValue="Test">
+        <Form.Item label="Danh mục" name="id_cate">
+          <Select>
             {data_Cate?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
                 {item.name}
@@ -135,12 +123,12 @@ const ProductEditPage = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item>
-          <Button htmlType="submit">Edit</Button>
+        <Form.Item className="ButtonForm">
+          <Button htmlType="submit">Thêm</Button>
         </Form.Item>
       </Form>
     </div>
   );
 };
 
-export default ProductEditPage;
+export default AdminProductAdd;

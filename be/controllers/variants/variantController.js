@@ -147,10 +147,10 @@ class VariantController {
       let query = Variant.find({ id_product: id_product }).populate([
         {
           path: "id_product",
-          select: "name price about description status id_cate slug -_id",
+          // select: "name price about description status id_cate slug -_id",
           populate: {
             path: "id_cate",
-            select: "name -_id",
+            select: "name ",
           },
         },
         {
@@ -162,9 +162,18 @@ class VariantController {
           select: "name -_id",
         },
       ]);
+      // .sort({ "id_size.name": 1, "id_color.name": 1 });
 
       const result = await Variant.paginate(query, options);
       const { docs, ...paginationData } = result;
+
+      docs.sort((a, b) => {
+        if (a.id_size.name < b.id_size.name) return -1;
+        if (a.id_size.name > b.id_size.name) return 1;
+        if (a.id_color.name < b.id_color.name) return -1;
+        if (a.id_color.name > b.id_color.name) return 1;
+        return 0;
+      });
 
       return res.status(StatusCodes.OK).json({
         variants: docs,
