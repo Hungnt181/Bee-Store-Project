@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Modal,
@@ -56,7 +55,7 @@ const AdminProductList = () => {
   const urlDelete = "http://localhost:3000/api/products/status/";
   const { mutate } = useDelete(urlDelete, key);
 
-  const handleSearchVariant = (id: any) => {
+  const handleSearchVariant = (id: unknown) => {
     navigate(`/admin/${id}/variant`);
   };
 
@@ -65,7 +64,7 @@ const AdminProductList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, item: any, index: number) => {
+      render: (_: unknown, _item: Product, index: number) => {
         return index + 1;
       },
     },
@@ -73,11 +72,11 @@ const AdminProductList = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (_: any, item: any) => {
+      render: (_: unknown, item: Product) => {
         return (
           <h3
             onClick={() => handleSearchVariant(item._id)}
-            style={{ cursor: "pointer" }}
+            // style={{ cursor: "pointer" }}
           >
             {item.name}
           </h3>
