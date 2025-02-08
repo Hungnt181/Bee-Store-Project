@@ -26,7 +26,7 @@ class ProductController {
       //   select: "name -_id",
       // });
       // Thêm điều kiện sắp xếp vào truy vấn
-      query = query.sort(_sort);
+      query = query.sort({ id_cate: 1, createdAt: -1 });
       const result = await Product.paginate(query, options);
       const { docs, ...paginationData } = result;
 

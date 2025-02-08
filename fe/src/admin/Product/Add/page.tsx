@@ -12,16 +12,34 @@ import {
 import axios from "axios";
 import Category from "../../../interface/Category";
 import useGetAllNotArray from "../../hooks/useGetAllNotArray";
-
+import TextArea from "antd/es/input/TextArea";
+import "../../../assets/Css/Admin/Product/page.css";
 const AdminProductAdd = () => {
   const url = `http://localhost:3000/api/categories`;
   const key = "categories";
-  const queryClient = useQueryClient();
   const { data: data_Cate } = useGetAllNotArray<Category>(url, key);
+
+  const queryClient = useQueryClient();
+  const [form] = Form.useForm();
 
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
-      await axios.post(`http://localhost:3000/api/products`, formData);
+      try {
+        await axios.post(`http://localhost:3000/api/products`, formData);
+        form.resetFields();
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          message.error(`Error creating: ${error.response.data.message}`);
+        } else {
+          message.error("Error creating");
+        }
+        console.log(error);
+        throw error; // Ném lại lỗi để đảm bảo onSuccess không được gọi
+      }
     },
 
     onSuccess: () => {
@@ -34,8 +52,9 @@ const AdminProductAdd = () => {
   return (
     <div>
       <Form
+        form={form}
         labelCol={{
-          span: 4,
+          span: 6,
         }}
         wrapperCol={{
           span: 14,
@@ -77,7 +96,7 @@ const AdminProductAdd = () => {
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
 
         <Form.Item
@@ -87,14 +106,14 @@ const AdminProductAdd = () => {
             { required: true, message: "Vui lòng nhập mô tả của sản phẩm" },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
 
         <Form.Item label="Trạng thái" name="status">
-          <Switch />
+          <Switch defaultChecked />
         </Form.Item>
 
-        <Form.Item label="Select" name="id_cate">
+        <Form.Item label="Danh mục" name="id_cate">
           <Select>
             {data_Cate?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
@@ -104,7 +123,7 @@ const AdminProductAdd = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item className="ButtonForm">
           <Button htmlType="submit">Thêm</Button>
         </Form.Item>
       </Form>

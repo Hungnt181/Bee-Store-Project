@@ -12,10 +12,11 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const VariantEditPage = ({ id }: { id: string }) => {
+const VariantEditPage = () => {
   const [form] = useForm();
-
+  const { id } = useParams();
   const { data, isLoading } = useQuery({
     queryKey: ["variant", id],
     queryFn: async () => {
@@ -42,11 +43,26 @@ const VariantEditPage = ({ id }: { id: string }) => {
     },
   });
 
+  // console.log("id", data.id_product);
+
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
-      await axios.put(`http://localhost:3000/api/variants/${id}`, formData);
+      try {
+        await axios.put(`http://localhost:3000/api/variants/${id}`, formData);
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          message.error(`Error eaditing: ${error.response.data.message}`);
+        } else {
+          message.error("Error eaditing");
+        }
+        console.log(error);
+        throw error; // Ném lại lỗi để đảm bảo onSuccess không được gọi
+      }
     },
-
     onSuccess: () => {
       message.success("Cập nhật sản phẩm thành công");
     },
@@ -73,6 +89,13 @@ const VariantEditPage = ({ id }: { id: string }) => {
           mutate(formData);
         }}
       >
+        <Form.Item
+          name="id_product"
+          initialValue={data[0].id_product._id}
+          hidden
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           label="Ảnh "
           name="image"

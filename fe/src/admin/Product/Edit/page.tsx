@@ -37,7 +37,21 @@ const ProductEditPage = () => {
   });
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
-      await axios.put(`http://localhost:3000/api/products/${id}`, formData);
+      try {
+        await axios.put(`http://localhost:3000/api/products/${id}`, formData);
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          message.error(`Error creating: ${error.response.data.message}`);
+        } else {
+          message.error("Error creating");
+        }
+        console.log(error);
+        throw error; // Ném lại lỗi để đảm bảo onSuccess không được gọi
+      }
     },
 
     onSuccess: () => {

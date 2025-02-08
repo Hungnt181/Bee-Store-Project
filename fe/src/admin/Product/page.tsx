@@ -16,6 +16,7 @@ import useGetAll from "../hooks/useGetAll";
 import useDelete from "../hooks/useDelete";
 import { useState } from "react";
 import AdminProductAdd from "./Add/page";
+import dayjs from "dayjs";
 const AdminProductList = () => {
   //   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -61,6 +62,14 @@ const AdminProductList = () => {
 
   const columns = [
     {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_: any, item: any, index: number) => {
+        return index + 1;
+      },
+    },
+    {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
@@ -99,6 +108,14 @@ const AdminProductList = () => {
       key: "id_cate",
       render: (object: any) => {
         return <p>{object.name}</p>;
+      },
+    },
+    {
+      title: "Ngày sửa cuối",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (value: Date) => {
+        return dayjs(value).format("DD/MM/YYYY HH:mm:ss");
       },
     },
     {
@@ -179,10 +196,11 @@ const AdminProductList = () => {
         />
 
         <Modal
-          title="Basic Modal"
+          title="Thêm mới sản phẩm"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          footer={null}
         >
           <AdminProductAdd />
         </Modal>

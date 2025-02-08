@@ -18,19 +18,35 @@ import useGetDetail from "../hooks/useGetDetail";
 import useDelete from "../hooks/useDelete";
 import { useState } from "react";
 import AdminVariantAdd from "./Add/page";
+import "../../assets/Css/Admin/Product/page.css";
+import useGetDetailNotArray from "../hooks/useGetDetailNotArray";
 
 const AdminVariantList = () => {
   const { id } = useParams();
-
   const safeId = id || "";
   const url = `http://localhost:3000/api/variants/product/${id}`;
   const key = "variants";
   const { data, isLoading } = useGetDetail<Variant>(url, key, safeId);
 
+  //
+  const urlDtPro = `http://localhost:3000/api/products/${id}`;
+  const keyDtPro = "ProductDetail";
+  const ProDtId = String(id);
+  const { data: DataDtPro } = useGetDetailNotArray(urlDtPro, keyDtPro, ProDtId);
+  // console.log("DataDtPro", DataDtPro);
+
   const urlDelete = "http://localhost:3000/api/variants/status/";
   const { mutate } = useDelete(urlDelete, key);
 
   const columns = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_: any, item: any, index: number) => {
+        return index + 1;
+      },
+    },
     {
       title: "Ảnh",
       dataIndex: "image",
@@ -154,7 +170,7 @@ const AdminVariantList = () => {
                 </Button>
               </Popconfirm>
 
-              <Link to={`/admin/product/${item._id}/edit`}>
+              <Link to={`/admin/variant/${item._id}/edit`}>
                 <Button type="primary">Sửa</Button>
               </Link>
             </Space>
@@ -201,12 +217,13 @@ const AdminVariantList = () => {
         />
 
         <Modal
-          title="Basic Modal"
+          title="Thêm mới biến thể"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          footer={null}
         >
-          <AdminVariantAdd />
+          <AdminVariantAdd dataDtPro={DataDtPro} />
         </Modal>
       </Skeleton>
     </div>
