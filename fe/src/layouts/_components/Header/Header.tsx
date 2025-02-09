@@ -34,7 +34,7 @@ export default function Header() {
           </h3> */}
           <img
             className="w-58"
-            src="https://res-console.cloudinary.com/dpplfiyki/thumbnails/v1/image/upload/v1739093811/MzAzNDY3NDAyXzQwNDU3NjM1NTEyMTM4MV8xNjcwNDE1MzA4MDM3NDIzODJfbi1yZW1vdmViZy1wcmV2aWV3X2tkMHZzMg==/drilldown"
+            src='./public/logo.png'
             alt=""
           />
         </div>
