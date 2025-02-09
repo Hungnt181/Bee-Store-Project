@@ -13,9 +13,9 @@ export default function ClientLayout() {
       return () => window.removeEventListener("scroll", handleScroll);
     }, []);
   return (
-    <div>
+    <div className="font-client">
       <Header />
-      <main className={`mb-8 transition-transform duration-300 ${isSticky ? 'pt-[9%]': 'mt-8'}`}>
+      <main className={`mb-8 transition-transform min-h-[100vh] duration-300 ${isSticky ? 'pt-[9%]': 'mt-8'}`}>
         <Outlet />
       </main>
       <Footer/>

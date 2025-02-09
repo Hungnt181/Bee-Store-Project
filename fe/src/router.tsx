@@ -12,6 +12,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <ClientLayout />,
+    errorElement: <Navigate to={'/'}/>,
     children: [{ index: true, element: <HomePage /> }],
   },
   {
