@@ -15,9 +15,9 @@ export default function Footer() {
       <div className="max-w-[1240px] mx-6 xl:mx-auto py-8">
         {/* LINE 1 IN FOOTER */}
         <div className="flex  justify-between">
-          <div className="mt-20">
+          <Link to={'/'} className="mt-20">
             <img className="w-2xs invert-35" src="./public/logo.png" alt="" />
-          </div>
+          </Link>
           <div className="border-l-[1px] border-[#6d6d6d] pl-6">
             <h3 className="text-white font-medium uppercase">
               Hỗ trợ khách hàng

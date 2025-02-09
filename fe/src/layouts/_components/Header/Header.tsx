@@ -28,7 +28,7 @@ export default function Header() {
       {/* LINE 1 IN HEADER */}
       <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center justify-between mt-6">
         {/* BOX 1 IN HEADER */}
-        <div className="flex-1">
+        <Link to={'/'} className="flex-1">
           {/* <h3 className="font-bold font-sans text-2xl text-yellow-700">
             BEE<span className="text-black"> - STORE</span>
           </h3> */}
@@ -37,7 +37,7 @@ export default function Header() {
             src='./public/logo.png'
             alt=""
           />
-        </div>
+        </Link>
         {/* BOX 2 IN HEADER */}
         <div className="flex items-center justify-between flex-1/2 text-sm">
           {/* SEARCH BOX */}
@@ -96,11 +96,11 @@ export default function Header() {
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (
-            <div className="hidden xl:block">
+            <Link to={'/'} className="hidden xl:block">
               <h3 className="text-yellow-400 text-2xl font-bold">
                 BEE <span className="text-white">STORE</span>
               </h3>
-            </div>
+            </Link>
           )}
           <ListitemCateegory isSticky={isSticky} />
         </div>
