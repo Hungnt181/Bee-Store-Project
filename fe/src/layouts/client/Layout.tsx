@@ -1,15 +1,24 @@
 import { Outlet } from "react-router-dom";
 import Header from "../_components/Header/Header";
 import Footer from "../_components/Footer/Footer";
+import { useEffect, useState } from "react";
 
 export default function ClientLayout() {
+  const [isSticky, setIsSticky] = useState(false);
+    useEffect(() => {
+      const handleScroll = () => {
+        setIsSticky(window.scrollY > 150); 
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
   return (
-    <>
+    <div>
       <Header />
-      <main className="my-8">
+      <main className={`mb-8 transition-transform duration-300 ${isSticky ? 'pt-[9%]': 'mt-8'}`}>
         <Outlet />
       </main>
       <Footer/>
-    </>
+    </div>
   );
 }

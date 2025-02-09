@@ -1,8 +1,6 @@
 
 export default function HomePage() {
   return (
-    <div>
-      HomePage Work!
-    </div>
+    <div>HomePage</div>
   )
 }
