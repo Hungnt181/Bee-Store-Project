@@ -24,7 +24,7 @@ const items: MenuProps['items'] = [
     },
   ];
 
-export const getColumnsCategories = (): ColumnsType<Category> => {
+export const getColumnsCategories = ({onAction}: {onAction: (record: Category) => void}): ColumnsType<Category> => {
   return [
     {
       title: "STT",
@@ -91,10 +91,10 @@ export const getColumnsCategories = (): ColumnsType<Category> => {
       key: "action",
       align: "right",
       fixed: 'right',
-      render: () => {
+      render: (_: unknown, item: Category) => {
         return (
           <Space>
-            <Button type={"primary"}>Chi tiết</Button>
+            <Button type={"primary"} onClick={() => onAction(item)}>Chi tiết</Button>
             <Dropdown menu={{ items }} placement="bottomLeft">
               <MoreOutlined style={{cursor: "pointer"}}/>
             </Dropdown>

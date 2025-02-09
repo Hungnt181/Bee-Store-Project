@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import LayoutAdmin from "./admin/layout";
 import AdminProductList from "./admin/Product/page";
 import HomePage from "./website/components/Home";
-import AdminCategory from "./admin/CategoryManagement/AdminCategory";
+import AdminCategory from "./admin/CategoryManagement/components/AdminCategory";
 import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
 
