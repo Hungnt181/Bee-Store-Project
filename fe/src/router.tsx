@@ -1,14 +1,19 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LayoutAdmin from "./admin/layout";
 import AdminProductList from "./admin/Product/page";
-import HomePage from "./website/components/Home";
 import AdminCategory from "./admin/category/page";
 import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
 import VariantEditPage from "./admin/Variant/Edit/page";
+import ClientLayout from "./layouts/client/Layout";
+import HomePage from "./pages/Home/HomePage";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
+  {
+    path: "/",
+    element: <ClientLayout />,
+    children: [{ index: true, element: <HomePage /> }],
+  },
   {
     path: "/admin",
     element: <LayoutAdmin />,
