@@ -7,7 +7,7 @@ export default function ClientLayout() {
   const [isSticky, setIsSticky] = useState(false);
     useEffect(() => {
       const handleScroll = () => {
-        setIsSticky(window.scrollY > 150); 
+        setIsSticky(window.scrollY > 100); 
       };
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
@@ -15,7 +15,7 @@ export default function ClientLayout() {
   return (
     <div className="font-client">
       <Header />
-      <main className={`mb-8 transition-transform min-h-[100vh] duration-300 ${isSticky ? 'pt-[9%]': 'mt-8'}`}>
+      <main className={`mb-8 transition-transform min-h-[100vh] duration-300 ${isSticky ? '': 'mt-8'}`}>
         <Outlet />
       </main>
       <Footer/>
