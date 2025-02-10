@@ -108,7 +108,7 @@ export default function Footer() {
             <p className="text-center text-white text-sm">Địa chỉ: Số 9 Đường Trịnh Văn Bô, Quận Nam Từ Liêm, Thành Phố Hà Nội</p>
             <p className="text-center text-white text-sm">HotLine: 012345678910JQKA</p>
             <p className="text-center text-white text-sm">Mail: Beestore@gmail.com</p>
-            <p className="text-center mt-14 pb-4 text-white text-sm">Thiết kế web bởi đội ngũ sinh viên FPOLY</p>
+            <p className="text-center mt-14 pb-4 text-white text-sm">Bee-Store ©2025 Created by WD-25</p>
        </div>
     </footer>
   );
