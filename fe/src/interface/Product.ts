@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 
-interface Product {
+export interface Product {
     _id: ObjectId;
   name: {
     type: string;
@@ -33,5 +33,28 @@ interface Product {
     unique: true;
   };
 }
+export type ProductType = {
+  _id: string;
+  name: string;
+  price: number;
+  about: string;
+  description: string;
+  status: boolean;
+  id_cate: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export default Product;
+export interface ProductResponse {
+  products: ProductType[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};

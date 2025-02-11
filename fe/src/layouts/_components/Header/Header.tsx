@@ -17,7 +17,7 @@ export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      setIsSticky(window.scrollY > 150);
+      setIsSticky(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -89,6 +89,15 @@ export default function Header() {
         </div>
       </div>
       {/* LINE 2 IN HEADER */}
+      <div
+        className={` w-full transition-all duration-300 ${
+          isSticky ? "block" : "hidden"
+        }`}
+      >
+        <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
+          <ListitemCateegory isSticky={isSticky} />
+        </div>
+      </div>
       <div
         className={` w-full transition-all duration-300 ${
           isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
