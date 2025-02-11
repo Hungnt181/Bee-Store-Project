@@ -8,15 +8,21 @@ import { useGetAllCategories } from '../queryHooks';
 import ModalAddCate from './ModalAddCate';
 import useCateStore from '../stores';
 import ModalViewCate from './ModalViewCate';
+import dayjs from 'dayjs';
 
 const AdminCategory: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { setCateDetail, setActionMode, actionMode, resetCateStore } = useCateStore();
+  const { setCateDetail, setActionMode, actionMode, resetCateStore, setIsValuesChange } = useCateStore();
   const { data: listCategories, isLoading: loadingTable } = useGetAllCategories();
-  const handleAction = useCallback(( record: Category) => {
+  const handleAction = useCallback((record: Category, editStatus: boolean) => {
     setActionMode(true);
-    setCateDetail(record); 
-  }, [setActionMode, setCateDetail])
+    setCateDetail({
+      ...record,
+      createdAt: dayjs(record.createdAt).format("DD/MM/YYYY HH:mm:ss"),
+      updatedAt: dayjs(record.updatedAt).format("DD/MM/YYYY HH:mm:ss"),
+    });
+    setIsValuesChange(editStatus);
+  }, [setActionMode, setCateDetail, setIsValuesChange])
   const columns: ColumnsType<Category> = useMemo(() => {
     return getColumnsCategories({
       onAction: handleAction
@@ -25,7 +31,7 @@ const AdminCategory: React.FC = () => {
 
   return (
     <div>
-      <h2>DANH MỤC LOẠI SẢN PHẨM</h2>
+      <h1>DANH MỤC LOẠI SẢN PHẨM</h1>
       <Flex vertical gap={20} >
         <Button type={"primary"} style={{ width: "100px" }} onClick={() => setIsModalOpen(true)} icon={<PlusOutlined />}>
           Thêm mới
@@ -35,11 +41,12 @@ const AdminCategory: React.FC = () => {
           loading={loadingTable}
           dataSource={listCategories}
           columns={columns}
-          rowKey={"id"}
+          rowKey={"_id"}
           pagination={{ pageSize: 10 }}
-          scroll={{ x: 'max-content', y: 55 * 7 }}
+          scroll={{ x: 'max-content', y: 55 * 8 }}
+          // virtual
         />
-        <ModalViewCate open={actionMode} onClose={resetCateStore}/>
+        <ModalViewCate open={actionMode} onClose={resetCateStore} />
       </Flex>
     </div>
   )

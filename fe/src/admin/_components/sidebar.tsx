@@ -49,7 +49,6 @@ const Sidebar = () => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const item = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
-      console.log(1);
       navigate(item.url); // Chuyển hướng đến URL
     }
   };

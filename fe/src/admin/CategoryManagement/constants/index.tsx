@@ -4,33 +4,13 @@ import { Button, Dropdown, MenuProps, Space, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { MoreOutlined } from "@ant-design/icons";
 
-const items: MenuProps['items'] = [
-    {
-      key: 'EDIT',
-      label: (
-        <a target="_blank" href="">
-          Chỉnh sửa
-        </a>
-      ),
-    },
-    {
-      key: 'DELETE',
-      label: (
-        <a target="_blank" href="">
-          Xóa
-        </a>
-      ),
-      disabled: true,
-    },
-  ];
-
-export const getColumnsCategories = ({onAction}: {onAction: (record: Category) => void}): ColumnsType<Category> => {
+export const getColumnsCategories = ({ onAction }: { onAction: (record: Category, edit: boolean) => void }): ColumnsType<Category> => {
   return [
     {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      width: 80,
+      width: 70,
       render: (_value: unknown, _record: Category, index: number) => {
         return <div>{index + 1}</div>
       }
@@ -39,7 +19,8 @@ export const getColumnsCategories = ({onAction}: {onAction: (record: Category) =
       title: "Tên danh mục",
       dataIndex: "name",
       key: "name",
-      width: 250,
+      width: 200,
+      fixed: "left",
       render: (value: string) => {
         return <Tooltip title={value}>
           <span>{value}</span>
@@ -92,11 +73,30 @@ export const getColumnsCategories = ({onAction}: {onAction: (record: Category) =
       align: "right",
       fixed: 'right',
       render: (_: unknown, item: Category) => {
+        const items: MenuProps['items'] = [
+          {
+            key: 'EDIT',
+            label: (
+              <span onClick={() => onAction(item, true)}>
+                Chỉnh sửa
+              </span>
+            ),
+          },
+          {
+            key: 'DELETE',
+            label: (
+              <span>
+                Xóa
+              </span>
+            ),
+            disabled: true,
+          },
+        ];
         return (
           <Space>
-            <Button type={"primary"} onClick={() => onAction(item)}>Chi tiết</Button>
-            <Dropdown menu={{ items }} placement="bottomLeft">
-              <MoreOutlined style={{cursor: "pointer"}}/>
+            <Button type={"primary"} onClick={() => onAction(item, false)}>Chi tiết</Button>
+            <Dropdown menu={{ items: items }} placement="bottomLeft">
+              <MoreOutlined style={{ cursor: "pointer" }} />
             </Dropdown>
           </Space>
         );

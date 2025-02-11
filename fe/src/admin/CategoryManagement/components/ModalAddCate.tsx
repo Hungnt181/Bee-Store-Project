@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, Modal, Select } from 'antd'
+import { Form, Input, Modal, Select } from 'antd'
 import React from 'react'
 import { useCreateCategory } from '../queryHooks';
 type AddProps = {
@@ -18,7 +18,9 @@ const ModalAddCate: React.FC<AddProps> = ({ open, onClose }) => {
     title="Thêm mới danh mục"
     open={open}
     onCancel={handleCancel}
-    footer={null}
+    onOk={() => form.submit()}
+    cancelText={"Hủy bỏ"}
+    okText={"Thêm mới"}
     maskClosable={false}>
     <Form
       form={form}
@@ -57,12 +59,6 @@ const ModalAddCate: React.FC<AddProps> = ({ open, onClose }) => {
           <Select.Option value={true}>Đang hoạt động</Select.Option>
           <Select.Option value={false}>Dừng hoạt động</Select.Option>
         </Select>
-      </Form.Item>
-      <Form.Item label={null}>
-        <Flex gap={20} justify='center'>
-          <Button htmlType='submit' type='primary'>Thêm mới</Button>
-          <Button type='primary' onClick={handleCancel}>Hủy bỏ</Button>
-        </Flex>
       </Form.Item>
     </Form>
   </Modal>

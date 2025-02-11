@@ -91,7 +91,9 @@ class CategoryController {
 				});
 			}
 			const existedCate = await Category.findOne({ name: req.body.name });
-			if (existedCate) {
+			// console.log((existedCate._id).toString(), req.params.id);
+			
+			if (existedCate && (existedCate._id).toString() !== req.params.id) {
 				return res.status(StatusCodes.BAD_REQUEST).json({
 					message: "Danh mục đã tồn tại",
 				});

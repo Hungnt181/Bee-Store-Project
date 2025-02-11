@@ -24,11 +24,27 @@ export const CategoryService = {
     }
   },
 
-  createCategory: async (newCategory: Category) => {
+  createCategory: async (data: Category) => {
     try {
-      await axios.post(`${baseApiUrl}/api/categories`, newCategory)
+      await axios.post(`${baseApiUrl}/api/categories`, data)
     } catch (error) {
-      throw new Error(`Opp!!! ${error}`);
+      if (axios.isAxiosError(error)) {
+        throw new Error(`${error.response?.data?.message || error.message}`);
+      } else {
+        throw new Error(`Opp!!! Thêm danh mục thất bại`);
+      }
     }
-  }
+  },
+
+  updateCategory: async (data: Category, id: string) => {
+    try {
+      await axios.put(`${baseApiUrl}/api/categories/${id}`, data)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(`${error.response?.data?.message || error.message}`);
+      } else {
+        throw new Error(`Opp!!! Cập nhật danh mục thất bại`);
+      }
+    }
+  },
 };
