@@ -5,3 +5,7 @@ export type Category = {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export type IParamsUrl = {
+    searchKey: string
+}

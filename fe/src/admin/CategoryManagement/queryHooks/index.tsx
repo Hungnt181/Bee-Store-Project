@@ -4,10 +4,10 @@ import { REACT_QUERY_KEYS } from "../../../constants/querykeys";
 import { notification } from "antd";
 import { Category } from "../../../interface/Category";
 
-export const useGetAllCategories = () => {
+export const useGetAllCategories = (param: string) => {
   return useQuery({
-    queryKey: [REACT_QUERY_KEYS.GET_ALL_CATEGORIES],
-    queryFn: () => CategoryService.getAllCategories(),
+    queryKey: [REACT_QUERY_KEYS.GET_ALL_CATEGORIES, param],
+    queryFn: () => CategoryService.getAllCategories(param),
   });
 };
 

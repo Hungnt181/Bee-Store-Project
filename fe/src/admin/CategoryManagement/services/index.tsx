@@ -3,9 +3,9 @@ import { Category } from "../../../interface/Category";
 const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 
 export const CategoryService = {
-  getAllCategories: async () => {
+  getAllCategories: async (param: string) => {
     try {
-      const { data } = await axios.get(`${baseApiUrl}/api/categories`);
+      const { data } = await axios.get(`${baseApiUrl}/api/categories/search?key=${param}`);
       return data.data.map((item: Category) => ({
         key: item._id,
         ...item,
