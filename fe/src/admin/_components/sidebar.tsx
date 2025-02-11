@@ -30,9 +30,9 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Products", "2", <DesktopOutlined />, undefined, "product"),
+  getItem("Quản lý màu", "4", <DesktopOutlined />, undefined, "color"),
   getItem("Categories", "3", <DesktopOutlined />, undefined, "category"),
   getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "4"),
     getItem("Bill", "5"),
     getItem("Alex", "6"),
   ]),
@@ -49,7 +49,6 @@ const Sidebar = () => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const item = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
-      console.log(1);
       navigate(item.url); // Chuyển hướng đến URL
     }
   };
