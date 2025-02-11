@@ -1,0 +1,25 @@
+
+
+.card_inf_product {
+    width: 50% !important;
+    margin: 0px auto;
+}
+
+.inf_product_div {
+    display: flex;
+
+}
+ .title_p {
+    min-width: 100px;
+    margin: 4px 0;
+}   
+
+.content_p {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    width: 400px; /* Đặt chiều rộng cho phần tử */
+    margin: 4px 0;
+
+  }
+

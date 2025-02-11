@@ -2,6 +2,7 @@ import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
+  SkinOutlined,
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -29,8 +30,8 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
-  getItem("Products", "2", <DesktopOutlined />, undefined, "product"),
-  getItem("Categories", "3", <DesktopOutlined />, undefined, "category"),
+  getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
+  getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
   getItem("User", "sub1", <UserOutlined />, [
     getItem("Tom", "4"),
     getItem("Bill", "5"),

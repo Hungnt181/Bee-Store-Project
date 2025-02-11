@@ -16,17 +16,17 @@ const App: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-              height: "80vh",
+              height: "83vh",
+              overflow: "auto",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#1890ff #f0f0f0",
             }}
           >
             <Outlet></Outlet>

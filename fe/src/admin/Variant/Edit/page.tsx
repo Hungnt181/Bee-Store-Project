@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -9,12 +10,17 @@ import {
   Select,
   Skeleton,
   Switch,
+  Upload,
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const VariantEditPage = () => {
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [defaultFileList, setDefaultFileList] = useState<any[]>([]);
+  const nav = useNavigate();
   const [form] = useForm();
   const { id } = useParams();
   const { data, isLoading } = useQuery({
@@ -43,7 +49,37 @@ const VariantEditPage = () => {
     },
   });
 
-  // console.log("id", data.id_product);
+  useEffect(() => {
+    if (data_Color && data_Color.length > 0) {
+      form.setFieldsValue({ id_color: data_Color[0]._id });
+    }
+    if (data_Size && data_Size.length > 0) {
+      form.setFieldsValue({ id_size: data_Size[0]._id });
+    }
+  }, [data_Color, data_Size, form]);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        id_color: data[0]?.id_color._id,
+        id_size: data[0]?.id_size._id,
+        id_product: data[0]?.id_product._id,
+        quantity: data[0]?.quantity,
+        status: data[0]?.status,
+      });
+      setImageUrls(data[0]?.image || []); // Cập nhật trạng thái imageUrls với các URL ảnh hiện có
+      setDefaultFileList(
+        data[0]?.image.map((url: string, index: number) => ({
+          uid: index.toString(),
+          name: `image-${index}.jpg`,
+          status: "done",
+          url,
+        })) || []
+      ); // Cập nhật defaultFileList với các URL ảnh hiện có
+    }
+  }, [data, form]);
+
+  console.log("imageUrls", imageUrls);
 
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
@@ -55,9 +91,9 @@ const VariantEditPage = () => {
           error.response.data &&
           error.response.data.message
         ) {
-          message.error(`Error eaditing: ${error.response.data.message}`);
+          message.error(`Error editing: ${error.response.data.message}`);
         } else {
-          message.error("Error eaditing");
+          message.error("Error editing");
         }
         console.log(error);
         throw error; // Ném lại lỗi để đảm bảo onSuccess không được gọi
@@ -65,13 +101,42 @@ const VariantEditPage = () => {
     },
     onSuccess: () => {
       message.success("Cập nhật sản phẩm thành công");
+      nav(`/admin/${data[0]?.id_product._id}/variant`);
     },
   });
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+
+    console.log(e);
+    return e?.fileList;
+  };
+
+  const onHandleChange = (info: any) => {
+    if (info.file.status === "done") {
+      const imageUrl = info.file.response.secure_url;
+      setImageUrls((prevUrls) => {
+        const newUrls = [...prevUrls, imageUrl];
+        form.setFieldsValue({ image: newUrls });
+        return newUrls;
+      });
+    }
+  };
+
+  const onFinish = (values: any) => {
+    console.log("imageUrls", imageUrls);
+    values.image = imageUrls; // Cập nhật giá trị của trường image
+    console.log("values", values);
+
+    mutate(values);
+  };
 
   if (isLoading) return <Skeleton></Skeleton>;
 
   return (
-    <div>
+    <div className="form_edit">
       <Form
         form={form}
         initialValues={data[0]}
@@ -84,27 +149,53 @@ const VariantEditPage = () => {
         layout="horizontal"
         style={{
           maxWidth: 600,
+          margin: "0 auto",
         }}
-        onFinish={(formData) => {
-          mutate(formData);
-        }}
+        onFinish={onFinish}
       >
-        <Form.Item
-          name="id_product"
-          initialValue={data[0].id_product._id}
-          hidden
+        <h3
+          style={{
+            fontWeight: "500",
+            fontSize: "24px",
+            marginLeft: "30%",
+          }}
         >
+          Chỉnh sửa thông tin
+        </h3>
+
+        <Form.Item name="id_product" hidden>
           <Input />
         </Form.Item>
+
+        {/* upload image  */}
         <Form.Item
-          label="Ảnh "
-          name="image"
-          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
+          label="Upload"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
         >
-          <Input />
+          <Upload
+            action="https://api.cloudinary.com/v1_1/ddjylufrj/image/upload"
+            listType="picture-card"
+            multiple
+            data={{
+              upload_preset: "reactJS",
+            }}
+            onChange={onHandleChange}
+            defaultFileList={defaultFileList}
+          >
+            <button style={{ border: 0, background: "none" }} type="button">
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </button>
+          </Upload>
         </Form.Item>
-        <Form.Item label="Kích cỡ" name="id_size">
-          <Select defaultValue="Test">
+        {/*  */}
+        <Form.Item
+          label="Kích cỡ"
+          name="id_size"
+          rules={[{ required: true, message: "Vui lòng chọn kích cỡ" }]}
+        >
+          <Select>
             {data_Size?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
                 {item.name}
@@ -112,9 +203,12 @@ const VariantEditPage = () => {
             ))}
           </Select>
         </Form.Item>
-
-        <Form.Item label="Màu sắc" name="id_color">
-          <Select defaultValue="Test">
+        <Form.Item
+          label="Màu sắc"
+          name="id_color"
+          rules={[{ required: true, message: "Vui lòng chọn màu sắc" }]}
+        >
+          <Select>
             {data_Color?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
                 {item.name}
@@ -133,9 +227,9 @@ const VariantEditPage = () => {
           <InputNumber />
         </Form.Item>
         <Form.Item label="Trạng thái" name="status">
-          <Switch defaultValue={data.status} />
+          <Switch defaultChecked={data[0]?.status} />
         </Form.Item>
-        <Form.Item>
+        <Form.Item style={{ display: "flex", justifyContent: "center" }}>
           <Button htmlType="submit">Edit</Button>
         </Form.Item>
       </Form>
