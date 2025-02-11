@@ -9,7 +9,7 @@ import {
   Table,
   Tag,
 } from "antd";
-import Product from "../../interface/Product";
+import {Product} from "../../interface/Product";
 import { Link, useNavigate } from "react-router-dom";
 import { MoreOutlined } from "@ant-design/icons";
 import useGetAll from "../hooks/useGetAll";
