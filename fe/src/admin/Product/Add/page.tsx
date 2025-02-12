@@ -23,6 +23,7 @@ import { PlusOutlined } from "@ant-design/icons";
 
 const AdminProductAdd = () => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const url = `http://localhost:3000/api/categories`;
   const key = "categories";
   const { data: data_Cate } = useGetAllNotArray<Category>(url, key);
@@ -141,13 +142,19 @@ const AdminProductAdd = () => {
     }
   };
 
-  // const onFinish = (values: any) => {
-  //   console.log("imageUrls", imageUrls);
-  //   values.image = imageUrls; // Cập nhật giá trị của trường image
-  //   console.log("values", values);
-
-  //   mutate(values);
-  // };
+  const onValuesChange = () => {
+    const values = form.getFieldsValue();
+    const isFormValid =
+      values.name &&
+      values.price &&
+      values.about &&
+      values.description &&
+      values.quantity &&
+      values.id_size &&
+      values.id_color &&
+      imageUrls.length > 0;
+    setIsFormValid(isFormValid);
+  };
 
   return (
     <div>
@@ -166,6 +173,7 @@ const AdminProductAdd = () => {
         onFinish={(formData) => {
           addProduct(formData);
         }}
+        onValuesChange={onValuesChange}
       >
         <Form.Item
           label="Tên sản phẩm"
@@ -178,6 +186,7 @@ const AdminProductAdd = () => {
         <Form.Item
           label="Giá"
           name="price"
+          initialValue={0}
           rules={[
             { required: true, message: "Vui lòng nhập giá" },
             { type: "number", min: 0, message: "Giá sản phẩm luôn không âm" },
@@ -229,6 +238,7 @@ const AdminProductAdd = () => {
           label="Upload"
           valuePropName="fileList"
           getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Vui lòng upload ảnh" }]}
         >
           <Upload
             action="https://api.cloudinary.com/v1_1/ddjylufrj/image/upload"
@@ -249,6 +259,7 @@ const AdminProductAdd = () => {
         <Form.Item
           label="Số lượng"
           name="quantity"
+          initialValue={1}
           rules={[
             { required: true, message: "Vui lòng nhập số lượng" },
             {
@@ -290,7 +301,9 @@ const AdminProductAdd = () => {
         </Form.Item>
 
         <Form.Item className="ButtonForm">
-          <Button htmlType="submit">Thêm</Button>
+          <Button htmlType="submit" disabled={!isFormValid}>
+            Thêm
+          </Button>
         </Form.Item>
       </Form>
     </div>
