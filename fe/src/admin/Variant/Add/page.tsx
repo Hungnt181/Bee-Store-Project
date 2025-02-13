@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 
 const AdminVariantAdd = (dataDtPro: any) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const DataDtPro = dataDtPro.dataDtPro;
   const [form] = Form.useForm();
 
@@ -98,6 +99,16 @@ const AdminVariantAdd = (dataDtPro: any) => {
     mutate(values);
   };
 
+  const onValuesChanged = () => {
+    const values = form.getFieldsValue();
+    const isFormValid =
+      values.quantity &&
+      values.id_size &&
+      values.id_color &&
+      imageUrls.length > 0;
+    setIsFormValid(isFormValid);
+  };
+
   return (
     <div>
       <Form
@@ -113,6 +124,7 @@ const AdminVariantAdd = (dataDtPro: any) => {
           maxWidth: 600,
         }}
         onFinish={onFinish}
+        onValuesChange={onValuesChanged}
       >
         <Form.Item name="id_product" initialValue={DataDtPro._id} hidden>
           <Input />
@@ -147,6 +159,7 @@ const AdminVariantAdd = (dataDtPro: any) => {
         <Form.Item
           label="Số lượng"
           name="quantity"
+          initialValue={0}
           rules={[
             { required: true, message: "Vui lòng nhập số lượng" },
             {
@@ -165,9 +178,9 @@ const AdminVariantAdd = (dataDtPro: any) => {
           rules={[{ required: true, message: "Vui lòng chọn kích cỡ" }]}
         >
           <Select>
-            {data_Size?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
-                {item.name}
+            {data_Size?.map((item: Size) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
+                {item.name.toString()}
               </Select.Option>
             ))}
           </Select>
@@ -179,9 +192,9 @@ const AdminVariantAdd = (dataDtPro: any) => {
           rules={[{ required: true, message: "Vui lòng chọn màu sắc" }]}
         >
           <Select>
-            {data_Color?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
-                {item.name}
+            {data_Color?.map((item: Color) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
+                {item.name.toString()}
               </Select.Option>
             ))}
           </Select>
@@ -192,7 +205,9 @@ const AdminVariantAdd = (dataDtPro: any) => {
         </Form.Item>
 
         <Form.Item className="ButtonForm">
-          <Button htmlType="submit">Thêm</Button>
+          <Button htmlType="submit" disabled={!isFormValid}>
+            Thêm
+          </Button>
         </Form.Item>
       </Form>
     </div>

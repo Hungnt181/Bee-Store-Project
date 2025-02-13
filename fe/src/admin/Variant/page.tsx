@@ -23,6 +23,8 @@ import AdminVariantAdd from "./Add/page";
 import "../../assets/Css/Admin/Product/page.css";
 import "../../assets/Css/Admin/variant/page.css";
 import useGetDetailNotArray from "../hooks/useGetDetailNotArray";
+import dayjs from "dayjs";
+import Size from "../../interface/Size";
 
 const AdminVariantList = () => {
   const { id } = useParams();
@@ -45,7 +47,7 @@ const AdminVariantList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, item: any, index: number) => {
+      render: (_: any, __: any, index: number) => {
         return index + 1;
       },
     },
@@ -61,7 +63,7 @@ const AdminVariantList = () => {
       title: "Kích cỡ",
       dataIndex: "id_size",
       key: "id_size",
-      render: (object: any) => {
+      render: (object: Size) => {
         return <p>{object.name}</p>;
       },
     },
@@ -239,6 +241,12 @@ const AdminVariantList = () => {
               ) : (
                 <Tag color="red">Dừng bán</Tag>
               )}
+            </p>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Ngày sửa cuối :</p>
+            <p className="content_p">
+              {dayjs(DataDtPro?.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
             </p>
           </div>
         </Card>

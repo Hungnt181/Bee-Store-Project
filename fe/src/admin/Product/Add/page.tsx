@@ -53,6 +53,10 @@ const AdminProductAdd = () => {
 
   const { mutate: addProduct } = useMutation({
     mutationFn: async (formData) => {
+      if (typeof formData === "undefined") {
+        message.error("Form data is undefined");
+        return;
+      }
       const productData = omit(formData, [
         "image",
         "quantity",
@@ -224,8 +228,8 @@ const AdminProductAdd = () => {
 
         <Form.Item label="Danh mục" name="id_cate">
           <Select>
-            {data_Cate?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
+            {data_Cate?.map((item: Category) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
                 {item.name}
               </Select.Option>
             ))}
@@ -259,7 +263,7 @@ const AdminProductAdd = () => {
         <Form.Item
           label="Số lượng"
           name="quantity"
-          initialValue={1}
+          initialValue={0}
           rules={[
             { required: true, message: "Vui lòng nhập số lượng" },
             {
@@ -278,8 +282,8 @@ const AdminProductAdd = () => {
           initialValue={data_Size?.[0]?._id}
         >
           <Select>
-            {data_Size?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
+            {data_Size?.map((item: Size) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
                 {item.name}
               </Select.Option>
             ))}
@@ -292,8 +296,8 @@ const AdminProductAdd = () => {
           initialValue={data_Color?.[0]?._id}
         >
           <Select>
-            {data_Color?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
+            {data_Color?.map((item: Color) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
                 {item.name}
               </Select.Option>
             ))}

@@ -16,6 +16,8 @@ import { useForm } from "antd/es/form/Form";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Size from "../../../interface/Size";
+import Color from "../../../interface/Color";
 
 const VariantEditPage = () => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -196,9 +198,9 @@ const VariantEditPage = () => {
           rules={[{ required: true, message: "Vui lòng chọn kích cỡ" }]}
         >
           <Select>
-            {data_Size?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
-                {item.name}
+            {data_Size?.map((item: Size) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
+                {item.name.toString()}
               </Select.Option>
             ))}
           </Select>
@@ -209,9 +211,9 @@ const VariantEditPage = () => {
           rules={[{ required: true, message: "Vui lòng chọn màu sắc" }]}
         >
           <Select>
-            {data_Color?.map((item: any) => (
-              <Select.Option key={item._id} value={item._id}>
-                {item.name}
+            {data_Color?.map((item: Color) => (
+              <Select.Option key={item._id.toString()} value={item._id}>
+                {item.name.toString()}
               </Select.Option>
             ))}
           </Select>
