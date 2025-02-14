@@ -3,7 +3,7 @@ import { ObjectId } from "mongoose";
 interface Variant {
     _id: ObjectId;
   image: string;
-  stock?: boolean;
+  quantity: number;
   status?: boolean; 
   id_color?:  ObjectId;
   id_size?:  ObjectId;

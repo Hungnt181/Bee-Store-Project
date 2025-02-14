@@ -6,7 +6,11 @@ const productValidator = Joi.object({
   description: Joi.string().optional(),
   about: Joi.string().required(),
   status: Joi.boolean().default(true),
-  id_cate: Joi.string().required(),
+  id_cate: Joi.string().required().messages({
+    "any.required": "Chọn danh mục sản phẩm",
+    "string.empty": "Chọn danh mục sản phẩm",
+    "string.base": "Chọn danh mục sản phẩm",
+  }),
 });
 
 export { productValidator };
