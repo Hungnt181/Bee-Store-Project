@@ -6,6 +6,8 @@ import AdminCategory from "./admin/category/page";
 import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
 import VariantEditPage from "./admin/Variant/Edit/page";
+import VoucherPage from "./admin/Voucher/page";
+import VoucherAddPage from "./admin/Voucher/Add/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -20,6 +22,8 @@ export const router = createBrowserRouter([
       { path: "/admin/:id/variant", element: <AdminVariantList /> },
       { path: "/admin/variant/:id/edit", element: <VariantEditPage /> },
       { path: "/admin/category", element: <AdminCategory /> },
+      { path: "/admin/voucher", element: <VoucherPage /> },
+      { path: "/admin/voucher/add", element: <VoucherAddPage /> },
     ],
   },
 ]);
