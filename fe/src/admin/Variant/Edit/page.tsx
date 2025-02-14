@@ -21,7 +21,8 @@ import Color from "../../../interface/Color";
 
 const VariantEditPage = () => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [defaultFileList, setDefaultFileList] = useState<any[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
+
   const nav = useNavigate();
   const [form] = useForm();
   const { id } = useParams();
@@ -61,7 +62,10 @@ const VariantEditPage = () => {
   }, [data_Color, data_Size, form]);
 
   useEffect(() => {
-    if (data) {
+    if (!data) {
+      return;
+    }
+    if (data && data[0]?.image) {
       form.setFieldsValue({
         id_color: data[0]?.id_color._id,
         id_size: data[0]?.id_size._id,
@@ -69,19 +73,18 @@ const VariantEditPage = () => {
         quantity: data[0]?.quantity,
         status: data[0]?.status,
       });
-      setImageUrls(data[0]?.image || []); // Cập nhật trạng thái imageUrls với các URL ảnh hiện có
-      setDefaultFileList(
-        data[0]?.image.map((url: string, index: number) => ({
-          uid: index.toString(),
-          name: `image-${index}.jpg`,
-          status: "done",
-          url,
-        })) || []
-      ); // Cập nhật defaultFileList với các URL ảnh hiện có
     }
-  }, [data, form]);
 
-  console.log("imageUrls", imageUrls);
+    const imageFiles =
+      data[0]?.image.map((url: string, index: number) => ({
+        uid: index.toString(),
+        name: `image-${index}.jpg`,
+        status: "done",
+        url, // URL ảnh hiện có
+      })) || [];
+    setFileList(imageFiles);
+    setImageUrls(data[0]?.image); // Giữ lại URL ảnh cũ
+  }, [data, form]);
 
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
@@ -117,6 +120,8 @@ const VariantEditPage = () => {
   };
 
   const onHandleChange = (info: any) => {
+    const newFileList = [...info.fileList]; // Cập nhật danh sách fileList
+    setFileList(newFileList);
     if (info.file.status === "done") {
       const imageUrl = info.file.response.secure_url;
       setImageUrls((prevUrls) => {
@@ -127,15 +132,36 @@ const VariantEditPage = () => {
     }
   };
 
+  const handleRemove = async (file: any) => {
+    const id_variant = data[0]?._id;
+    if (file.status === "done") {
+      try {
+        const { data } = await axios.patch(
+          `http://localhost:3000/api/variants/${id_variant}?imageUrl=${file.url}`
+        );
+        // console.log("response", data.data);
+        setImageUrls(data.data);
+        const imageUrl = file.response?.secure_url; // Lấy URL từ phản hồi của server
+        setImageUrls((prevUrls) => {
+          const newUrls = prevUrls.filter((url) => url !== imageUrl); // Lọc URL đã xóa
+          form.setFieldsValue({ image: newUrls }); // Cập nhật trường 'image' trong form
+          return newUrls;
+        });
+      } catch (error) {
+        message.error("Failed to update variant data." + error);
+      }
+    }
+  };
+
   const onFinish = (values: any) => {
-    console.log("imageUrls", imageUrls);
+    // console.log("imageUrls", imageUrls);
     values.image = imageUrls; // Cập nhật giá trị của trường image
-    console.log("values", values);
+    // console.log("values", values);
 
     mutate(values);
   };
 
-  if (isLoading) return <Skeleton></Skeleton>;
+  if (isLoading || !data) return <Skeleton></Skeleton>;
 
   return (
     <div className="form_edit">
@@ -182,8 +208,10 @@ const VariantEditPage = () => {
             data={{
               upload_preset: "reactJS",
             }}
+            fileList={fileList || []}
             onChange={onHandleChange}
-            defaultFileList={defaultFileList}
+            onRemove={handleRemove}
+            // defaultFileList={defaultFileList}
           >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
