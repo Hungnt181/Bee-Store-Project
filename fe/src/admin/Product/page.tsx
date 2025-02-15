@@ -47,12 +47,12 @@ const AdminProductList = () => {
       key: "name",
       render: (_: any, item: Product) => {
         return (
-          <h3
+          <p
             onClick={() => handleSearchVariant(item._id.toString())}
             style={{ cursor: "pointer" }}
           >
             {item.name.toString()}
-          </h3>
+          </p>
         );
       },
     },
