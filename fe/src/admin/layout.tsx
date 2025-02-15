@@ -1,9 +1,9 @@
-import { Breadcrumb, Layout, theme } from "antd";
+import { Layout, theme } from "antd";
 import Sidebar from "./_components/sidebar";
 import { Outlet } from "react-router-dom";
 import "../assets/Css/Admin/Layout.css";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const App: React.FC = () => {
   const {
@@ -14,19 +14,15 @@ const App: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Sidebar />
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
+        {/* <Header style={{ padding: 0, background: colorBgContainer }}/> */}
+        <Content style={{ margin: "20px 16px" }}>
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-              height: "83vh",
-              overflow: "auto",
-              scrollbarWidth: "thin",
-              scrollbarColor: "#1890ff #f0f0f0",
+              height: "87vh",
             }}
           >
             <Outlet></Outlet>
