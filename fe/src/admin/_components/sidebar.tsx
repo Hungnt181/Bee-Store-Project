@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
+  SkinOutlined,
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -29,8 +31,8 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
-  getItem("Products", "2", <DesktopOutlined />, undefined, "product"),
-  getItem("Categories", "3", <DesktopOutlined />, undefined, "category"),
+  getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
+  getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
   getItem("Account", "4", <UserOutlined />, [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
@@ -46,7 +48,7 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    const item = items.find((item) => item?.key === e.key) || null;
+    const item: any = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
       navigate(item.url); // Chuyển hướng đến URL
     } else if (e.key === "sub1") {

@@ -6,6 +6,7 @@ import AdminCategory from "./admin/category/page";
 import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
 import VariantEditPage from "./admin/Variant/Edit/page";
+import AdminDashboarPage from "./admin/dashboard/page";
 import AdminAccountPage from "./admin/Account/Admin/page";
 import AdminAccountEditPage from "./admin/Account/Admin/Edit/page";
 import UserAccountPage from "./admin/Account/User/page";
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
     element: <LayoutAdmin />,
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" /> },
-      { path: "/admin/dashboard", element: <AdminProductList /> },
+      { path: "/admin/dashboard", element: <AdminDashboarPage /> },
       { path: "/admin/product", element: <AdminProductList /> },
       { path: "/admin/product/:id/edit", element: <ProductEditPage /> },
       { path: "/admin/:id/variant", element: <AdminVariantList /> },

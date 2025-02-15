@@ -1,7 +1,11 @@
 import Joi from "joi";
 
 const VariantValidator = Joi.object({
-  image: Joi.string().required(),
+  image: Joi.array().items(Joi.string().uri()).required().messages({
+    "array.base": "Trường image phải là một mảng",
+    "array.includes": "Mỗi phần tử trong mảng image phải là một URL hợp lệ",
+    "any.required": "Trường image là bắt buộc",
+  }),
   quantity: Joi.number().min(0),
   status: Joi.boolean().default(true),
   id_size: Joi.string().required().messages({
