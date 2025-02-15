@@ -1,11 +1,11 @@
 {
   "name": "be",
   "version": "1.0.0",
-"type": "module",
-    "main": "index.js",
-    "scripts": {
-        "dev": "nodemon --watch './**/*.js' --exec vite"
-    },
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch './**/*.js' --exec vite"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

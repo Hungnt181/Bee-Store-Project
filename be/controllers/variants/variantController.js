@@ -294,6 +294,30 @@ class VariantController {
       });
     }
   }
+  // Cập nhật status của variant
+  async removeImageVariant(req, res) {
+    try {
+      const { id } = req.params;
+      const { imageUrl } = req.query;
+
+      const variant = await Variant.findById(id);
+      if (!variant) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "Không tìm thấy variant",
+        });
+      }
+      variant.image = variant.image.filter((item) => item !== imageUrl);
+      await variant.save();
+      return res.status(StatusCodes.OK).json({
+        message: "Cập nhật ảnh variant thành công",
+        data: variant.image,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
 }
 
 export default VariantController;

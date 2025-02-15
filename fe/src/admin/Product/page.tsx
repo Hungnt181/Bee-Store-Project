@@ -17,46 +17,18 @@ import useDelete from "../hooks/useDelete";
 import { useState } from "react";
 import AdminProductAdd from "./Add/page";
 import dayjs from "dayjs";
+import { Category } from "../../interface/Category";
 const AdminProductList = () => {
-  //   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  // const { data, isLoading } = useQuery({
-  //   queryKey: ["products"],
-  //   queryFn: async () => {
-  //     try {
-  //       const { data } = await axios.get(
-  //         `http://localhost:3000/api/products?_embed=id_cate`
-  //       );
-  //       return data.products.map((item: Product) => ({
-  //         ...item,
-  //         key: item._id,
-  //       }));
-  //     } catch (error) {
-  //       return console.log(error);
-  //     }
-  //   },
-  // });
-
   const url = `http://localhost:3000/api/products?_embed=id_cate`;
   const key = "products";
 
   const { data, isLoading } = useGetAll<Product>(url, key);
 
-  // const { mutate } = useMutation({
-  //   mutationFn: async (id: object) => {
-  //     await axios.patch(`http://localhost:3000/api/products/status/${id}`);
-  //   },
-  //   onSuccess: () => {
-  //     message.success("Cập nhật trạng thái sản phẩm thành công");
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["products"],
-  //     });
-  //   },
-  // });
   const urlDelete = "http://localhost:3000/api/products/status/";
   const { mutate } = useDelete(urlDelete, key);
 
-  const handleSearchVariant = (id: any) => {
+  const handleSearchVariant = (id: string) => {
     navigate(`/admin/${id}/variant`);
   };
 
@@ -65,7 +37,7 @@ const AdminProductList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, item: any, index: number) => {
+      render: (_: any, __: any, index: number) => {
         return index + 1;
       },
     },
@@ -73,14 +45,14 @@ const AdminProductList = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (_: any, item: any) => {
+      render: (_: any, item: Product) => {
         return (
-          <h3
-            onClick={() => handleSearchVariant(item._id)}
+          <p
+            onClick={() => handleSearchVariant(item._id.toString())}
             style={{ cursor: "pointer" }}
           >
-            {item.name}
-          </h3>
+            {item.name.toString()}
+          </p>
         );
       },
     },
@@ -106,7 +78,7 @@ const AdminProductList = () => {
       title: "Danh mục",
       dataIndex: "id_cate",
       key: "id_cate",
-      render: (object: any) => {
+      render: (object: Category) => {
         return <p>{object.name}</p>;
       },
     },
@@ -180,6 +152,7 @@ const AdminProductList = () => {
   };
   return (
     <div>
+      <h1>DANH MỤC SẢN PHẨM</h1>
       <Skeleton loading={isLoading}>
         <Button
           type="primary"
@@ -192,7 +165,8 @@ const AdminProductList = () => {
         <Table
           dataSource={data}
           columns={columns}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
+          scroll={{ y: 55 * 8 }}
         />
 
         <Modal
