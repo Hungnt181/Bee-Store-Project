@@ -37,6 +37,7 @@ const items: MenuItem[] = [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
+  getItem("Quản lý màu", "5", <DesktopOutlined />, undefined, "color"),
   getItem("Team", "sub2", <TeamOutlined />, [
     getItem("Team 1", "7"),
     getItem("Team 2", "8"),

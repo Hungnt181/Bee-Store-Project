@@ -12,6 +12,10 @@ import AdminDashboarPage from "./admin/dashboard/page";
 import AdminAccountPage from "./admin/Account/Admin/page";
 import AdminAccountEditPage from "./admin/Account/Admin/Edit/page";
 import UserAccountPage from "./admin/Account/User/page";
+import AdminColorList from "./admin/Color/page";
+import AdminColorAdd from "./admin/Color/Add/page";
+import AdminColorEdit from "./admin/Color/Edit/page";
+import AdminColorDetail from "./admin/Color/Detail/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -22,6 +26,10 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/admin/dashboard" /> },
       { path: "/admin/dashboard", element: <AdminDashboarPage /> },
       { path: "/admin/product", element: <AdminProductList /> },
+      { path: "/admin/color", element: <AdminColorList /> },
+      { path: "/admin/color/add", element: <AdminColorAdd /> },
+      { path: "/admin/color/edit/:id", element: <AdminColorEdit /> },
+      { path: "/admin/color/detail/:id", element: <AdminColorDetail /> },
       { path: "/admin/product/:id/edit", element: <ProductEditPage /> },
       { path: "/admin/:id/variant", element: <AdminVariantList /> },
       { path: "/admin/variant/:id/edit", element: <VariantEditPage /> },

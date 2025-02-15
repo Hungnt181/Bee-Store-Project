@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Modal,
@@ -37,7 +36,7 @@ const AdminProductList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, __: any, index: number) => {
+      render: (_: unknown, _item: Product, index: number) => {
         return index + 1;
       },
     },
@@ -45,7 +44,7 @@ const AdminProductList = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (_: any, item: Product) => {
+      render: (_: unknown, item: Product) => {
         return (
           <p
             onClick={() => handleSearchVariant(item._id.toString())}
