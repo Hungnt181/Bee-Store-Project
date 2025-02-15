@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DesktopOutlined,
   FileOutlined,
@@ -48,9 +49,8 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    const item = items.find((item) => item?.key === e.key) || null;
+    const item: any = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
-      console.log(1);
       navigate(item.url); // Chuyển hướng đến URL
     }
   };
