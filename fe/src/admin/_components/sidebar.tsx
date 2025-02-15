@@ -33,10 +33,9 @@ const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
   getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "4"),
-    getItem("Bill", "5"),
-    getItem("Alex", "6"),
+  getItem("Account", "4", <UserOutlined />, [
+    getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
+    getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
   getItem("Team", "sub2", <TeamOutlined />, [
     getItem("Team 1", "7"),
@@ -52,6 +51,10 @@ const Sidebar = () => {
     const item: any = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
       navigate(item.url); // Chuyển hướng đến URL
+    } else if (e.key === "sub1") {
+      navigate("admin_account"); // Chuyển hướng đến Tài khoản admin
+    } else if (e.key === "sub2") {
+      navigate("user_account"); // Chuyển hướng đến Tài khoản khách
     }
   };
   return (

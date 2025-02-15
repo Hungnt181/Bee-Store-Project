@@ -7,6 +7,9 @@ import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
 import VariantEditPage from "./admin/Variant/Edit/page";
 import AdminDashboarPage from "./admin/dashboard/page";
+import AdminAccountPage from "./admin/Account/Admin/page";
+import AdminAccountEditPage from "./admin/Account/Admin/Edit/page";
+import UserAccountPage from "./admin/Account/User/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -21,6 +24,9 @@ export const router = createBrowserRouter([
       { path: "/admin/:id/variant", element: <AdminVariantList /> },
       { path: "/admin/variant/:id/edit", element: <VariantEditPage /> },
       { path: "/admin/category", element: <AdminCategory /> },
+      { path: "/admin/admin_account", element: <AdminAccountPage /> },
+      { path: "/admin/user_account", element: <UserAccountPage /> },
+      { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
     ],
   },
 ]);
