@@ -125,8 +125,8 @@ const ProductEditPage = () => {
           <Switch defaultValue={data.status} />
         </Form.Item>
 
-        <Form.Item label="Select" name="id_cate">
-          <Select defaultValue="Test">
+        <Form.Item label="Danh mục" name="id_cate" rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}>
+          <Select defaultValue={data.id_cate}>
             {data_Cate?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
                 {item.name}
