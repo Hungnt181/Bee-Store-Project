@@ -1,5 +1,5 @@
 import { Form, Input, Modal, Select } from 'antd'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useCreateCategory } from '../queryHooks';
 type AddProps = {
   open: boolean;
@@ -13,6 +13,12 @@ const ModalAddCate: React.FC<AddProps> = ({ open, onClose }) => {
     form.resetFields()
   };
   const { mutate: createCategory } = useCreateCategory(handleCancel);
+
+  const defaultStatus = useMemo(() => {
+    if (!form.getFieldValue("status")) {
+      form.setFieldValue("status", true)
+    }
+  }, [form])
 
   return <Modal
     title="Thêm mới danh mục"
@@ -30,6 +36,7 @@ const ModalAddCate: React.FC<AddProps> = ({ open, onClose }) => {
       wrapperCol={{ span: 16 }}
       style={{ marginTop: "20px" }}
       onFinish={createCategory}
+      initialValues={{status: defaultStatus}}
     >
       <Form.Item
         label="Tên danh mục"

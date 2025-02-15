@@ -1,7 +1,7 @@
 import { Button, Flex, Form, Input, Table, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Category, IParamsUrl } from '../../../interface/Category';
-import { ColumnsType } from 'antd/es/table';
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { PlusOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { getColumnsCategories } from '../constants';
 import { useGetAllCategories } from '../queryHooks';
@@ -16,6 +16,10 @@ const AdminCategory: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  })
   const { setCateDetail, setActionMode, actionMode, resetCateStore, setIsValuesChange } = useCateStore();
   const { data: listCategories, isLoading: loadingTable } = useGetAllCategories(searchValue);
   const handleAction = useCallback((record: Category, editStatus: boolean) => {
@@ -28,11 +32,17 @@ const AdminCategory: React.FC = () => {
     setIsValuesChange(editStatus);
   }, [setActionMode, setCateDetail, setIsValuesChange])
   const columns: ColumnsType<Category> = useMemo(() => {
-    return getColumnsCategories({
-      onAction: handleAction
-    });
-  }, [handleAction]);
+    return getColumnsCategories(
+      pagination.current,
+      pagination.pageSize,
+      {
+        onAction: handleAction,
+      },
+    );
+  }, [handleAction, pagination]);
   const handleFinish = useCallback((values: IParamsUrl) => {
+    console.log(values);
+
     setSearchValue(values.searchKey);
   }, [])
   const handleRefresh = useCallback(() => {
@@ -51,11 +61,11 @@ const AdminCategory: React.FC = () => {
           layout='inline'
           onFinish={handleFinish}
         >
-          <Form.Item label={null} name="searchKey" style={{ width: "400px" }}>
-            <Tooltip title="Nhập tên danh mục" placement='right'>
-              <Input placeholder='Tìm kiếm danh mục...' value={searchValue} prefix={<SearchOutlined />} />
-            </Tooltip>
-          </Form.Item>
+          <Tooltip title="Nhập tên danh mục" placement='right'>
+            <Form.Item label={null} name="searchKey" style={{ width: "400px" }}>
+              <Input placeholder='Tìm kiếm danh mục...' prefix={<SearchOutlined />} />
+            </Form.Item>
+          </Tooltip>
           <Form.Item label={null}>
             <Button type='primary' htmlType='submit'>Tìm kiếm</Button>
           </Form.Item>
@@ -73,7 +83,8 @@ const AdminCategory: React.FC = () => {
         dataSource={listCategories || []}
         columns={columns}
         rowKey={"_id"}
-        pagination={{ pageSize: 10 }}
+        pagination={pagination}
+        onChange={(page) => setPagination(page)}
         scroll={{ x: 'max-content', y: 55 * 6 }}
       // virtual
       />

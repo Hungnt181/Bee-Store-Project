@@ -1,10 +1,14 @@
 import { Category } from "../../../interface/Category";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { Button, Dropdown, MenuProps, Space, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { MoreOutlined } from "@ant-design/icons";
 
-export const getColumnsCategories = ({ onAction }: { onAction: (record: Category, edit: boolean) => void }): ColumnsType<Category> => {
+export const getColumnsCategories = (
+  current: TablePaginationConfig["current"],
+  pageSize: TablePaginationConfig["pageSize"],
+  { onAction }: { onAction: (record: Category, edit: boolean) => void },
+): ColumnsType<Category> => {
   return [
     {
       title: "STT",
@@ -12,7 +16,10 @@ export const getColumnsCategories = ({ onAction }: { onAction: (record: Category
       key: "index",
       width: 70,
       render: (_value: unknown, _record: Category, index: number) => {
-        return <div>{index + 1}</div>
+        const stt = (current && pageSize) ? (current - 1) * pageSize + index + 1 : "";
+        return <Tooltip title={stt}>
+          <div>{stt}</div>
+        </Tooltip>
       }
     },
     {
@@ -34,13 +41,17 @@ export const getColumnsCategories = ({ onAction }: { onAction: (record: Category
       width: 250,
       render: (_status: boolean, item: Category) => {
         return item.status ? (
-          <Tag color="green">
-            Đang hoạt động
-          </Tag>
+          <Tooltip title={"Đang hoạt động"}>
+            <Tag color="green">
+              Đang hoạt động
+            </Tag>
+          </Tooltip>
         ) : (
+          <Tooltip title={"Dừng hoạt động"}>
           <Tag color="red">
             Dừng hoạt động
           </Tag>
+          </Tooltip>
         );
       },
     },
