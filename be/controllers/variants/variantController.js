@@ -147,10 +147,10 @@ class VariantController {
       let query = Variant.find({ id_product: id_product }).populate([
         {
           path: "id_product",
-          select: "name price about description status id_cate slug -_id",
+          // select: "name price about description status id_cate slug -_id",
           populate: {
             path: "id_cate",
-            select: "name -_id",
+            select: "name ",
           },
         },
         {
@@ -162,9 +162,18 @@ class VariantController {
           select: "name -_id",
         },
       ]);
+      // .sort({ "id_size.name": 1, "id_color.name": 1 });
 
       const result = await Variant.paginate(query, options);
       const { docs, ...paginationData } = result;
+
+      docs.sort((a, b) => {
+        if (a.id_size.name < b.id_size.name) return -1;
+        if (a.id_size.name > b.id_size.name) return 1;
+        if (a.id_color.name < b.id_color.name) return -1;
+        if (a.id_color.name > b.id_color.name) return 1;
+        return 0;
+      });
 
       return res.status(StatusCodes.OK).json({
         variants: docs,
@@ -278,6 +287,30 @@ class VariantController {
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái variant thành công",
         data: variant,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+  // Cập nhật status của variant
+  async removeImageVariant(req, res) {
+    try {
+      const { id } = req.params;
+      const { imageUrl } = req.query;
+
+      const variant = await Variant.findById(id);
+      if (!variant) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "Không tìm thấy variant",
+        });
+      }
+      variant.image = variant.image.filter((item) => item !== imageUrl);
+      await variant.save();
+      return res.status(StatusCodes.OK).json({
+        message: "Cập nhật ảnh variant thành công",
+        data: variant.image,
       });
     } catch (error) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

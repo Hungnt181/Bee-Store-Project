@@ -1,0 +1,18 @@
+.ButtonForm {
+    display: flex;
+    justify-content: center;
+}
+
+.Chucnang .ant-popover-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.Chucnang .ant-popover-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

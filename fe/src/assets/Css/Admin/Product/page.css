@@ -5,3 +5,12 @@
     justify-items: center !important;
     align-items: center;
 }
+
+.ant-modal {
+    min-width: 600px
+}
+
+.ButtonForm {
+    display: flex;
+    justify-content: center;
+}
