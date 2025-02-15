@@ -17,7 +17,7 @@ import useDelete from "../hooks/useDelete";
 import { useState } from "react";
 import AdminProductAdd from "./Add/page";
 import dayjs from "dayjs";
-import Category from "../../interface/Category";
+import { Category } from "../../interface/Category";
 const AdminProductList = () => {
   const navigate = useNavigate();
   const url = `http://localhost:3000/api/products?_embed=id_cate`;
@@ -47,12 +47,12 @@ const AdminProductList = () => {
       key: "name",
       render: (_: any, item: Product) => {
         return (
-          <h3
+          <p
             onClick={() => handleSearchVariant(item._id.toString())}
             style={{ cursor: "pointer" }}
           >
             {item.name.toString()}
-          </h3>
+          </p>
         );
       },
     },
@@ -152,6 +152,7 @@ const AdminProductList = () => {
   };
   return (
     <div>
+      <h1>DANH MỤC SẢN PHẨM</h1>
       <Skeleton loading={isLoading}>
         <Button
           type="primary"
@@ -165,6 +166,7 @@ const AdminProductList = () => {
           dataSource={data}
           columns={columns}
           pagination={{ pageSize: 10 }}
+          scroll={{ y: 55 * 8 }}
         />
 
         <Modal
