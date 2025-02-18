@@ -41,6 +41,31 @@ class ProductController {
     }
   }
 
+  // Sreach
+  async search(req, res) {
+    try {
+      const product = await Product.find();
+      const { key } = req.query;
+      console.log(key);
+
+      let filteredProducts = product;
+      if (key) {
+        const lowerCaseKey = key.toLowerCase();
+        filteredProducts = product.filter((pro) =>
+          pro.name.toLowerCase().includes(lowerCaseKey)
+        );
+      }
+      return res.status(StatusCodes.OK).json({
+        message: "Tìm kiếm sản phẩm thành công",
+        data: filteredProducts,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
+
   // Get product detail by id
   async getProducDetail(req, res) {
     try {

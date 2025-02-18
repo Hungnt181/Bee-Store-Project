@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   Modal,
+  Pagination,
   Popconfirm,
   Popover,
   Skeleton,
@@ -20,25 +21,43 @@ import {
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import useGetAll from "../hooks/useGetAll";
+// import useGetAll from "../hooks/useGetAll";
 import useDelete from "../hooks/useDelete";
 import { useEffect, useState } from "react";
 import AdminProductAdd from "./Add/page";
 import dayjs from "dayjs";
 import { Category } from "../../interface/Category";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 const AdminProductList = () => {
   const navigate = useNavigate();
-  const url = `http://localhost:3000/api/products?_embed=id_cate`;
+  // const { data, isLoading } = useGetAll<Product>(url, key);
+  const [dataTable, setDataTable] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [curentPages, setCurentPages] = useState(1);
+  const pageSize = 10;
+  const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate`;
   const key = "products";
 
-  const { data, isLoading } = useGetAll<Product>(url, key);
-  const [dataTable, setDataTable] = useState<Product[]>([]);
+  const { data: dataPage, isLoading } = useQuery({
+    queryKey: ["dataPage", curentPages],
+    queryFn: async () => {
+      const response = await axios.get(url);
+      return response.data;
+    },
+  });
 
   useEffect(() => {
-    if (data) {
-      setDataTable(data);
+    if (dataPage) {
+      console.log({ dataPage });
+      setTotalPages(dataPage.totalPages);
+      setCurentPages(dataPage.page);
+      setDataTable(dataPage.products);
     }
-  }, [data]);
+  }, [dataPage]);
+
+  // console.log("curentPages", curentPages);
+  // console.log("totalPages", totalPages);
 
   const urlDelete = "http://localhost:3000/api/products/status/";
   const { mutate } = useDelete(urlDelete, key);
@@ -169,7 +188,24 @@ const AdminProductList = () => {
     searchKey: string;
   }
   // Filter
-  const handleFinish = (values: SearchValues) => {
+  // Hàm fetch API
+  const fetchProducts = async (key: string) => {
+    const res = await fetch(
+      `http://localhost:3000/api/products/search?key=${key}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error fetching products");
+    }
+    return res.json(); // Trả về dữ liệu từ API
+  };
+  ///
+  const handleFinish = async (values: SearchValues) => {
     if (!values || typeof values.searchKey !== "string") {
       console.error("Invalid input value");
       return [];
@@ -177,22 +213,25 @@ const AdminProductList = () => {
 
     const searchKey = values.searchKey.toLowerCase();
 
-    const newData = data.filter((item: any) => {
-      return (
-        item.name &&
-        typeof item.name === "string" &&
-        item.name.toLowerCase().includes(searchKey)
-      );
-    });
-    setDataTable(newData);
-    return newData;
+    try {
+      const newData = await fetchProducts(searchKey); // Chờ dữ liệu trả về
+      // console.log("new data:", newData);
+      setDataTable(newData?.data); // Cập nhật state với dữ liệu thực tế
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
   };
 
-  console.log("dataTable", dataTable);
+  // console.log("dataTable", dataTable);
   const [formSearch] = Form.useForm();
   const handleRefresh = () => {
-    setDataTable(data);
+    setDataTable(dataPage?.products);
     formSearch.resetFields();
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurentPages(page);
   };
   return (
     <div>
@@ -233,11 +272,20 @@ const AdminProductList = () => {
         </Button>
 
         <Table
-          dataSource={dataTable.length !== null ? dataTable : data}
+          dataSource={
+            dataTable.length !== null ? dataTable : dataPage?.products
+          }
           columns={columns}
-          pagination={{ pageSize: 10 }}
+          pagination={false}
           scroll={{ y: 55 * 8 }}
         />
+        <Pagination
+          current={curentPages}
+          total={totalPages * pageSize}
+          pageSize={pageSize}
+          onChange={handlePageChange}
+          style={{ marginTop: 20, textAlign: "center" }}
+        ></Pagination>
 
         <Modal
           title="Thêm mới sản phẩm"
