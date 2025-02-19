@@ -8,6 +8,7 @@ import {
   Pagination,
   Popconfirm,
   Popover,
+  Select,
   Skeleton,
   Space,
   Table,
@@ -29,6 +30,7 @@ import dayjs from "dayjs";
 import { Category } from "../../interface/Category";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useGetAllNotArray from "../hooks/useGetAllNotArray";
 const AdminProductList = () => {
   const navigate = useNavigate();
   // const { data, isLoading } = useGetAll<Product>(url, key);
@@ -36,9 +38,15 @@ const AdminProductList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [curentPages, setCurentPages] = useState(1);
   const [searchKeyState, setSearchKeyState] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const pageSize = 10;
   const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate&key=${searchKeyState}`;
   const key = "products";
+
+  //cate query
+  const urlCate = `http://localhost:3000/api/categories`;
+  const keyCate = "categories";
+  const { data: data_Cate } = useGetAllNotArray<Category>(urlCate, keyCate);
 
   const { data: dataPage, isLoading } = useQuery({
     queryKey: ["dataPage", curentPages],
@@ -241,8 +249,48 @@ const AdminProductList = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number) => {
     setCurentPages(page);
+    if (selectedCategory) {
+      try {
+        const newDataByCate = await fetchProductsByCategory(
+          selectedCategory,
+          page
+        );
+        setDataTable(newDataByCate.products);
+      } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm:", error);
+      }
+    }
+  };
+
+  const fetchProductsByCategory = async (categoryId: string, page: number) => {
+    const res = await fetch(
+      `http://localhost:3000/api/products/category/${categoryId}?_page=${page}&_limit=${pageSize}`
+    );
+    if (!res.ok) {
+      throw new Error("Lỗi khi lấy sản phẩm theo danh mục");
+    }
+    return res.json();
+  };
+  // filter by cate
+  const handleChangeSelect = async (value: string) => {
+    setSelectedCategory(value);
+    setCurentPages(1);
+
+    if (!value) {
+      handleRefresh(); // Nếu chọn "Tất cả danh mục", lấy lại tất cả sản phẩm
+      return;
+    }
+
+    try {
+      const newDataByCate = await fetchProductsByCategory(value, 1);
+      setDataTable(newDataByCate.products);
+      setTotalPages(newDataByCate.totalPages);
+      setCurentPages(newDataByCate.page);
+    } catch (error) {
+      console.error("Lỗi khi lấy sản phẩm:", error);
+    }
   };
   return (
     <div>
@@ -272,6 +320,19 @@ const AdminProductList = () => {
             />
           </Tooltip>
         </Form>
+
+        <Select
+          style={{ width: 150 }}
+          defaultValue={"Tất cả danh mục"}
+          onChange={handleChangeSelect}
+        >
+          <Select.Option value="">Tất cả danh mục</Select.Option>
+          {data_Cate?.map((item: Category) => (
+            <Select.Option key={item._id?.toString()} value={item._id}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
       </Flex>
       <Skeleton loading={isLoading}>
         <Button

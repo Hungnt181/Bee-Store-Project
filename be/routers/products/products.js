@@ -8,7 +8,6 @@ const productRouter = Router();
 productRouter.get("/products", productsController.getAllProducts);
 
 // serach product
-productRouter.get("/products/search", productsController.search);
 
 // Get product theo categories : Không phải là tất cả biến thể mà đơn giản chỉ là product chính
 productRouter.get(

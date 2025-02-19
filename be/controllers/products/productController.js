@@ -6,13 +6,7 @@ class ProductController {
   // Get all products
   async getAllProducts(req, res) {
     try {
-      const {
-        _page = 1,
-        _limit = 10,
-        _embed,
-        _sort = "id_cate",
-        key = "",
-      } = req.query;
+      const { _page = 1, _limit = 10, _embed, key = "" } = req.query;
 
       const options = {
         page: parseInt(_page, 10),
@@ -35,7 +29,7 @@ class ProductController {
         });
       }
 
-      productQuery = productQuery.sort({ id_cate: 1, createdAt: -1 });
+      productQuery = productQuery.sort({ createdAt: -1 });
 
       const result = await Product.paginate(productQuery, options);
       const { docs, ...paginationData } = result;
@@ -46,30 +40,6 @@ class ProductController {
       });
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
-    }
-  }
-
-  // Sreach
-  async search(req, res) {
-    try {
-      const product = await Product.find();
-      const { key } = req.query;
-
-      let filteredProducts = product;
-      if (key) {
-        const lowerCaseKey = key.toLowerCase();
-        filteredProducts = product.filter((pro) =>
-          pro.name.toLowerCase().includes(lowerCaseKey)
-        );
-      }
-      return res.status(StatusCodes.OK).json({
-        message: "Tìm kiếm sản phẩm thành công",
-        data: filteredProducts,
-      });
-    } catch (error) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: error.message,
       });
     }
@@ -112,6 +82,8 @@ class ProductController {
         "id_cate",
         "name"
       );
+
+      query = query.sort({ createdAt: -1 });
 
       const result = await Product.paginate(query, options);
       const { docs, ...paginationData } = result;

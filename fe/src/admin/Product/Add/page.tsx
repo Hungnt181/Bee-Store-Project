@@ -11,7 +11,6 @@ import {
   Upload,
 } from "antd";
 import axios from "axios";
-import Category from "../../../interface/Category";
 import useGetAllNotArray from "../../hooks/useGetAllNotArray";
 import TextArea from "antd/es/input/TextArea";
 import "../../../assets/Css/Admin/Product/page.css";
@@ -20,6 +19,7 @@ import Size from "../../../interface/Size";
 import { omit } from "lodash";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { Category } from "../../../interface/Category";
 
 const AdminProductAdd = () => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -229,7 +229,7 @@ const AdminProductAdd = () => {
         <Form.Item label="Danh mục" name="id_cate">
           <Select>
             {data_Cate?.map((item: Category) => (
-              <Select.Option key={item._id.toString()} value={item._id}>
+              <Select.Option key={item._id?.toString()} value={item._id}>
                 {item.name}
               </Select.Option>
             ))}
