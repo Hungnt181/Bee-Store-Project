@@ -35,8 +35,9 @@ const AdminProductList = () => {
   const [dataTable, setDataTable] = useState<Product[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [curentPages, setCurentPages] = useState(1);
+  const [searchKeyState, setSearchKeyState] = useState<string>("");
   const pageSize = 10;
-  const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate`;
+  const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate&key=${searchKeyState}`;
   const key = "products";
 
   const { data: dataPage, isLoading } = useQuery({
@@ -49,16 +50,11 @@ const AdminProductList = () => {
 
   useEffect(() => {
     if (dataPage) {
-      console.log({ dataPage });
       setTotalPages(dataPage.totalPages);
       setCurentPages(dataPage.page);
       setDataTable(dataPage.products);
     }
   }, [dataPage]);
-
-  // console.log("curentPages", curentPages);
-  // console.log("totalPages", totalPages);
-
   const urlDelete = "http://localhost:3000/api/products/status/";
   const { mutate } = useDelete(urlDelete, key);
 
@@ -190,8 +186,9 @@ const AdminProductList = () => {
   // Filter
   // Hàm fetch API
   const fetchProducts = async (key: string) => {
+    setSearchKeyState(key);
     const res = await fetch(
-      `http://localhost:3000/api/products/search?key=${key}`,
+      `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate&key=${key}`,
       {
         method: "GET",
         headers: {
@@ -214,9 +211,11 @@ const AdminProductList = () => {
     const searchKey = values.searchKey.toLowerCase();
 
     try {
-      const newData = await fetchProducts(searchKey); // Chờ dữ liệu trả về
+      const newData = await fetchProducts(searchKey);
       // console.log("new data:", newData);
-      setDataTable(newData?.data); // Cập nhật state với dữ liệu thực tế
+      setDataTable(newData?.products); // Cập nhật state với dữ liệu thực tế
+      setTotalPages(newData.totalPages);
+      setCurentPages(newData.page);
     } catch (error) {
       console.error("Error fetching products:", error);
       return [];
@@ -225,9 +224,17 @@ const AdminProductList = () => {
 
   // console.log("dataTable", dataTable);
   const [formSearch] = Form.useForm();
-  const handleRefresh = () => {
-    setDataTable(dataPage?.products);
+  const handleRefresh = async () => {
     formSearch.resetFields();
+    setSearchKeyState("");
+    try {
+      const newData = await fetchProducts(""); // Gọi lại API với key rỗng để lấy toàn bộ sản phẩm
+      setDataTable(newData?.products); // Cập nhật state với dữ liệu gốc
+      setTotalPages(newData.totalPages);
+      setCurentPages(newData.page);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const handlePageChange = (page: number) => {

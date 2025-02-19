@@ -6,28 +6,38 @@ class ProductController {
   // Get all products
   async getAllProducts(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed, _sort = "id_cate" } = req.query;
+      const {
+        _page = 1,
+        _limit = 10,
+        _embed,
+        _sort = "id_cate",
+        key = "",
+      } = req.query;
+
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
 
-      let query = Product.find();
+      let query = {};
+
+      if (key) {
+        const lowerCaseKey = key.toLowerCase();
+        query.name = { $regex: lowerCaseKey, $options: "i" };
+      }
+
+      let productQuery = Product.find(query);
 
       if (_embed) {
         const embeds = _embed.split(",");
         embeds.forEach((embed) => {
-          query = query.populate(embed);
+          productQuery = productQuery.populate(embed);
         });
       }
 
-      // let query = Product.find().populate({
-      //   path: "id_cate",
-      //   select: "name -_id",
-      // });
-      // Thêm điều kiện sắp xếp vào truy vấn
-      query = query.sort({ id_cate: 1, createdAt: -1 });
-      const result = await Product.paginate(query, options);
+      productQuery = productQuery.sort({ id_cate: 1, createdAt: -1 });
+
+      const result = await Product.paginate(productQuery, options);
       const { docs, ...paginationData } = result;
 
       return res.status(StatusCodes.OK).json({
@@ -46,7 +56,6 @@ class ProductController {
     try {
       const product = await Product.find();
       const { key } = req.query;
-      console.log(key);
 
       let filteredProducts = product;
       if (key) {
