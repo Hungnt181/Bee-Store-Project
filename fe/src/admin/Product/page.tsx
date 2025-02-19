@@ -68,7 +68,11 @@ const AdminProductList = () => {
       dataIndex: "index",
       key: "index",
       render: (_: any, __: any, index: number) => {
-        return index + 1;
+        const stt =
+          curentPages && pageSize
+            ? (curentPages - 1) * pageSize + index + 1
+            : "";
+        return stt;
       },
     },
     {
