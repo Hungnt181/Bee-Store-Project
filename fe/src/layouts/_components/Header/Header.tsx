@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ListitemCateegory from "./_components/ListItemCategory";
 import PocilySlide from "./_components/PocilySlide";
-import logoImage from "../../../../public/logo.png";
+import logoImage from "../../../assets/logo.png";
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
   const location = useLocation();

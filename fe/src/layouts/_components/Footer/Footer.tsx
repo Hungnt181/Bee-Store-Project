@@ -7,6 +7,7 @@ import {
   YoutubeFilled,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import logoImage from "../../../assets/logo.png";
 
 export default function Footer() {
   return (
@@ -16,7 +17,7 @@ export default function Footer() {
         {/* LINE 1 IN FOOTER */}
         <div className="flex  justify-between">
           <Link to={'/'} className="mt-20">
-            <img className="w-2xs invert-35" src="./public/logo.png" alt="" />
+            <img className="w-2xs invert-35" src={logoImage} alt="" />
           </Link>
           <div className="border-l-[1px] border-[#6d6d6d] pl-6">
             <h3 className="text-white font-medium uppercase">

@@ -13,7 +13,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
       <div className="relative cursor-pointer group hover:border hover:border-black overflow-hidden">
         <Link to={`/products/${product._id}`}>
           <img
-            className="w-auto h-auto min-h-[286px] object-contain transition-transform duration-300 group-hover:scale-105"
+            className="w-auto h-auto min-h-[356px] object-cover transition-transform duration-300 group-hover:scale-105"
             src={
               variants?.variants[0]?.image[0] ||
               "https://pos.nvncdn.com/8ca22b-20641/ps/20241203_ADbovjN911.jpeg"
