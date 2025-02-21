@@ -7,13 +7,19 @@ import ProductEditPage from "./admin/Product/Edit/page";
 import VariantEditPage from "./admin/Variant/Edit/page";
 import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
+import FilterProducts from "./pages/Products/Products";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <ClientLayout />,
-    errorElement: <Navigate to={'/'}/>,
-    children: [{ index: true, element: <HomePage /> }],
+    errorElement: <Navigate to={"/"} />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "/products", element: <FilterProducts /> },
+      { path: "/products/:id", element: <ProductDetail /> },
+    ],
   },
   {
     path: "/admin",

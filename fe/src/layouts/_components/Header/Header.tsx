@@ -1,20 +1,21 @@
 import {
-    BankFilled,
-    HeartFilled,
-    PhoneFilled,
-    SearchOutlined,
-    ShoppingCartOutlined,
-    UserOutlined,
+  BankFilled,
+  HeartFilled,
+  PhoneFilled,
+  SearchOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Badge } from "antd";
 import { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ListitemCateegory from "./_components/ListItemCategory";
 import PocilySlide from "./_components/PocilySlide";
-
+import logoImage from "../../../../public/logo.png";
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
+  const location = useLocation();
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 100);
@@ -28,15 +29,11 @@ export default function Header() {
       {/* LINE 1 IN HEADER */}
       <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center justify-between mt-6">
         {/* BOX 1 IN HEADER */}
-        <Link to={'/'} className="flex-1">
+        <Link to={"/"} className="flex-1">
           {/* <h3 className="font-bold font-sans text-2xl text-yellow-700">
             BEE<span className="text-black"> - STORE</span>
           </h3> */}
-          <img
-            className="w-58"
-            src='./public/logo.png'
-            alt=""
-          />
+          <img className="w-58" src={logoImage} alt="" />
         </Link>
         {/* BOX 2 IN HEADER */}
         <div className="flex items-center justify-between flex-1/2 text-sm">
@@ -105,7 +102,7 @@ export default function Header() {
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (
-            <Link to={'/'} className="hidden xl:block">
+            <Link to={"/"} className="hidden xl:block">
               <h3 className="text-yellow-400 text-2xl font-bold">
                 BEE <span className="text-white">STORE</span>
               </h3>
@@ -116,7 +113,7 @@ export default function Header() {
       </div>
       {/* LINE 3 IN HEADER */}
       <div className="flex justify-center mt-4">
-        <PocilySlide />
+        {location.pathname === "/" && <PocilySlide />}
       </div>
     </header>
   );

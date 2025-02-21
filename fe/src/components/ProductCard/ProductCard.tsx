@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ProductType } from "../../interface/Product";
 import { useGetVariantByProduct } from "../../hooks/queries/variants/useGetVariantByProduct";
 import { Spin } from "antd";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }: { product: ProductType }) {
   const [isHovered, setIsHovered] = useState(false); // State to track hover status
@@ -10,12 +11,20 @@ export default function ProductCard({ product }: { product: ProductType }) {
   return variants && !isPending ? (
     <>
       <div className="relative cursor-pointer group">
-        <img
-          className="w-auto h-auto min-h-[286px] object-contain transition-transform duration-300 group-hover:scale-105"
-          src={variants?.variants[0]?.image[0] || "https://pos.nvncdn.com/8ca22b-20641/ps/20241203_ADbovjN911.jpeg"}
-          alt=""
-        />
-        <div className="mt-3.5 text-center flex flex-col gap-2">
+        <Link to={`/products/${product._id}`}>
+          <img
+            className="w-auto h-auto min-h-[286px] object-contain transition-transform duration-300 group-hover:scale-105"
+            src={
+              variants?.variants[0]?.image[0] ||
+              "https://pos.nvncdn.com/8ca22b-20641/ps/20241203_ADbovjN911.jpeg"
+            }
+            alt=""
+          />
+        </Link>
+        <Link
+          to={`/products/${product._id}`}
+          className="mt-3.5 text-center flex flex-col gap-2"
+        >
           <h3 className="text-base capitalize underline hover:text-[#cccccc]">
             {product.name}
           </h3>
@@ -24,7 +33,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
             {product.price}
           </p>
           <p className="text-sm font-thin uppercase">{product.slug}</p>
-        </div>
+        </Link>
         {/* discount absolute */}
         <div className="absolute flex gap-2 items-center top-2 right-0 ">
           <div
