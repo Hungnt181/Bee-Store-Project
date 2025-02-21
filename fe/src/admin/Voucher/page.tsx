@@ -22,68 +22,68 @@ const columns: TableProps<Voucher>['columns'] = [
     //     key: '_id',
     // },
     {
-        title: 'Index',
+        title: '#',
         dataIndex: 'index',
         key: 'index',
     },
     {
-        title: 'Title',
+        title: 'Tên voucher',
         dataIndex: 'title',
         key: 'title',
         render: (text: string) => <a>{text}</a>,
     },
     {
-        title: 'Code Name',
+        title: 'Mã voucher',
         dataIndex: 'codeName',
         key: 'codeName',
     },
     {
-        title: 'Value',
+        title: 'Giá trị',
         dataIndex: 'value',
         key: 'value',
     },
     {
-        title: 'Quantity',
+        title: 'Số lượng',
         dataIndex: 'quantity',
         key: 'quantity',
     },
     {
-        title: 'Description',
+        title: 'Mô tả',
         dataIndex: 'description',
         key: 'description',
     },
     {
-        title: 'Start Time',
+        title: 'Ngày bắt đầu',
         dataIndex: 'startTime',
         key: 'startTime',
         render: (text: Date) => text.toLocaleString(),
     },
     {
-        title: 'End Time',
+        title: 'Ngày kết thúc',
         dataIndex: 'endTime',
         key: 'endTime',
         render: (text: Date) => text.toLocaleString(),
     },
     {
-        title: 'Created At',
+        title: 'Ngày tạo',
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
-        title: 'Updated At',
+        title: 'Ngày sửa',
         dataIndex: 'updatedAt',
         key: 'updatedAt',
         render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
-        title: 'Status',
+        title: 'Trạng thái',
         dataIndex: 'status',
         key: 'status',
-        render: (text: boolean) => (text ? 'Active' : 'Inactive'),
+        render: (text: boolean) => (text ? 'Hoạt động' : 'Không hoạt động'),
     },
     {
-        title: 'Action',
+        title: '#',
         key: 'action',
         render: (record: Voucher) => (
             <div>
@@ -107,6 +107,14 @@ const columns: TableProps<Voucher>['columns'] = [
 //         status: true,
 //     },
 // ];
+
+const modifiedColumns = columns.map((column) => ({
+    ...column,
+    onHeaderCell: () => ({
+        className: 'whitespace-nowrap',
+    }),
+}));
+
 const VoucherPage: React.FC = () => {
     const [listVoucher, setListVoucher] = useState<Voucher[]>([]);
 
@@ -142,7 +150,7 @@ const VoucherPage: React.FC = () => {
                 <Button type="primary" href="/admin/voucher/add">Thêm voucher</Button>
             </Space>
             <Table<Voucher>
-                columns={columns}
+                columns={modifiedColumns}
                 dataSource={listVoucher}
                 rowKey="index"
                 locale={locale} />
