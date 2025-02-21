@@ -4,3 +4,7 @@
 @theme{
     --font-client: "K2D", serif;
 }
+
+.antd-custom .ant-input-number input {
+    text-align: center !important;
+}
