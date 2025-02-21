@@ -1,23 +1,30 @@
-import { Space, Table, TableProps } from "antd";
+import { Button, Space, Table, TableProps } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface Voucher {
-    id: String;
+    _id: String;
     title: String;
     codeName: String;
-    value: number;
+    value: Number;
     quantity: Number;
     description: String;
     startTime: Date;
     endTime: Date;
+    createdAt:Date;
+    updatedAt: Date
     status: Boolean;
 }
 const columns: TableProps<Voucher>['columns'] = [
+    // {
+    //     title: 'ID',
+    //     dataIndex: '_id',
+    //     key: '_id',
+    // },
     {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
+        title: 'Index',
+        dataIndex: 'index',
+        key: 'index',
     },
     {
         title: 'Title',
@@ -58,6 +65,18 @@ const columns: TableProps<Voucher>['columns'] = [
         render: (text: Date) => text.toLocaleString(),
     },
     {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
+    },
+    {
+        title: 'Updated At',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
+    },
+    {
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
@@ -66,10 +85,10 @@ const columns: TableProps<Voucher>['columns'] = [
     {
         title: 'Action',
         key: 'action',
-        render: () => (
+        render: (record: Voucher) => (
             <div>
                 <button>Xóa</button>
-                <button>Sửa </button>
+                <Button href={`/admin/voucher/${record._id}/edit`}>Sửa</Button>
             </div>
         ),
     },
@@ -96,16 +115,38 @@ const VoucherPage: React.FC = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get<Voucher[]>(`http://localhost:3000/api/vouchers`);
-                setListVoucher(response.data);
+                const response = (await axios.get(`http://localhost:3000/api/vouchers`)).data;
+                console.log(response);
+                // console.log(setListVoucher(response.data.data));
+                let list = response.data.map((item: Voucher, index: number) => ({
+                    ...item, index: index + 1,
+                    // createdAt: new Date(item.createdAt).toLocaleString(),
+                    // updatedAt: new Date(item.updatedAt).toLocaleString(),
+                }));
+                setListVoucher(list);
+                // setListVoucher(response.data);
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, [listVoucher]);
+    }, []);
+
+    const locale = {
+        emptyText: 'Không có dữ liệu',
+    };
 
     return (
-        <Table<Voucher> columns={columns} dataSource={listVoucher} />
+        <>
+            <Space className="flex justify-between">
+                <h1>Danh sách mã giảm giá</h1>
+                <Button type="primary" href="/admin/voucher/add">Thêm voucher</Button>
+            </Space>
+            <Table<Voucher>
+                columns={columns}
+                dataSource={listVoucher}
+                rowKey="index"
+                locale={locale} />
+        </>
     )
 };
 

@@ -29,7 +29,7 @@ const VoucherSchema = new Schema(
     endTime: {
       type: Date,
     },
-    statue: {
+    status: {
       type: Boolean,
       default: true,
     },

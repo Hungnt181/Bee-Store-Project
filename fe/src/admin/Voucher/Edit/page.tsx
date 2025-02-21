@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 // import { PlusOutlined } from '@ant-design/icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     DatePicker,
@@ -8,23 +8,48 @@ import {
     Input,
     InputNumber,
     message,
+    Skeleton,
+    Switch,
 } from 'antd';
 import Title from 'antd/es/typography/Title';
 import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 
-const VoucherAddPage = () => {
+const VoucherEditPage = () => {
     //   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    const [isFormValid, setIsFormValid] = useState(false);
 
-    const onValuesChange = () => {
-        setIsFormValid(form.isFieldsTouched(true) && !form.getFieldsError().filter(({ errors }) => errors.length).length);
-    };
+    const { id } = useParams();
+    // lấy dữ liệu để sửa
+    const { data, isLoading } = useQuery({
+        queryKey: ["VOUCHER", id],
+        queryFn: async () => {
+            const { data } = await axios.get(
+                `http://localhost:3000/api/vouchers/${id}`
+            );
+            return data.data;
+        },
+    });
+    useEffect(() => {
+        if (data) {
+            form.setFieldsValue({
+                title: data.title,
+                codeName: data.codeName,
+                value: data.value,
+                quantity: data.quantity,
+                description: data.description,
+                startTime: data.startTime ? dayjs(data.startTime) : null,
+                endTime: data.endTime ? dayjs(data.endTime) : null,
+                status: data.status,
+            });
+        }
+    }, [data, form]);
+
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: async (formData) => {
@@ -34,9 +59,9 @@ const VoucherAddPage = () => {
                 }
             };
             try {
-                await axios.post("http://localhost:3000/api/vouchers", formData, config);
-                form.resetFields();
-                navigate("/admin/voucher");
+                await axios.put(`http://localhost:3000/api/vouchers/${id}`, formData, config);
+                // form.resetFields();
+                // navigate("/admin/voucher");
                 console.log(formData);
 
             } catch (error: any) {
@@ -54,15 +79,13 @@ const VoucherAddPage = () => {
             }
         },
         onSuccess: () => {
-            message.success("Thêm thành công");
-            queryClient.invalidateQueries({
-                queryKey: ["vouchers"],
-            });
+            message.success("Cập nhật sản phẩm thành công");
         },
         onError: (error: any) => {
             console.error("Mutation error:", error);
         },
     });
+    if (isLoading) return <Skeleton></Skeleton>;
     return (
         <>
             <Form
@@ -71,12 +94,11 @@ const VoucherAddPage = () => {
                 onFinish={(formData) => {
                     mutate(formData);
                 }}
-                onValuesChange={onValuesChange}
                 layout="horizontal"
                 // disabled={componentDisabled}
                 style={{ maxWidth: 600 }}
             >
-                <Title level={2}>Thêm voucher</Title>
+                <Title level={2}>Sửa voucher</Title>
 
                 <Form.Item label="Tên voucher" name={"title"} labelCol={{ className: 'w-auto text-left' }}>
                     <Input />
@@ -94,22 +116,22 @@ const VoucherAddPage = () => {
                     <TextArea rows={4} />
                 </Form.Item>
                 <Form.Item label="Thời gian bắt đầu" name={'startTime'} labelCol={{ className: 'w-auto text-left' }}>
-                    <DatePicker  showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
+                    <DatePicker showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
                 </Form.Item>
                 <Form.Item label="Thời gian kết thúc" name={'endTime'} labelCol={{ className: 'w-auto text-left' }}>
-                    <DatePicker  showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
+                    <DatePicker showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
                 </Form.Item>
-                {/* <Form.Item label="Trạng thái (bật/tắt)"
+                <Form.Item label="Trạng thái (bật/tắt)"
                     name={'status'}
                     labelCol={{ className: 'w-auto text-left' }}>
                     <Switch />
-                </Form.Item> */}
+                </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" disabled={!isFormValid}>Submit</Button>
+                    <Button type="primary" htmlType="submit">Cập nhật</Button>
                 </Form.Item>
             </Form>
         </>
     );
 };
 
-export default VoucherAddPage;
+export default VoucherEditPage;

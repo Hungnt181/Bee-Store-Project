@@ -16,6 +16,7 @@ import AdminColorList from "./admin/Color/page";
 import AdminColorAdd from "./admin/Color/Add/page";
 import AdminColorEdit from "./admin/Color/Edit/page";
 import AdminColorDetail from "./admin/Color/Detail/page";
+import VoucherEditPage from "./admin/Voucher/Edit/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: "/admin/category", element: <AdminCategory /> },
       { path: "/admin/voucher", element: <VoucherPage /> },
       { path: "/admin/voucher/add", element: <VoucherAddPage /> },
+      { path: "/admin/voucher/:id/edit", element: <VoucherEditPage /> },
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
       { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
