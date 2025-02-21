@@ -20,6 +20,7 @@ import VoucherEditPage from "./admin/Voucher/Edit/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
+
   {
     path: "/admin",
     element: <LayoutAdmin />,
