@@ -50,7 +50,6 @@ const VoucherEditPage = () => {
         }
     }, [data, form]);
 
-    const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: async (formData) => {
             const config = {
@@ -60,8 +59,8 @@ const VoucherEditPage = () => {
             };
             try {
                 await axios.put(`http://localhost:3000/api/vouchers/${id}`, formData, config);
-                // form.resetFields();
-                // navigate("/admin/voucher");
+                form.resetFields();
+                navigate("/admin/voucher");
                 console.log(formData);
 
             } catch (error: any) {
