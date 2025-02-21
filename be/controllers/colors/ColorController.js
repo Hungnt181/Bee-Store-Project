@@ -1,61 +1,117 @@
-import color from "../../models/colors/color";
-import { colorJoi } from "../../utils/validator/color";
+import color from "../../models/colors/color.js";
+import { colorJoi } from "../../utils/validator/color.js";
 import StatusCodes from "http-status-codes";
-//them
+
+// Thêm màu mới
 export const add = async (req, res) => {
   try {
-    const { error } = colorJoi.validate(req.body, { abortEarly: false });
+    // Kiểm tra dữ liệu đầu vào
+    const { error } = await colorJoi.validate(req.body, { abortEarly: false });
     if (error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: error.details.map((err) => err.message).join(", "),
+      });
+    }
+
+    // Kiểm tra xem màu có tồn tại không
+    const existingColor = await color.findOne({
+      $or: [{ name: req.body.name }, { hexcode: req.body.hexcode }],
+    });
+
+    if (existingColor) {
+      const errors = [];
+      if (existingColor.name === req.body.name) {
+        errors.push("Tên màu đã tồn tại!");
+      }
+      if (existingColor.hexcode === req.body.hexcode) {
+        errors.push("Mã màu đã tồn tại!");
+      }
       return res
-        .status(400)
-        .json({ message: error.details.map((err) => err.message).join(", ") });
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: errors.join(" ") });
     }
-    const checkHexcode = await color.findOne({ hexcode: req.body.hexcode });
-    if (checkHexcode) {
-      return res.status(400).json({ message: "Ma mau da ton tai" });
-    }
+
+    // Thêm màu nếu hợp lệ
     const data = await color.create(req.body);
-    res.status(200).json({ message: "Them mau thanh cong", data });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ message: "Thêm màu thành công", data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Lỗi server: " + error.message });
   }
 };
-//hienthi
+
+// Lấy danh sách màu
 export const list = async (req, res) => {
   try {
     const data = await color.find();
-    res.status(200).json({ message: "Danh sach mau", data });
+    return res.status(StatusCodes.OK).json({ message: "Danh sách màu", data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Lỗi server: " + error.message });
   }
 };
-//chitiet
+
+// Lấy chi tiết một màu
 export const detail = async (req, res) => {
   try {
     const data = await color.findById(req.params.id);
-    res.status(200).json({ message: "Chi tiet mau", data });
+    if (!data) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Màu không tồn tại" });
+    }
+    return res.status(StatusCodes.OK).json({ message: "Chi tiết màu", data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Lỗi server: " + error.message });
   }
 };
-//xoa
+
+// Xóa màu
 export const remove = async (req, res) => {
   try {
     const data = await color.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Xoa mau thanh cong", data });
+    if (!data) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Màu không tồn tại" });
+    }
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Xóa màu thành công", data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Lỗi server: " + error.message });
   }
 };
-//sua
+
+// Cập nhật màu
 export const edit = async (req, res) => {
   try {
-    const { error } = colorJoi.validate(req.body, { abortEarly: false });
+    const { error } = await colorJoi.validate(req.body, { abortEarly: false });
     if (error) {
-      return res
-        .status(400)
-        .json({ message: error.details.map((err) => err.message).join(", ") });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: error.details.map((err) => err.message).join(", "),
+      });
     }
+
+    // Kiểm tra xem tên màu hoặc mã màu có trùng không (ngoại trừ ID hiện tại)
+    const checkName = await color.findOne({
+      name: req.body.name,
+      _id: { $ne: req.params.id },
+    });
+    if (checkName) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Tên màu đã tồn tại!" });
+    }
+
     const checkHexcode = await color.findOne({
       hexcode: req.body.hexcode,
       _id: { $ne: req.params.id },
@@ -63,15 +119,24 @@ export const edit = async (req, res) => {
     if (checkHexcode) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Ma mau da ton tai" });
+        .json({ message: "Mã màu đã tồn tại!" });
     }
+
     const data = await color.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
+    if (!data) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Màu không tồn tại" });
+    }
+
     return res
       .status(StatusCodes.OK)
-      .json({ message: "Cap nhat mau thanh cong", data });
+      .json({ message: "Cập nhật màu thành công", data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Lỗi server: " + error.message });
   }
 };

@@ -1,9 +1,11 @@
-import mongoose, { Schema } from "mongoose";
-const ColorSchema = Schema(
+import mongoose from "mongoose";
+
+const colorSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    hexcode: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
+    hexcode: { type: String, required: true, unique: true },
   },
-  { timestamps: true, versionKey: false }
+  { timestamps: true }
 );
-export default mongoose.model("Color", ColorSchema);
+
+export default mongoose.model("Color", colorSchema);

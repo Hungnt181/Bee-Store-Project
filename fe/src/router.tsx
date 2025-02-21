@@ -13,6 +13,7 @@ import AdminColorDetail from "./admin/Color/Detail/page";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
+
   {
     path: "/admin",
     element: <LayoutAdmin />,
