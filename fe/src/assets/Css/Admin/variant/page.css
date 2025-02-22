@@ -1,8 +1,8 @@
 
 
 .card_inf_product {
-    width: 50% !important;
-    margin: 0px auto;
+    width: 100% !important;
+    margin: 10px;
 }
 
 .inf_product_div {
@@ -18,7 +18,7 @@
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
-    width: 400px; /* Đặt chiều rộng cho phần tử */
+    width: 80%; /* Đặt chiều rộng cho phần tử */
     margin: 4px 0;
 
   }
