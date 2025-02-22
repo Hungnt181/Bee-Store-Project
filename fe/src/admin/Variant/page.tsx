@@ -262,6 +262,7 @@ const AdminVariantList = () => {
             dataSource={data}
             columns={columns}
             pagination={{ pageSize: 5 }}
+            scroll={{ y: 55 * 3 }}
           />
         </div>
         <Modal
