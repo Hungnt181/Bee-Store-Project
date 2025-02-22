@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LayoutAdmin from "./admin/layout";
 import AdminProductList from "./admin/Product/page";
-import HomePage from "./website/components/Home";
 import AdminCategory from "./admin/CategoryManagement/components/AdminCategory";
 import AdminVariantList from "./admin/Variant/page";
 import ProductEditPage from "./admin/Product/Edit/page";
@@ -17,10 +16,22 @@ import AdminColorAdd from "./admin/Color/Add/page";
 import AdminColorEdit from "./admin/Color/Edit/page";
 import AdminColorDetail from "./admin/Color/Detail/page";
 import VoucherEditPage from "./admin/Voucher/Edit/page";
+import ClientLayout from "./layouts/client/Layout";
+import HomePage from "./pages/Home/HomePage";
+import FilterProducts from "./pages/Products/Products";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-
+  {
+    path: "/",
+    element: <ClientLayout />,
+    errorElement: <Navigate to={"/"} />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "/products", element: <FilterProducts /> },
+      { path: "/products/:id", element: <ProductDetail /> },
+    ],
+  },
   {
     path: "/admin",
     element: <LayoutAdmin />,
