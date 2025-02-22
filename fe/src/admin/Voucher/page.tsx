@@ -56,13 +56,13 @@ const columns: TableProps<Voucher>['columns'] = [
         title: 'Ngày bắt đầu',
         dataIndex: 'startTime',
         key: 'startTime',
-        render: (text: Date) => text.toLocaleString(),
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
         title: 'Ngày kết thúc',
         dataIndex: 'endTime',
         key: 'endTime',
-        render: (text: Date) => text.toLocaleString(),
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
         title: 'Ngày tạo',
