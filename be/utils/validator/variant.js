@@ -1,9 +1,10 @@
 import Joi from "joi";
 
 const VariantValidator = Joi.object({
-  image: Joi.array().items(Joi.string().uri()).required().messages({
+  image: Joi.array().items(Joi.string().uri()).max(5).required().messages({
     "array.base": "Trường image phải là một mảng",
     "array.includes": "Mỗi phần tử trong mảng image phải là một URL hợp lệ",
+    "array.max": "Bạn chỉ có thể tải lên tối đa 5 ảnh",
     "any.required": "Trường image là bắt buộc",
   }),
   quantity: Joi.number().min(0),

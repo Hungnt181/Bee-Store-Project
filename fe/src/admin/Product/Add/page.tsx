@@ -101,6 +101,7 @@ const AdminProductAdd = () => {
     },
   });
 
+  // Add variant data
   const { mutate: addVariant } = useMutation({
     mutationFn: async (variantData) => {
       await axios.post(`http://localhost:3000/api/variants`, variantData);
@@ -108,7 +109,7 @@ const AdminProductAdd = () => {
     onSuccess: () => {
       message.success("Thêm biến thể thành công");
       queryClient.invalidateQueries({
-        queryKey: ["variants"],
+        queryKey: ["dataPage"],
       });
       form.resetFields();
     },
@@ -139,6 +140,10 @@ const AdminProductAdd = () => {
     if (info.file.status === "done") {
       const imageUrl = info.file.response.secure_url;
       setImageUrls((prevUrls) => {
+        if (prevUrls.length >= 5) {
+          message.error("Bạn chỉ có thể tải lên tối đa 5 ảnh.");
+          return prevUrls; // Không thêm ảnh mới vào
+        }
         const newUrls = [...prevUrls, imageUrl];
         form.setFieldsValue({ image: newUrls });
         return newUrls;
@@ -156,7 +161,8 @@ const AdminProductAdd = () => {
       values.quantity &&
       values.id_size &&
       values.id_color &&
-      imageUrls.length > 0;
+      imageUrls.length > 0 &&
+      imageUrls.length < 6;
     setIsFormValid(isFormValid);
   };
 
