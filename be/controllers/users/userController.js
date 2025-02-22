@@ -2,7 +2,10 @@ import User from "../../models/users/user";
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes';
+import nodemailer from 'nodemailer';
 import { authValidator, signInValidator, signUpAdminValidator, signUpUserValidator, signUpValidator, updateAdminValidator } from "../../utils/validator/user.js";
+import emailExistence from 'email-existence';
+
 
 class UserController {
     async listUserAccount(req, res) {
@@ -241,15 +244,18 @@ class UserController {
             'data': user
         })
     }
+
+
+
     async signupUser(req, res) {
         const { error } = signUpUserValidator.validate(req.body, { abortEarly: false });
         if (error) { //nếu có lỗi validate -> bắn ra lỗi
             const listErrors = error.details.map((item) => item.message);
             return res.status(400).json({
                 'message': listErrors
-            })
+            });
         }
-        const { name, email, password, confirmPassword, tel } = req.body
+        const { name, email, password, confirmPassword, tel } = req.body;
 
         if (password !== confirmPassword) {
             return res.status(400).json({
@@ -257,30 +263,95 @@ class UserController {
             });
         }
 
-        const existedEmail = await User.findOne({ email })
+        const existedEmail = await User.findOne({ email });
 
         if (existedEmail) {
             return res.status(200).json({
-                'message': 'Email da ton tai'
-            })
+                'message': 'Email đã tồn tại'
+            });
         }
 
-        const hashedPass = await bcryptjs.hash(password, 10)
+        emailExistence.check(email, async (error, response) => {
+            if (error || !response) {
+                return res.status(400).json({
+                    'message': 'Email không tồn tại'
+                });
+            }
 
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPass,
-            tel,
-            role: 'user'
-        })
+            const hashedPass = await bcryptjs.hash(password, 10);
 
-        res.status(200).json({
-            'message': 'Dang ky tai khoan user thanh cong',
-            'data': user
-        })
+            const user = await User.create({
+                name,
+                email,
+                password: hashedPass,
+                tel,
+                role: 'user',
+            });
+
+            // Cấu hình nodemailer
+            const transporter = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: 'thinh07122002@gmail.com',
+                    pass: 'jzrx aimw jdki cxqj'
+                }
+            });
+
+            const mailOptions = {
+                from: 'Bee-Store',
+                to: email,
+                subject: 'Xác nhận Email',
+                html: `
+                    <div class="email"
+                    style="max-width: 700px;
+                    margin: 20px auto;
+                    background-color: #fff;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;">
+                    <div class="header" style="
+                            background: rgb(224, 255, 100);
+                            color: #fff;
+                            padding: 10px 24px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            max-height: 50px;">
+        <h1 style="
+        margin: 0;
+        font-size: 18px;">
+            BeeStore  | Shop quần áo thể thao  
+        </h1>
+
+    <div class="content" style="padding: 14px 20px 20px 20px; color: #242424;">
+        <div style = " margin: 10px 0 16px 0; font-size: 16px; text-align : center" >
+            <strong >XÁC MINH EMAIL CỦA BẠN</strong>
+        </div>
+
+        <div style="margin-top: 16px;;">
+            <a href="http://${req.headers.host}/api/verify-email?token=${user._id}" style="margin-left:43%; cursor: pointer;"> 
+                <button style="padding: 8px 12px; background:rgb(224, 255, 100); border: 1px solid rgb(224, 255, 100);
+                 border-radius: 4px; font-weight: 600; color: white; font-size: 16px;cursor: pointer;">Xác Minh</button>
+            </a>    
+        </div>
+    </div>
+</div>
+                `
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.status(500).json({
+                        'message': 'Lỗi khi gửi email'
+                    });
+                }
+                res.status(200).json({
+                    'message': 'Đăng ký tài khoản user thành công. Vui lòng kiểm tra email của bạn để xác nhận tài khoản.',
+                    'data': user
+                });
+            });
+        });
     }
-    async signin(req, res) {
+    async signinAdmin(req, res) {
         const { error } = signInValidator.validate(req.body, { abortEarly: false });
         if (error) { //nếu có lỗi validate -> bắn ra lỗi
             const listErrors = error.details.map((item) => item.message);
@@ -303,6 +374,57 @@ class UserController {
         if (!checkPass) {
             return res.status(400).json({
                 'message': 'Password khong dung'
+            })
+        }
+
+        if (!user.status) {
+            return res.status(400).json({
+                'message': 'Tài khoản đã ngừng hoạt động'
+            })
+        }
+
+        const token = jwt.sign(
+            { email: user.email, role: user.role },
+            '123456',
+            { expiresIn: '1d' }
+        )
+
+        res.status(200).json({
+            'message': 'Dang nhap thanh cong',
+            'data': user,
+            token
+        })
+    }
+
+    async signinUser(req, res) {
+        const { error } = signInValidator.validate(req.body, { abortEarly: false });
+        if (error) { //nếu có lỗi validate -> bắn ra lỗi
+            const listErrors = error.details.map((item) => item.message);
+            return res.status(400).json({
+                'message': listErrors
+            })
+        }
+        const { email, password } = req.body
+
+        const user = await User.findOne({ email })
+
+        if (!user) {
+            return res.status(400).json({
+                'message': 'Email khong ton tai'
+            })
+        }
+
+        const checkPass = await bcryptjs.compare(password, user.password)
+
+        if (!checkPass) {
+            return res.status(400).json({
+                'message': 'Password khong dung'
+            })
+        }
+
+        if (!user.isVerified) {
+            return res.status(400).json({
+                'message': 'Tài khoản chưa được xác thực'
             })
         }
 

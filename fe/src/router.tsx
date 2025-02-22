@@ -9,9 +9,22 @@ import VariantEditPage from "./admin/Variant/Edit/page";
 import AdminAccountPage from "./admin/Account/Admin/page";
 import AdminAccountEditPage from "./admin/Account/Admin/Edit/page";
 import UserAccountPage from "./admin/Account/User/page";
+import Signup from "./website/components/Signup/page";
+import Signin from "./website/components/Signin/page";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />
+  },
+  {
+    path: "/signin",
+    element: <Signin />
+  },
   {
     path: "/admin",
     element: <LayoutAdmin />,
