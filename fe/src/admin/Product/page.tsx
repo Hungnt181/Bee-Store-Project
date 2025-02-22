@@ -14,7 +14,7 @@ import {
   Tag,
   Tooltip,
 } from "antd";
-import Product from "../../interface/Product";
+import {Product} from "../../interface/Product";
 import { Link, useNavigate } from "react-router-dom";
 import {
   MoreOutlined,
