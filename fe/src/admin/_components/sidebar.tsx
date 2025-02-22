@@ -30,10 +30,10 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Products", "2", <DesktopOutlined />, undefined, "product"),
+  getItem("Quản lý size", "5", <DesktopOutlined />, undefined, "size"),
   getItem("Categories", "3", <DesktopOutlined />, undefined, "category"),
   getItem("User", "sub1", <UserOutlined />, [
     getItem("Tom", "4"),
-    getItem("Bill", "5"),
     getItem("Alex", "6"),
   ]),
   getItem("Team", "sub2", <TeamOutlined />, [
