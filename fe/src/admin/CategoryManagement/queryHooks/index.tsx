@@ -24,9 +24,8 @@ export function useCreateCategory(handleCancel: () => void) {
     mutationFn: CategoryService.createCategory,
     onSuccess: () => {
       notification.success({
-        message: <span style={{ textTransform: "uppercase", fontWeight: "bold", fontSize: "20px", color: "green"  }}>Thành công</span>,
+        message: <span>Thêm mới danh mục thành công</span>,
         placement: "topRight",
-        description: <span style={{ fontSize: "18px" }}>Thêm mới danh mục thành công</span>,
         showProgress: true,
         duration: 3
       })
@@ -37,9 +36,8 @@ export function useCreateCategory(handleCancel: () => void) {
     },
     onError(error) {
       notification.error({
-        message: <span style={{ textTransform: "uppercase", fontWeight: "bold", fontSize: "20px", color: "#FF4D4F" }}>Thất bại</span>,
+        message: <span>{error.message}</span>,
         placement: "topRight",
-        description: <span style={{ fontSize: "18px" }}>{error.message}</span>,
         showProgress: true,
         duration: 3
       })
@@ -54,9 +52,8 @@ export function useUpdateCategory(handleCancel: () => void, data: Category, id: 
     mutationFn: () =>  CategoryService.updateCategory(data, id),
     onSuccess: () => {
       notification.success({
-        message: <span style={{ textTransform: "uppercase", fontWeight: "bold", fontSize: "20px", color: "#52C41A"  }}>Thành công</span>,
+        message: <span >Cập nhật danh mục thành công</span>,
         placement: "topRight",
-        description: <span style={{ fontSize: "18px" }}>Cập nhật danh mục thành công</span>,
         showProgress: true,
         duration: 3
       })
@@ -67,9 +64,8 @@ export function useUpdateCategory(handleCancel: () => void, data: Category, id: 
     },
     onError(error) {
       notification.error({
-        message: <span style={{ textTransform: "uppercase", fontWeight: "bold", fontSize: "20px", color: "#FF4D4F" }}>Thất bại</span>,
+        message: <span>{error.message}</span>,
         placement: "topRight",
-        description: <span style={{ fontSize: "18px" }}>{error.message}</span>,
         showProgress: true,
         duration: 3
       })
