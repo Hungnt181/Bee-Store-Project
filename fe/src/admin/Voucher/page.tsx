@@ -1,75 +1,94 @@
-import { Space, Table, TableProps } from "antd";
+import { Button, Space, Table, TableProps } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface Voucher {
-    id: String;
+    _id: String;
     title: String;
     codeName: String;
-    value: number;
+    value: Number;
     quantity: Number;
     description: String;
     startTime: Date;
     endTime: Date;
+    createdAt:Date;
+    updatedAt: Date
     status: Boolean;
 }
 const columns: TableProps<Voucher>['columns'] = [
+    // {
+    //     title: 'ID',
+    //     dataIndex: '_id',
+    //     key: '_id',
+    // },
     {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
+        title: '#',
+        dataIndex: 'index',
+        key: 'index',
     },
     {
-        title: 'Title',
+        title: 'Tên voucher',
         dataIndex: 'title',
         key: 'title',
         render: (text: string) => <a>{text}</a>,
     },
     {
-        title: 'Code Name',
+        title: 'Mã voucher',
         dataIndex: 'codeName',
         key: 'codeName',
     },
     {
-        title: 'Value',
+        title: 'Giá trị',
         dataIndex: 'value',
         key: 'value',
     },
     {
-        title: 'Quantity',
+        title: 'Số lượng',
         dataIndex: 'quantity',
         key: 'quantity',
     },
     {
-        title: 'Description',
+        title: 'Mô tả',
         dataIndex: 'description',
         key: 'description',
     },
     {
-        title: 'Start Time',
+        title: 'Ngày bắt đầu',
         dataIndex: 'startTime',
         key: 'startTime',
-        render: (text: Date) => text.toLocaleString(),
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
-        title: 'End Time',
+        title: 'Ngày kết thúc',
         dataIndex: 'endTime',
         key: 'endTime',
-        render: (text: Date) => text.toLocaleString(),
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
     },
     {
-        title: 'Status',
+        title: 'Ngày tạo',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
+    },
+    {
+        title: 'Ngày sửa',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        render: (text: Date) => text ? new Date(text).toLocaleString() : '',
+    },
+    {
+        title: 'Trạng thái',
         dataIndex: 'status',
         key: 'status',
-        render: (text: boolean) => (text ? 'Active' : 'Inactive'),
+        render: (text: boolean) => (text ? 'Hoạt động' : 'Không hoạt động'),
     },
     {
-        title: 'Action',
+        title: '#',
         key: 'action',
-        render: () => (
+        render: (record: Voucher) => (
             <div>
                 <button>Xóa</button>
-                <button>Sửa </button>
+                <Button href={`/admin/voucher/${record._id}/edit`}>Sửa</Button>
             </div>
         ),
     },
@@ -88,6 +107,14 @@ const columns: TableProps<Voucher>['columns'] = [
 //         status: true,
 //     },
 // ];
+
+const modifiedColumns = columns.map((column) => ({
+    ...column,
+    onHeaderCell: () => ({
+        className: 'whitespace-nowrap',
+    }),
+}));
+
 const VoucherPage: React.FC = () => {
     const [listVoucher, setListVoucher] = useState<Voucher[]>([]);
 
@@ -96,16 +123,38 @@ const VoucherPage: React.FC = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get<Voucher[]>(`http://localhost:3000/api/vouchers`);
-                setListVoucher(response.data);
+                const response = (await axios.get(`http://localhost:3000/api/vouchers`)).data;
+                console.log(response);
+                // console.log(setListVoucher(response.data.data));
+                let list = response.data.map((item: Voucher, index: number) => ({
+                    ...item, index: index + 1,
+                    // createdAt: new Date(item.createdAt).toLocaleString(),
+                    // updatedAt: new Date(item.updatedAt).toLocaleString(),
+                }));
+                setListVoucher(list);
+                // setListVoucher(response.data);
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, [listVoucher]);
+    }, []);
+
+    const locale = {
+        emptyText: 'Không có dữ liệu',
+    };
 
     return (
-        <Table<Voucher> columns={columns} dataSource={listVoucher} />
+        <>
+            <Space className="flex justify-between">
+                <h1>Danh sách mã giảm giá</h1>
+                <Button type="primary" href="/admin/voucher/add">Thêm voucher</Button>
+            </Space>
+            <Table<Voucher>
+                columns={modifiedColumns}
+                dataSource={listVoucher}
+                rowKey="index"
+                locale={locale} />
+        </>
     )
 };
 
