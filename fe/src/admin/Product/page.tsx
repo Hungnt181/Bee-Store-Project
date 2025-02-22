@@ -74,7 +74,7 @@ const AdminProductList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, __: any, index: number) => {
+      render: (_: unknown, __: unknown, index: number) => {
         const stt =
           curentPages && pageSize
             ? (curentPages - 1) * pageSize + index + 1
@@ -107,7 +107,7 @@ const AdminProductList = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (_: any, item: Product) => {
+      render: (_: unknown, item: Product) => {
         return item.status ? (
           <Tag color="green">Mở bán</Tag>
         ) : (
@@ -135,7 +135,7 @@ const AdminProductList = () => {
       title: "Thao tác",
       dataIndex: "action",
       key: "action",
-      render: (_: any, item: Product) => {
+      render: (_: unknown, item: Product) => {
         const content = (
           <div>
             <Space>
