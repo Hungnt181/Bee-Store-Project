@@ -19,14 +19,15 @@ class CategoryController {
 
 	async search(req, res) {
 		try {
-			const category = await Category.find(); // Lấy toàn bộ danh mục từ database
+			const category = await Category.find();
 			const { key } = req.query;
-			let filteredCategories = category; // Mặc định là toàn bộ danh mục
+			let filteredCategories = category;
 			if (key) {
 				const lowerCaseKey = key.toLowerCase();
 				filteredCategories = category.filter((cate) => cate.name.toLowerCase().includes(lowerCaseKey));
 			}
-			return res.status(StatusCodes.OK).json({
+			filteredCategories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			return res.status(StatusCodes.OK).json({	
 				message: "Tìm kiếm danh mục thành công",
 				data: filteredCategories,
 			});

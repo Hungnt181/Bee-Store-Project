@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Flex,
@@ -87,7 +86,7 @@ const AdminProductList = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (_: any, item: Product) => {
+      render: (_: unknown, item: Product) => {
         return (
           <p
             onClick={() => handleSearchVariant(item._id.toString())}

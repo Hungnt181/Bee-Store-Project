@@ -1,5 +1,6 @@
 import color from "../../models/colors/color";
 import { colorJoi } from "../../utils/validator/color";
+import StatusCodes from "http-status-codes";
 //them
 export const add = async (req, res) => {
   try {
@@ -60,12 +61,16 @@ export const edit = async (req, res) => {
       _id: { $ne: req.params.id },
     });
     if (checkHexcode) {
-      return res.status(400).json({ message: "Ma mau da ton tai" });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Ma mau da ton tai" });
     }
     const data = await color.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(200).json({ message: "Cap nhat mau thanh cong", data });
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Cap nhat mau thanh cong", data });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
