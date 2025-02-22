@@ -14,7 +14,7 @@ export const getColumnsCategories = (
       title: "STT",
       dataIndex: "index",
       key: "index",
-      width: 70,
+      width: 80,
       render: (_value: unknown, _record: Category, index: number) => {
         const stt = (current && pageSize) ? (current - 1) * pageSize + index + 1 : "";
         return <Tooltip title={stt}>
@@ -26,7 +26,7 @@ export const getColumnsCategories = (
       title: "Tên danh mục",
       dataIndex: "name",
       key: "name",
-      width: 200,
+      width: 250,
       fixed: "left",
       render: (value: string) => {
         return <Tooltip title={value}>
@@ -38,7 +38,7 @@ export const getColumnsCategories = (
       title: "Trạng thái danh mục",
       dataIndex: "status",
       key: "status",
-      width: 250,
+      width: 280,
       render: (_status: boolean, item: Category) => {
         return item.status ? (
           <Tooltip title={"Đang hoạt động"}>
@@ -59,7 +59,7 @@ export const getColumnsCategories = (
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 200,
+      width: 320,
       render: (value: string) => {
         return <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
           <span>{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -70,7 +70,7 @@ export const getColumnsCategories = (
       title: "Ngày sửa cuối",
       dataIndex: "updatedAt",
       key: "updatedAt",
-      width: 200,
+      width: 320,
       render: (value: string) => {
         return <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
           <span>{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -81,7 +81,7 @@ export const getColumnsCategories = (
       title: "Thao tác",
       dataIndex: "action",
       key: "action",
-      align: "right",
+      align: "center",
       fixed: 'right',
       render: (_: unknown, item: Category) => {
         const items: MenuProps['items'] = [

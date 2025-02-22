@@ -85,7 +85,7 @@ const AdminCategory: React.FC = () => {
         rowKey={"_id"}
         pagination={pagination}
         onChange={(page) => setPagination(page)}
-        scroll={{ x: 'max-content', y: 55 * 6 }}
+        scroll={{ x: 'max-content', y: 55 * 7 }}
       // virtual
       />
       <ModalViewCate open={actionMode} onClose={resetCateStore} />
