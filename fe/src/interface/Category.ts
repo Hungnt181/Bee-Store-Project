@@ -1,9 +1,11 @@
-import { ObjectId } from "mongoose";
-
-interface Category {
-    _id: ObjectId;
-  name: string;
-  status?: boolean; 
+export type Category = {
+    _id?: string;
+    name: string;
+    status: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
-export default Category;
+export type IParamsUrl = {
+    searchKey: string
+}

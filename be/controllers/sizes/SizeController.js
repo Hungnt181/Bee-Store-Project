@@ -14,6 +14,19 @@ class SizeController {
 			});
 		}
 	}
+async remove(req, res) {
+		try {
+			const size = await Size.findByIdAndDelete(req.params.id);
+			return res.status(200).json({
+				message: "Xóa kích thước thành công",
+				data: size,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				message: "something went wrong",
+			});
+		}
+	}
 
 	async detail(req, res) {
 		try {
