@@ -1,14 +1,7 @@
 import { ProductType } from "./Product";
 
-interface Color {
-  name: string;
-  hexcode: string;
-}
-interface Size {
-  name: string;
-}
-export interface Variant {
-  _id: string;
+interface Variant {
+    _id: ObjectId;
   image: string[];
   quantity: number;
   status: boolean;
