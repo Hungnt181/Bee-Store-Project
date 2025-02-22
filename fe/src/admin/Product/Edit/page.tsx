@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ProductEditPage = () => {
@@ -35,6 +36,12 @@ const ProductEditPage = () => {
       return data.data;
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({ id_cate: data.id_cate._id });
+    }
+  }, [data, form]);
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
       try {
@@ -74,11 +81,21 @@ const ProductEditPage = () => {
         layout="horizontal"
         style={{
           maxWidth: 600,
+          margin: "0 auto",
         }}
         onFinish={(formData) => {
           mutate(formData);
         }}
       >
+        <h3
+          style={{
+            fontWeight: "500",
+            fontSize: "24px",
+            marginLeft: "30%",
+          }}
+        >
+          Chỉnh sửa thông tin
+        </h3>
         <Form.Item
           label="Tên sản phẩm"
           name="name"
@@ -125,8 +142,8 @@ const ProductEditPage = () => {
           <Switch defaultValue={data.status} />
         </Form.Item>
 
-        <Form.Item label="Select" name="id_cate">
-          <Select defaultValue="Test">
+        <Form.Item label="Danh mục" name="id_cate">
+          <Select>
             {data_Cate?.map((item: any) => (
               <Select.Option key={item._id} value={item._id}>
                 {item.name}
@@ -135,7 +152,7 @@ const ProductEditPage = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item style={{ display: "flex", justifyContent: "center" }}>
           <Button htmlType="submit">Edit</Button>
         </Form.Item>
       </Form>

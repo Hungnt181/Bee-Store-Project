@@ -30,5 +30,7 @@ variantRouter.patch(
   "/variants/status/:id",
   variantsController.updateStatusVariant
 );
+// Update Status Variant
+variantRouter.patch("/variants/:id", variantsController.removeImageVariant);
 
 export default variantRouter;

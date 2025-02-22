@@ -70,7 +70,7 @@ class VoucherController {
     try {
       // Kiểm tra unique
       const { codeName } = req.body;
-      const existingCodeName = await Product.findOne({ codeName });
+      const existingCodeName = await Voucher.findOne({ codeName });
       if (existingCodeName) {
         return res.status(400).json({ message: "CodeName này đã tồn tại" });
       }
@@ -93,10 +93,20 @@ class VoucherController {
 
   async apiUpdate(req, res) {
     try {
+
       //B1: lấy id bản ghi cần sửa
       const id = req.params.id;
+
       //B2: lấy dữ liệu mới
       const data = req.body;
+
+      // Kiểm tra đã tồn tại
+      const { codeName } = req.body;
+      const existingCodeName = await Voucher.findOne({ codeName, _id: { $ne: id } })
+      if (existingCodeName) {
+        return res.status(400).json({ message: "CodeName này đã tồn tại" });
+      }
+
       //B3: đẩy dữ liệu lưu vào DB
       const voucher = await Voucher.findByIdAndUpdate(id, data);
       //B4: trả về dữ liệu

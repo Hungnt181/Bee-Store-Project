@@ -1,9 +1,9 @@
-import { ObjectId } from "mongoose";
-
 interface Color {
-    _id: ObjectId;
+  _id: string;
   name: string;
-  hexcode?: boolean; 
+  hexcode?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export default Color;

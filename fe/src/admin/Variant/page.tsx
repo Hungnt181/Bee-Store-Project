@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
+  Card,
   Image,
   Modal,
   Popconfirm,
@@ -9,6 +10,7 @@ import {
   Space,
   Table,
   Tag,
+  Tooltip,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
 import "../../assets/Css/Admin/Product/page.css";
@@ -19,7 +21,10 @@ import useDelete from "../hooks/useDelete";
 import { useState } from "react";
 import AdminVariantAdd from "./Add/page";
 import "../../assets/Css/Admin/Product/page.css";
+import "../../assets/Css/Admin/variant/page.css";
 import useGetDetailNotArray from "../hooks/useGetDetailNotArray";
+import dayjs from "dayjs";
+import Size from "../../interface/Size";
 
 const AdminVariantList = () => {
   const { id } = useParams();
@@ -28,7 +33,6 @@ const AdminVariantList = () => {
   const key = "variants";
   const { data, isLoading } = useGetDetail<Variant>(url, key, safeId);
 
-  //
   const urlDtPro = `http://localhost:3000/api/products/${id}`;
   const keyDtPro = "ProductDetail";
   const ProDtId = String(id);
@@ -43,7 +47,7 @@ const AdminVariantList = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_: any, item: any, index: number) => {
+      render: (_: any, __: any, index: number) => {
         return index + 1;
       },
     },
@@ -52,22 +56,14 @@ const AdminVariantList = () => {
       dataIndex: "image",
       key: "image",
       render: (text: string) => {
-        return <Image src={text} width={50} height={50}></Image>;
-      },
-    },
-    {
-      title: "Tên sản phẩm",
-      dataIndex: "id_product",
-      key: "id_product",
-      render: (object: any) => {
-        return <h3>{object.name}</h3>;
+        return <Image src={text[0]} width={50} height={50}></Image>;
       },
     },
     {
       title: "Kích cỡ",
       dataIndex: "id_size",
       key: "id_size",
-      render: (object: any) => {
+      render: (object: Size) => {
         return <p>{object.name}</p>;
       },
     },
@@ -95,24 +91,7 @@ const AdminVariantList = () => {
         );
       },
     },
-    {
-      title: "Giới thiệu",
-      dataIndex: "id_product",
-      key: "id_product",
-      ellipsis: true,
-      render: (object: any) => {
-        return <p>{object.about}</p>;
-      },
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "id_product",
-      key: "id_product",
-      ellipsis: true,
-      render: (object: any) => {
-        return <p>{object.description}</p>;
-      },
-    },
+
     {
       title: "Số lượng",
       dataIndex: "quantity",
@@ -207,15 +186,85 @@ const AdminVariantList = () => {
   return (
     <div>
       <Skeleton loading={isLoading}>
-        <Button type="primary" onClick={showModal}>
-          Thêm biển thể mới
-        </Button>
-        <Table
-          dataSource={data}
-          columns={columns}
-          pagination={{ pageSize: 10 }}
-        />
+        <Card
+          title="Thông tin sản phẩm"
+          style={{ width: 600 }}
+          className="card_inf_product"
+        >
+          <div className="inf_product_div">
+            <p className="title_p">Tên sản phẩm:</p>{" "}
+            <p style={{ color: "red" }} className="content_p">
+              {DataDtPro?.name}
+            </p>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Giới thiệu :</p>
+            <Tooltip
+              title={DataDtPro?.about}
+              placement="bottom"
+              overlayStyle={{
+                maxWidth: "500px",
+                whiteSpace: "normal",
+                wordWrap: "break-word",
+              }}
+            >
+              <p className="content_p">{DataDtPro?.about}</p>
+            </Tooltip>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Mô tả :</p>
+            <Tooltip
+              title={DataDtPro?.description}
+              placement="bottom"
+              overlayStyle={{
+                maxWidth: "500px",
+                whiteSpace: "normal",
+                wordWrap: "break-word",
+              }}
+            >
+              <p className="content_p">{DataDtPro?.description}</p>
+            </Tooltip>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Giá:</p>
+            <p className="content_p">{DataDtPro?.price}</p>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Danh mục :</p>
+            <p className="content_p">{DataDtPro?.id_cate?.name}</p>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Trạng thái :</p>
+            <p className="content_p">
+              {DataDtPro?.status ? (
+                <Tag color="green">Mở bán</Tag>
+              ) : (
+                <Tag color="red">Dừng bán</Tag>
+              )}
+            </p>
+          </div>
+          <div className="inf_product_div">
+            <p className="title_p">Ngày sửa cuối :</p>
+            <p className="content_p">
+              {dayjs(DataDtPro?.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
+            </p>
+          </div>
+        </Card>
 
+        <div>
+          <Button type="primary" onClick={showModal}>
+            Thêm biển thể mới
+          </Button>
+
+          <h3>Thông tin biến thể</h3>
+
+          <Table
+            dataSource={data}
+            columns={columns}
+            pagination={{ pageSize: 5 }}
+            scroll={{ y: 55 * 3 }}
+          />
+        </div>
         <Modal
           title="Thêm mới biến thể"
           open={isModalOpen}
