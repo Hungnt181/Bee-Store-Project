@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { Category } from "./Category";
 
 export interface Product {
     _id: ObjectId;
@@ -41,6 +42,19 @@ export type ProductType = {
   description: string;
   status: boolean;
   id_cate: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ProductType2 = {
+  _id: string;
+  name: string;
+  price: number;
+  about: string;
+  description: string;
+  status: boolean;
+  id_cate: Category;
   slug: string;
   createdAt: string;
   updatedAt: string;
