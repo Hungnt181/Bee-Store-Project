@@ -84,3 +84,18 @@ export interface IProductWithVariants {
   updatedAt: string;
   variants: IVariant[];
 }
+
+export interface IPageProductConditions {
+  total: number;
+  content: {
+    products: IProductWithVariants[]
+  }
+}
+
+export interface IParamsProductCondition {
+  cate?: string | string[];
+  color?: string | string[];
+  size?: string | string[];
+  priceMin?: number | string;
+  priceMax?: number | string;
+}

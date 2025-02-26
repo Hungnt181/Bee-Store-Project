@@ -6,6 +6,7 @@ import {
   ConfigProvider,
   Skeleton,
   Slider,
+  SliderSingleProps,
 } from "antd";
 import { useState } from "react";
 import { useGetAllSizes } from "../../../hooks/queries/sizes";
@@ -14,9 +15,17 @@ import { useGetAllColors } from "../../../hooks/queries/colors";
 import Color from "../../../interface/Color";
 import { useGetAllCategories } from "../../../hooks/queries/categories";
 import { Category } from "../../../interface/Category";
+import { IParamsProductCondition } from "../../../interface/Product";
+import { formatCurrency } from "../../../helpers/utils";
 
-export default function FilterSide() {
+export type FilterProps = {
+  params: IParamsProductCondition
+  setParams: (params: IParamsProductCondition) => void
+}
+
+export default function FilterSide({ params, setParams }: FilterProps) {
   const [priceFilter, setPriceFilter] = useState<number[]>([0, 5000000]);
+  const [, setCateChange] = useState<string[]>([]);
   const [sizeChange, setSizeChange] = useState<string[]>([]);
   const [colorChange, setColorChange] = useState<string[]>([]);
   const { data: listSize, isLoading: loadingSize } = useGetAllSizes();
@@ -24,15 +33,38 @@ export default function FilterSide() {
   const { data: listCate, isLoading: loadingCate } = useGetAllCategories();
 
   const handleSizeChange = (id: string) => {
-    setSizeChange((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setSizeChange(prevSizeChange => {
+      const newSizeChange = prevSizeChange.includes(id)
+        ? prevSizeChange.filter(item => item !== id)
+        : [...prevSizeChange, id];
+      setParams({ ...params, size: newSizeChange })
+      return newSizeChange;
+    });
   };
   const handleColorChange = (id: string) => {
-    setColorChange((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setColorChange(prevColorChange => {
+      const newColorChange = prevColorChange.includes(id)
+        ? prevColorChange.filter(item => item !== id)
+        : [...prevColorChange, id];
+      setParams({ ...params, color: newColorChange })
+      return newColorChange;
+    });
   };
+  const handleCateChange = (id: string) => {
+    setCateChange(prevCateChange => {
+      const newCateChange = prevCateChange.includes(id)
+        ? prevCateChange.filter(item => item !== id)
+        : [...prevCateChange, id];
+      setParams({ ...params, cate: newCateChange })
+      return newCateChange;
+    });
+  };
+  const handlePriceChange = (priceArr: number[]) => {
+    const priceMin = priceArr[0];
+    const priceMax = priceArr[1];
+    setParams({ ...params, priceMin: priceMin, priceMax: priceMax })
+  }
+  const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (value) => value ? formatCurrency(value, "VND", "") : value;
   const items: CollapseProps["items"] = [
     {
       key: "1",
@@ -41,7 +73,7 @@ export default function FilterSide() {
         <ul className="flex flex-col gap-2 text-lg">
           {listCate?.data?.map((item: Category, index: number) => (
             <li key={index}>
-              <Checkbox>{item.name}</Checkbox>
+              <Checkbox value={item?._id} onClick={() => handleCateChange(item._id ?? "")}>{item.name}</Checkbox>
             </li>
           ))}
         </ul>
@@ -92,13 +124,13 @@ export default function FilterSide() {
       ),
     },
     {
-      key: "5",
+      key: "4",
       label: <span className="font-normal">GIÁ</span>,
       children: (
         <div>
           <div className="flex gap-2 justify-center  text-sm text-[]">
-            <span>{priceFilter[0]} VNĐ</span> -{" "}
-            <span>{priceFilter[1]} VNĐ</span>
+            <span>{formatCurrency(priceFilter[0], "VND", "VNĐ")}</span> -{" "}
+            <span>{formatCurrency(priceFilter[1], "VND", "VNĐ")}</span>
           </div>
           <ConfigProvider
             theme={{
@@ -121,7 +153,9 @@ export default function FilterSide() {
               min={0}
               max={5000000}
               value={priceFilter}
+              tooltip={{ formatter }}
               onChange={setPriceFilter}
+              onChangeComplete={handlePriceChange}
               range={{ draggableTrack: true }}
             />
           </ConfigProvider>
@@ -131,7 +165,7 @@ export default function FilterSide() {
   ];
 
   if (loadingCate && loadingSize && loadingColor) {
-    return <Skeleton>Loading</Skeleton>
+    return <Skeleton active>Loading</Skeleton>
   }
   return (
     <div>
@@ -146,7 +180,7 @@ export default function FilterSide() {
         }}
       >
         <Collapse
-          defaultActiveKey={["1", "2", "3"]}
+          defaultActiveKey={["1", "2", "3", "4"]}
           expandIconPosition={"end"}
           items={items}
         />
