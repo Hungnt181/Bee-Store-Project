@@ -185,31 +185,36 @@ class ProductController {
 
 	async getProductWithConditions(req, res) {
 		try {
-			const { cate, size, color, price } = req.query;
+			const { cate, size, color, priceMin, priceMax } = req.query;
 			let queryProduct = { status: true };
 			if (cate) {
+				const cateArray = Array.isArray(cate) ? cate : cate.split(",");
 				queryProduct = {
 					...queryProduct,
-					id_cate: cate,
+					id_cate: { $in: cateArray },
 				};
 			}
-			if (price) {
+			if (priceMin || priceMax) {
 				queryProduct = {
 					...queryProduct,
-					price: price,
+					price: {},
 				};
+				if (priceMin) queryProduct.price.$gte = Number(priceMin);
+				if (priceMax) queryProduct.price.$lte = Number(priceMax);
 			}
 			let queryVariants = { status: true };
 			if (color) {
+				const colorArray = Array.isArray(color) ? color : color.split(",");
 				queryVariants = {
 					...queryVariants,
-					id_color: color,
+					id_color: { $in: colorArray },
 				};
 			}
 			if (size) {
+				const sizeArray = Array.isArray(size) ? size : size.split(",");
 				queryVariants = {
 					...queryVariants,
-					id_size: size,
+					id_size: { $in: sizeArray },
 				};
 			}
 			const products = await Product.find(queryProduct).lean();
@@ -223,10 +228,15 @@ class ProductController {
 					),
 				};
 			});
+			let filteredData = productsWithVariants;
+			if (color || size) {
+				filteredData = filteredData.filter((item) => item.variants.length > 0);
+			}
 			return res.status(StatusCodes.OK).json({
 				message: "Lọc danh sách sản phẩm thành công",
+				total: filteredData.length,
 				content: {
-					products: productsWithVariants,
+					products: filteredData,
 				},
 			});
 		} catch (error) {
