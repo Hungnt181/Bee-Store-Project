@@ -58,3 +58,29 @@ export interface ProductResponse {
   prevPage: number | null;
   nextPage: number | null;
 };
+
+export interface IVariant {
+  _id: string;
+  image: string[];
+  quantity: number;
+  status: boolean;
+  id_color: string;
+  id_size: string;
+  id_product: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IProductWithVariants {
+  _id: string;
+  name: string;
+  price: number;
+  about: string;
+  description: string;
+  status: boolean;
+  id_cate: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  variants: IVariant[];
+}
