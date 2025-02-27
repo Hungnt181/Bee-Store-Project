@@ -98,4 +98,5 @@ export interface IParamsProductCondition {
   size?: string | string[];
   priceMin?: number | string;
   priceMax?: number | string;
+  sortBy?: string;
 }

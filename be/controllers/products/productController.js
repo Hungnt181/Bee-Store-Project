@@ -185,7 +185,7 @@ class ProductController {
 
 	async getProductWithConditions(req, res) {
 		try {
-			const { cate, size, color, priceMin, priceMax } = req.query;
+			const { cate, size, color, priceMin, priceMax, sortBy } = req.query;
 			let queryProduct = { status: true };
 			if (cate) {
 				const cateArray = Array.isArray(cate) ? cate : cate.split(",");
@@ -231,6 +231,24 @@ class ProductController {
 			let filteredData = productsWithVariants;
 			if (color || size) {
 				filteredData = filteredData.filter((item) => item.variants.length > 0);
+			}
+			if (sortBy) {
+				switch (sortBy) {
+					case "new":
+						filteredData = filteredData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+						break;
+					case "hightToLow":
+						filteredData = filteredData.sort((a, b) => b.price - a.price);
+						break;
+					case "lowToHight":
+						filteredData = filteredData.sort((a, b) => a.price - b.price);
+						break;
+					default:
+						//pending...
+						//best sellers is not improved
+						filteredData = filteredData;
+						break;
+				}
 			}
 			return res.status(StatusCodes.OK).json({
 				message: "Lọc danh sách sản phẩm thành công",

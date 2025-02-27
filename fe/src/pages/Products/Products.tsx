@@ -7,8 +7,16 @@ import { useState } from "react";
 import { IParamsProductCondition } from "../../interface/Product";
 
 export default function FilterProducts() {
-  const [params, setParams] = useState<IParamsProductCondition>({});
+  const [params, setParams] = useState<IParamsProductCondition>({
+    sortBy: "new"
+  });
   const { data: filteredProducts, isPending: loadingProducts } = useGetProductsWithConditions(params);
+  const handleChangeSort = (value: string) => {
+    setParams({
+      ...params,
+      sortBy: value
+    })
+  }
 
   return (
     <div className="mt-5 max-w-[1240px] mx-6 xl:mx-auto">
@@ -56,13 +64,14 @@ export default function FilterProducts() {
               >
                 <Select
                   defaultValue="new"
-                  style={{ width: 120 }}
+                  style={{ width: 130 }}
                   options={[
                     { value: "new", label: "Mới nhất" },
-                    { value: "highPrice", label: "Giá: Tăng dần dần" },
-                    { value: "lowPrice", label: "Giá: Giảm dần" },
+                    { value: "lowToHight", label: "Giá: Tăng dần" },
+                    { value: "hightToLow", label: "Giá: Giảm dần" },
                     { value: "best", label: "Bán chạy" },
                   ]}
+                  onChange={handleChangeSort}
                 />
               </ConfigProvider>
             </div>
