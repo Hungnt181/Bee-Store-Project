@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const Schema = mongoose.Schema;
 
@@ -38,17 +39,25 @@ const OrderSchema = new Schema(
     itemsOrder: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ItemsOrders",
+        ref: "ItemOrder",
         //required: true,
       },
     ],
-    statue: {
-      type: Boolean,
-      default: true,
+    status: {
+      type: String,
+      enum: [
+        "Chưa xác nhận",
+        "Đã xác nhận",
+        "Đang giao",
+        "Hoàn thành",
+        "Hoàn đơn",
+        "Đã hủy",
+      ],
+      default: "Chưa xác nhận",
     },
   },
   { timestamps: true }
 );
+OrderSchema.plugin(mongoosePaginate);
 const Order = mongoose.model("Order", OrderSchema);
-
 export default Order;
