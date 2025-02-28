@@ -40,8 +40,8 @@ ActionDetail) {
     setSelectedSize(null); // Reset size khi đổi màu
   };
 
-  console.log("selectedColor", selectedColor);
-  console.log("selectedSize", selectedSize);
+  // console.log("selectedColor", selectedColor);
+  // console.log("selectedSize", selectedSize);
 
   // Lọc size theo màu
   const getSizesByColor = (variants: Variant[], selectedColor: string) => {
@@ -70,7 +70,7 @@ ActionDetail) {
     }
   }, [selectedColor, variants]);
 
-  console.log("sizeOfColor", sizeOfColor);
+  // console.log("sizeOfColor", sizeOfColor);
   // handle Size
   const handleSelectSize = (size: string) => {
     setSelectedSize(size);
@@ -86,7 +86,7 @@ ActionDetail) {
     }
   }, [selectedVariant, newImage]);
 
-  console.log("Selected Variant:", selectedVariant);
+  // console.log("Selected Variant:", selectedVariant);
   return (
     <div>
       {/* INFOR MATION PRODUCT */}
@@ -112,8 +112,8 @@ ActionDetail) {
         <p className="font-medium">Màu</p>
         <div className="flex items-center gap-2 mt-2">
           <div className="relative cursor-pointer  flex">
-            {colors.map((item: Color) => (
-              <div
+            {colors.map((item: Color, index) => (
+              <div key={index}
                 className={`border ${
                   item.name === selectedColor
                     ? "border-b-black border-3"
@@ -139,8 +139,8 @@ ActionDetail) {
       <div className="mt-4">
         <p className="font-medium">Kích thước</p>
         <div className="flex items-center gap-2 mt-2">
-          {sizes.map((item: Size) => (
-            <div
+          {sizes.map((item: Size, index) => (
+            <div key={index}
               className={`border flex justify-center items-center cursor-pointer w-10 h-10 
             ${
               item.name === selectedSize

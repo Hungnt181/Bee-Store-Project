@@ -76,7 +76,7 @@ export default function ProductDetail() {
     }
   }, [variants]);
 
-  console.log("dataPro_Cate", dataPro_Cate);
+  // console.log("dataPro_Cate", dataPro_Cate);
 
   useEffect(() => {
     if (dataVariant) {
@@ -153,8 +153,8 @@ export default function ProductDetail() {
       <div className="mt-8">
         <h3 className="text-xl font-medium">CÓ THỂ BẠN QUAN TÂM</h3>
         <div className="grid grid-cols-4 items-center gap-2 mt-4">
-          {dataPro_Cate.map((item: ProductType) => (
-            <ProductCard product={item as ProductType} />
+          {dataPro_Cate.map((item: ProductType, index) => (
+            <ProductCard product={item as ProductType} key={index}/>
           ))}
         </div>
       </div>
@@ -164,7 +164,7 @@ export default function ProductDetail() {
         <div className="grid grid-cols-4 items-center gap-2 mt-4">
           {dataNewPro?.products.map(
             (item: ProductType, index: number) =>
-              index < 4 && <ProductCard product={item as ProductType} />
+              index < 4 && <ProductCard product={item as ProductType} key={index}/>
           )}
         </div>
       </div>
