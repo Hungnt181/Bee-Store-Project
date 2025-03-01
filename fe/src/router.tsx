@@ -20,6 +20,12 @@ import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import PaymentPage from "./pages/Payment/pagePayment";
+import OrderConfirmation from "./pages/Payment/pageInvoice";
+import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
+import PaymentSuccess from "./pages/Payment/notify/success";
+import PaymentSuccess2 from "./pages/Payment/notify/success2";
+import OrderCancelled from "./pages/Payment/notify/cancel";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +38,31 @@ export const router = createBrowserRouter([
       { path: "/products/:id", element: <ProductDetail /> },
     ],
   },
+  {
+    path: "/payment",
+    element: <PaymentPage />,
+  },
+  {
+    path: "/invoice",
+    element: <OrderConfirmation />,
+  },
+  {
+    path: "/VnPayQR",
+    element: <PaymentPageOl />,
+  },
+  {
+    path: "/notify",
+    element: <PaymentSuccess />,
+  },
+  {
+    path: "/notify2",
+    element: <PaymentSuccess2 />,
+  },
+  {
+    path: "/cancel",
+    element: <OrderCancelled />,
+  },
+
   {
     path: "/admin",
     element: <LayoutAdmin />,
