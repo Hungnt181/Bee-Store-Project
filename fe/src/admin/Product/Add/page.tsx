@@ -164,16 +164,12 @@ const AdminProductAdd = () => {
     <div>
       <Form
         form={form}
-        labelCol={{
-          span: 6,
-        }}
-        wrapperCol={{
-          span: 14,
-        }}
+        labelCol={{ span: 6, }}
+        wrapperCol={{ span: 16, }}
         layout="horizontal"
-        style={{
-          maxWidth: 600,
-        }}
+        colon={false}
+        labelAlign="left"
+        style={{ maxWidth: 600, marginTop: 20, marginLeft: 20, }}
         onFinish={(formData) => {
           addProduct(formData);
         }}
@@ -239,7 +235,7 @@ const AdminProductAdd = () => {
         {/* Biến thể */}
         {/* upload imga */}
         <Form.Item
-          label="Upload"
+          label="Hình ảnh"
           valuePropName="fileList"
           getValueFromEvent={normFile}
           rules={[{ required: true, message: "Vui lòng upload ảnh" }]}
@@ -255,7 +251,7 @@ const AdminProductAdd = () => {
           >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
+              <div style={{ marginTop: 8 }}>Tải lên</div>
             </button>
           </Upload>
         </Form.Item>

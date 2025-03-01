@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  DesktopOutlined,
   FileOutlined,
+  FormatPainterOutlined,
   GiftFilled,
   PieChartOutlined,
+  ProductOutlined,
   SkinOutlined,
   TeamOutlined,
+  UnorderedListOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
@@ -33,15 +35,15 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
-  getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
-  getItem("Quản lý size", "5", <DesktopOutlined />, undefined, "size"),
-  getItem("Voucher", "4", <GiftFilled />, undefined, "voucher"),
-  getItem("Account", "5", <UserOutlined />, [
+  getItem("Danh mục", "3", <UnorderedListOutlined />, undefined, "category"),
+  getItem("Kích cỡ", "4", <ProductOutlined />, undefined, "size"),
+  getItem("Màu sắc", "5", <FormatPainterOutlined />, undefined, "color"),
+  getItem("Mã giảm giá", "6", <GiftFilled />, undefined, "voucher"),
+  getItem("Tài khoản", "7", <UserOutlined />, [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
-  getItem("Quản lý màu", "6", <DesktopOutlined />, undefined, "color"),
-  getItem("Team", "7", <TeamOutlined />, [
+  getItem("Team", "8", <TeamOutlined />, [
     getItem("Team 1", "sub3"),
     getItem("Team 2", "sub4"),
   ]),

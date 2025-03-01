@@ -23,8 +23,19 @@ import VoucherEditPage from "./admin/Voucher/Edit/page";
 import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
-import ProductDetail from "./pages/ProductDetail/ProductDetail"
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import AccountLayout from "./layouts/client/AccountLayout";
+import MyProfile from "./pages/Account/Profile/MyProfile";
+import MyOrders from "./pages/Account/Orders/MyOrders";
+import MyAddress from "./pages/Account/Address/MyAddress";
+import PaymentPage from "./pages/Payment/pagePayment";
+import OrderConfirmation from "./pages/Payment/pageInvoice";
+import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
+import PaymentSuccess from "./pages/Payment/notify/success";
+import PaymentSuccess2 from "./pages/Payment/notify/success2";
+import OrderCancelled from "./pages/Payment/notify/cancel";
 import NotFoundPage from "./website/components/Errors/404";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -34,8 +45,51 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
+      {
+        path: "/account",
+        element: <AccountLayout />,
+        children: [
+          {
+            index: true,
+            element: <MyProfile />,
+          },
+          {
+            path: "orders",
+            element: <MyOrders />,
+          },
+          {
+            path: "address",
+            element: <MyAddress />,
+          },
+        ],
+      },
     ],
   },
+  {
+    path: "/payment",
+    element: <PaymentPage />,
+  },
+  {
+    path: "/invoice",
+    element: <OrderConfirmation />,
+  },
+  {
+    path: "/VnPayQR",
+    element: <PaymentPageOl />,
+  },
+  {
+    path: "/notify",
+    element: <PaymentSuccess />,
+  },
+  {
+    path: "/notify2",
+    element: <PaymentSuccess2 />,
+  },
+  {
+    path: "/cancel",
+    element: <OrderCancelled />,
+  },
+
   {
     path: "/404",
     element: <NotFoundPage />,
