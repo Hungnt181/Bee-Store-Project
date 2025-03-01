@@ -24,6 +24,10 @@ import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import AccountLayout from "./layouts/client/AccountLayout";
+import MyProfile from "./pages/Account/Profile/MyProfile";
+import MyOrders from "./pages/Account/Orders/MyOrders";
+import MyAddress from "./pages/Account/Address/MyAddress";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +38,24 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
+      {
+        path: "/account",
+        element: <AccountLayout />,
+        children: [
+          {
+            index: true,
+            element: <MyProfile />,
+          },
+          {
+            path: "orders",
+            element: <MyOrders />,
+          },
+          {
+            path: "address",
+            element: <MyAddress />,
+          },
+        ],
+      },
     ],
   },
   {
