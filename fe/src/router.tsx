@@ -23,8 +23,8 @@ import VoucherEditPage from "./admin/Voucher/Edit/page";
 import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
-import ProductDetail from "./pages/ProductDetail/ProductDetail";
-
+import ProductDetail from "./pages/ProductDetail/ProductDetail"
+import NotFoundPage from "./website/components/Errors/404";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +35,10 @@ export const router = createBrowserRouter([
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
     ],
+  },
+  {
+    path: "/404",
+    element: <NotFoundPage />,
   },
   {
     path: "/admin",
