@@ -34,6 +34,7 @@ import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
 import PaymentSuccess from "./pages/Payment/notify/success";
 import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
+import NotFoundPage from "./website/components/Errors/404";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ export const router = createBrowserRouter([
     element: <OrderCancelled />,
   },
 
+  {
+    path: "/404",
+    element: <NotFoundPage />,
+  },
   {
     path: "/admin",
     element: <LayoutAdmin />,
