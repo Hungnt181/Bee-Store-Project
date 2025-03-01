@@ -35,6 +35,8 @@ import PaymentSuccess from "./pages/Payment/notify/success";
 import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
 import NotFoundPage from "./website/components/Errors/404";
+import AdminOrderPage from "./admin/Order/page";
+import AdminOrderDetail from "./admin/Order/Detail/page";
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +121,8 @@ export const router = createBrowserRouter([
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
       { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
+      { path: "/admin/order", element: <AdminOrderPage /> },
+      { path: "/admin/order/:id", element: <AdminOrderDetail /> },
     ],
   },
 ]);

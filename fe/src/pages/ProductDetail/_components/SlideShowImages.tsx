@@ -38,9 +38,9 @@ export default function SlideShowImages({ images }: { images: string[] }) {
           ))}
         </Carousel>
         {/* DISCOUNT */}
-        <div className="absolute text-sm text-white font-medium px-4 py-1 top-2 right-0 bg-red-500">
+        {/* <div className="absolute text-sm text-white font-medium px-4 py-1 top-2 right-0 bg-red-500">
           -15%
-        </div>
+        </div> */}
       </div>
     </div>
   );

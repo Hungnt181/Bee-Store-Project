@@ -14,10 +14,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
         <Link to={`/products/${product._id}`}>
           <img
             className="w-auto h-auto min-h-[356px] object-cover transition-transform duration-300 group-hover:scale-105"
-            src={
-              variants?.variants[0]?.image[0] ||
-              "https://pos.nvncdn.com/8ca22b-20641/ps/20241203_ADbovjN911.jpeg"
-            }
+            src={variants?.variants[0]?.image[0]}
             alt=""
           />
         </Link>
@@ -26,13 +23,13 @@ export default function ProductCard({ product }: { product: ProductType }) {
           className="mt-3.5 text-center flex flex-col gap-2"
         >
           <h3 className="text-base capitalize underline hover:text-[#cccccc]">
-            {product.name}
+            {product?.name}
           </h3>
           <p className="text-[#f7040f] flex gap-2 justify-center items-center">
             {/* <span className="line-through text-black font-medium">990.000đ</span> */}
-            {product.price}
+            {product?.price}
           </p>
-          <p className="text-sm font-thin uppercase">{product.slug}</p>
+          <p className="text-sm font-thin uppercase">{product?.slug}</p>
         </Link>
         {/* discount absolute */}
         <div className="absolute flex gap-2 items-center top-2 right-0 ">
@@ -48,9 +45,9 @@ export default function ProductCard({ product }: { product: ProductType }) {
               <HeartOutlined className="text-xl " />
             )}
           </div>
-          <div className="w-[60px] text-white text-center py-1.5 bg-[#f7040f]">
+          {/* <div className="w-[60px] text-white text-center py-1.5 bg-[#f7040f]">
             -15%
-          </div>
+          </div> */}
         </div>
       </div>
     </>

@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { Link, useParams } from "react-router-dom";
 import "../../assets/Css/Admin/Product/page.css";
-import Variant from "../../interface/Variant";
+import { Variant } from "../../interface/Variant";
 import { MoreOutlined } from "@ant-design/icons";
 import useGetDetail from "../hooks/useGetDetail";
 import useDelete from "../hooks/useDelete";

@@ -41,7 +41,7 @@ const AdminProductList = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const pageSize = 10;
   const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate&key=${searchKeyState}`;
-  const key = "products";
+  const key = "dataPage";
 
   //cate query
   const urlCate = `http://localhost:3000/api/categories`;

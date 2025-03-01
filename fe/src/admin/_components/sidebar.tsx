@@ -5,6 +5,7 @@ import {
   GiftFilled,
   PieChartOutlined,
   ProductOutlined,
+  PrinterOutlined,
   SkinOutlined,
   TeamOutlined,
   UnorderedListOutlined,
@@ -43,6 +44,7 @@ const items: MenuItem[] = [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
+  getItem("Quản lý đơn hàng", "10", <PrinterOutlined />, undefined, "order"),
   getItem("Team", "8", <TeamOutlined />, [
     getItem("Team 1", "sub3"),
     getItem("Team 2", "sub4"),
