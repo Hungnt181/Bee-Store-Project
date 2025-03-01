@@ -64,7 +64,7 @@ const AdminCategory: React.FC = () => {
 
   return (
     <div>
-      <h1>DANH MỤC LOẠI SẢN PHẨM</h1>
+      <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH DANH MỤC</h1>
       <Flex gap={0} style={{ marginBottom: "30px" }} justify="space-between">
         <Form name="searchForm" layout="inline" onFinish={handleFinish}>
           <Tooltip title="Nhập tên danh mục" placement="right">

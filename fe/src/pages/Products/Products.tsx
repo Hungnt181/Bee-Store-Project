@@ -1,11 +1,23 @@
 import { Link } from "react-router-dom";
 import FilterSide from "./_components/FilterSide";
 import { ConfigProvider, Pagination, Select, Spin } from "antd";
-import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import { useGetProductsWithConditions } from "../../hooks/queries/products";
+import { useState } from "react";
+import { IParamsProductCondition } from "../../interface/Product";
 
 export default function FilterProducts() {
-  const { data, isPending } = useGetAllProducts();
+  const [params, setParams] = useState<IParamsProductCondition>({
+    sortBy: "new"
+  });
+  const { data: filteredProducts, isPending: loadingProducts } = useGetProductsWithConditions(params);
+  const handleChangeSort = (value: string) => {
+    setParams({
+      ...params,
+      sortBy: value
+    })
+  }
+
   return (
     <div className="mt-5 max-w-[1240px] mx-6 xl:mx-auto">
       {/* BREADCRUMB */}
@@ -28,10 +40,10 @@ export default function FilterProducts() {
       <div className="mt-6">
         <h3 className="text-2xl">
           SẢN PHẨM{" "}
-          <span className="text-sm ml-2 font-light">(979 Sản phẩm)</span>
+          <span className="text-sm ml-2 font-light">({filteredProducts?.total || 0} Sản phẩm)</span>
         </h3>
         <div className="mt-6 grid grid-cols-[25%_75%] gap-5">
-          <FilterSide />
+          <FilterSide params={params} setParams={setParams} />
           {/* FILTER SORT PRODUCTS */}
           <div>
             <div className="flex justify-end items-center gap-2">
@@ -52,22 +64,23 @@ export default function FilterProducts() {
               >
                 <Select
                   defaultValue="new"
-                  style={{ width: 120 }}
+                  style={{ width: 130 }}
                   options={[
                     { value: "new", label: "Mới nhất" },
-                    { value: "highPrice", label: "Giá: Tăng dần dần" },
-                    { value: "lowPrice", label: "Giá: Giảm dần" },
+                    { value: "lowToHight", label: "Giá: Tăng dần" },
+                    { value: "hightToLow", label: "Giá: Giảm dần" },
                     { value: "best", label: "Bán chạy" },
                   ]}
+                  onChange={handleChangeSort}
                 />
               </ConfigProvider>
             </div>
             {/* PRODUCTS LIST */}
-            {data && (
+            {filteredProducts && (
               <>
-                {!isPending ? (
+                {!loadingProducts ? (
                   <div className="grid grid-cols-3 gap-2 mt-4">
-                    {data.products.map((item, index) => (
+                    {filteredProducts?.content.products.map((item, index) => (
                       <ProductCard key={index} product={item} />
                     ))}
                   </div>
@@ -77,10 +90,10 @@ export default function FilterProducts() {
                   </div>
                 )}
                 {/* PAGINATION */}
-                {!isPending && (
-                  <div className="flex justify-center mt-2">
-                    <Pagination defaultCurrent={1} total={data.totalDocs} />
-                  </div>
+                {!loadingProducts && (
+                  // <div className="flex justify-center mt-2">
+                  <Pagination defaultCurrent={1} pageSize={9} total={filteredProducts?.total || 1} align="end" />
+                  // </div>
                 )}
               </>
             )}

@@ -5,7 +5,6 @@ import SlideShowBanner from "./_components/SlideShowBanner";
 
 export default function HomePage() {
   const { data, isPending } = useGetAllProducts();
-  console.log(data);
   const navigate = useNavigate();
   const handleViewProduct = () => {
     navigate("/products");
