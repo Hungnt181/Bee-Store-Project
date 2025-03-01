@@ -11,8 +11,9 @@ import {
   notification,
   Form,
   Input,
+  Flex,
 } from "antd"; // Import các thành phần UI từ Ant Design
-import { MoreOutlined } from "@ant-design/icons"; // Import biểu tượng từ Ant Design
+import { MoreOutlined, PlusOutlined } from "@ant-design/icons"; // Import biểu tượng từ Ant Design
 import axios from "axios"; // Import axios để gọi API
 import { useEffect, useState } from "react"; // Import useEffect và useState để quản lý trạng thái và hiệu ứng
 import { useNavigate } from "react-router-dom"; // Import useNavigate để điều hướng trang
@@ -173,29 +174,30 @@ const AdminColorList = () => {
 
   return (
     <div>
-      <h2>DANH SÁCH MÀU SẮC</h2>
-
+      <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH MÀU SẮC</h1>
       {/* Ô tìm kiếm */}
-      <Form style={{ marginBottom: 10 }}>
-        <Form.Item>
-          <Input
-            placeholder="Tìm kiếm theo tên hoặc mã màu"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            allowClear
-          />
-        </Form.Item>
-      </Form>
+      <Flex gap={0} justify="space-between">
+        <Form style={{ marginBottom: 10 }}>
+          <Form.Item style={{ width: "400px" }}>
+            <Input
+              placeholder="Tìm kiếm theo tên hoặc mã màu"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              allowClear
+            />
+          </Form.Item>
+        </Form>
 
-      {/* Nút thêm màu sắc */}
-      <Button
-        type="primary"
-        onClick={() => navigate("/admin/color/add")}
-        style={{ marginBottom: 10 }}
-      >
-        Thêm màu sắc
-      </Button>
-
+        {/* Nút thêm màu sắc */}
+        <Button
+          type="primary"
+          onClick={() => navigate("/admin/color/add")}
+          style={{ marginBottom: 10 }}
+          icon={<PlusOutlined />}
+        >
+          Thêm mới
+        </Button>
+      </Flex>
       {/* Bảng hiển thị danh sách màu */}
       <Table<Color>
         dataSource={filteredColors} // Dữ liệu nguồn cho bảng

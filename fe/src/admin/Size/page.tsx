@@ -9,7 +9,7 @@ import {
   MenuProps,
   Tooltip,
 } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -78,11 +78,13 @@ const AdminSizeList = () => {
       title: "Tên kích thước",
       dataIndex: "name",
       key: "name",
+      width: 300
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
+      width: 300,
       render: (value: string) => (
         <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
           <span>{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -93,6 +95,7 @@ const AdminSizeList = () => {
       title: "Ngày sửa cuối",
       dataIndex: "updatedAt",
       key: "updatedAt",
+      width: 300,
       render: (value: string) => (
         <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
           <span>{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -102,8 +105,9 @@ const AdminSizeList = () => {
     {
       title: "Thao tác",
       key: "action",
+      width: 150,
       fixed: "right",
-      align: "left",
+      align: "center",
       render: (_: unknown, size: Size) => {
         const items: MenuProps["items"] = [
           {
@@ -149,13 +153,14 @@ const AdminSizeList = () => {
 
   return (
     <div>
-      <h2>DANH SÁCH KÍCH THƯỚC</h2>
+      <h2 className="text-3xl mb-5 font-semibold">DANH SÁCH KÍCH THƯỚC</h2>
       <Button
         type="primary"
         onClick={() => navigate("/admin/size/add")}
         style={{ marginBottom: 10 }}
+        icon={<PlusOutlined />}
       >
-        Thêm kích thước
+        Thêm mới
       </Button>
       <Table<Size>
         dataSource={sizes}
