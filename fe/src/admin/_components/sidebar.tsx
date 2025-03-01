@@ -34,6 +34,7 @@ const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
   getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
+  getItem("Quản lý size", "5", <DesktopOutlined />, undefined, "size"),
   getItem("Voucher", "4", <GiftFilled />, undefined, "voucher"),
   getItem("Account", "5", <UserOutlined />, [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
