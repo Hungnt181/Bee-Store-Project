@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Variant } from "../../../interface/Variant";
 import Color from "../../../interface/Color";
 import Size from "../../../interface/Size";
+import CartModalbox from "./CartModalbox";
+import { useParams } from "react-router-dom";
 
 interface ActionDetail {
   variants: Variant[];
@@ -11,20 +13,25 @@ interface ActionDetail {
   newImage: (images: string[] | null) => void;
 }
 
+interface CartItemDetail {
+  idProduct: string,
+  idVariant: string,
+  color: string,
+  size: string,
+  quantity: number,
+}
+
 export default function ActionDetail({
   variants,
   colors,
   sizes,
   newImage,
 }: // onVariantChange,
-ActionDetail) {
+  ActionDetail) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const handleClickBuy = () => {
-    // console.log(quantity);
-  };
 
   useEffect(() => {
     if (variants.length > 0) {
@@ -86,7 +93,41 @@ ActionDetail) {
     }
   }, [selectedVariant, newImage]);
 
-  // console.log("Selected Variant:", selectedVariant);
+  // console.log("Selected Variant:", selectedVariant?.id_size.name);
+
+  //CART
+  const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  let { id } = useParams();
+  const handleClickBuy = () => {
+    if (selectedVariant && selectedVariant._id && id && selectedVariant.id_color.hexcode && selectedVariant?.id_size.name) {
+      let buyQuantity = quantity
+      const newItem: CartItemDetail = {
+        idProduct: id,
+        idVariant: selectedVariant._id.toString(),
+        color: selectedVariant.id_color.hexcode,
+        size: selectedVariant?.id_size.name,
+        quantity: buyQuantity,
+      };
+      // console.log(newItem);
+
+      const updatedCartItems = [...cartItems, newItem];
+      setCartItems(updatedCartItems);
+      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    }
+    else {
+      // setCartItems([])
+    }
+    setIsModalOpen(true);
+  };
+  // const handleCheckout = () => {
+  //   console.log("checkout clicked");
+  // }
+
+
   return (
     <div>
       {/* INFOR MATION PRODUCT */}
@@ -114,13 +155,12 @@ ActionDetail) {
           <div className="relative cursor-pointer  flex">
             {colors.map((item: Color, index) => (
               <div key={index}
-                className={`border ${
-                  item.name === selectedColor
-                    ? "border-b-black border-3"
-                    : item.hexcode === "#ffffff"
+                className={`border ${item.name === selectedColor
+                  ? "border-b-black border-3"
+                  : item.hexcode === "#ffffff"
                     ? "border-gray-400 border"
                     : "border-none"
-                }`}
+                  }`}
                 style={{
                   marginLeft: "5px",
                   backgroundColor: item.hexcode,
@@ -142,16 +182,14 @@ ActionDetail) {
           {sizes.map((item: Size, index) => (
             <div key={index}
               className={`border flex justify-center items-center cursor-pointer w-10 h-10 
-            ${
-              item.name === selectedSize
-                ? "bg-black text-white"
-                : "border-[#c0c0c0]"
-            } 
-            ${
-              sizeOfColor?.includes(item.name)
-                ? ""
-                : "opacity-50 pointer-events-none"
-            }`}
+            ${item.name === selectedSize
+                  ? "bg-black text-white"
+                  : "border-[#c0c0c0]"
+                } 
+            ${sizeOfColor?.includes(item.name)
+                  ? ""
+                  : "opacity-50 pointer-events-none"
+                }`}
               // handle fn
               onClick={() => handleSelectSize(item.name)}
             >
@@ -207,6 +245,11 @@ ActionDetail) {
         >
           Đặt mua
         </button>
+        <CartModalbox
+          isOpen={isModalOpen}
+          cartItems={cartItems}
+          onClose={handleCloseModal}
+        />
       </div>
     </div>
   );

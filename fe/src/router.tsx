@@ -24,6 +24,7 @@ import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import CartPage from "./pages/Cart/CartPage";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
+      { path: "/cart", element: <CartPage /> },
     ],
   },
   {
