@@ -24,6 +24,8 @@ import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import AdminOrderPage from "./admin/Order/page";
+import AdminOrderDetail from "./admin/Order/Detail/page";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +63,8 @@ export const router = createBrowserRouter([
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
       { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
+      { path: "/admin/order", element: <AdminOrderPage /> },
+      { path: "/admin/order/:id", element: <AdminOrderDetail /> },
     ],
   },
 ]);

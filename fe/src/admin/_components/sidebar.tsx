@@ -4,6 +4,7 @@ import {
   FileOutlined,
   GiftFilled,
   PieChartOutlined,
+  PrinterOutlined,
   SkinOutlined,
   TeamOutlined,
   UserOutlined,
@@ -41,6 +42,7 @@ const items: MenuItem[] = [
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
   getItem("Quản lý màu", "6", <DesktopOutlined />, undefined, "color"),
+  getItem("Quản lý đơn hàng", "10", <PrinterOutlined />, undefined, "order"),
   getItem("Team", "7", <TeamOutlined />, [
     getItem("Team 1", "sub3"),
     getItem("Team 2", "sub4"),

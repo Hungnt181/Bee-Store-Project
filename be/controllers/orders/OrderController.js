@@ -41,8 +41,18 @@ class OrderController {
 
       if (_embed) {
         const embeds = _embed.split(",");
+        // Nếu itemsOrder được yêu cầu, hãy populate nó kèm nested populate cho id_variant
+        if (embeds.includes("itemsOrder")) {
+          query = query.populate({
+            path: "itemsOrder",
+            populate: { path: "id_variant" },
+          });
+        }
+        // Populate các trường khác (tránh populate id_variant riêng lẻ)
         embeds.forEach((embed) => {
-          query = query.populate(embed);
+          if (embed !== "itemsOrder" && embed !== "id_variant") {
+            query = query.populate(embed);
+          }
         });
       }
 
@@ -50,11 +60,12 @@ class OrderController {
       if (!order) {
         return res.status(404).json({ message: "Không tìm thấy order" });
       }
-      res.status(200).json(product);
+      res.status(200).json(order);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
+
   async getOrders(req, res) {
     try {
       const { _page = 1, _limit = 10, _embed } = req.query;
