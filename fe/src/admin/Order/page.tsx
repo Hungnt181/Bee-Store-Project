@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Order } from "../../interface/Order";
 import axios from "axios";
-import { Button, Pagination, Skeleton, Table, TableProps, Tag } from "antd";
+import {
+  Button,
+  Pagination,
+  Skeleton,
+  Table,
+  TableProps,
+  Tag,
+  Tooltip,
+} from "antd";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -56,7 +64,11 @@ const AdminOrderPage = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       render: (value: Date) => {
-        return dayjs(value).format("DD/MM/YYYY HH:mm:ss");
+        return (
+          <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
+            {dayjs(value).format("DD/MM/YYYY")}
+          </Tooltip>
+        );
       },
     },
     {
@@ -98,6 +110,42 @@ const AdminOrderPage = () => {
           <Tag color="green">Đã thanh toán</Tag>
         ) : (
           <Tag color="red">Chưa thanh toán</Tag>
+        );
+      },
+    },
+    {
+      title: "Xác nhận của khách hàng",
+      dataIndex: "isConfirm",
+      key: "isConfirm",
+      render: (_: unknown, item: Order) => {
+        return item.isConfirm ? (
+          <Tag color="green">Đã nhận</Tag>
+        ) : (
+          <Tag color="red">Chưa nhận</Tag>
+        );
+      },
+    },
+    {
+      title: "Trạng thái đơn",
+      dataIndex: "status",
+      key: "status",
+      render: (_: unknown, item: Order) => {
+        return (
+          <p
+            className={`${
+              item?.status === "Hoàn thành"
+                ? "text-green-500"
+                : item?.status === "Chưa xác nhận"
+                ? "text-yellow-500"
+                : item?.status === "Đang giao"
+                ? "text-purple-500"
+                : item?.status === "Đã hủy"
+                ? "text-red-500"
+                : "text-blue-400"
+            } font-medium`}
+          >
+            {item?.status}
+          </p>
         );
       },
     },

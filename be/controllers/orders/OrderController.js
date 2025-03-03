@@ -45,7 +45,15 @@ class OrderController {
         if (embeds.includes("itemsOrder")) {
           query = query.populate({
             path: "itemsOrder",
-            populate: { path: "id_variant" },
+            populate: {
+              path: "id_variant",
+              populate: [
+                { path: "id_color" },
+                { path: "id_size" },
+                { path: "id_product" },
+              ],
+            },
+            options: { sort: { name: 1 } },
           });
         }
         // Populate các trường khác (tránh populate id_variant riêng lẻ)
@@ -72,6 +80,7 @@ class OrderController {
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
+        sort: { createdAt: -1 },
       };
 
       let query = Order.find();
@@ -103,7 +112,7 @@ class OrderController {
         "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
         "Đã xác nhận": ["Đang giao", "Đã hủy"],
         "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": [],
+        "Hoàn thành": ["Đã hủy"],
         "Đã hủy": [],
       };
 
@@ -124,6 +133,12 @@ class OrderController {
 
       // Cập nhật trạng thái
       order.status = status;
+      // Đỏi trạng thái isPaid
+      if (status === "Hoàn thành") {
+        order.isPaid = true;
+        order.completedAt = new Date(); // Lưu thời gian hoàn thành
+        console.log(order.completedAt);
+      }
       await order.save();
 
       return res.status(StatusCodes.OK).json({
@@ -141,13 +156,6 @@ class OrderController {
   // Các trạng thái hợp lệ
   async updateStatusByClient(req, res) {
     try {
-      const validClientTransitions = {
-        "Chưa xác nhận": ["Đã hủy"],
-        "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": ["Hoàn đơn"],
-        "Hoàn đơn": [],
-        "Đã hủy": [],
-      };
       const { status } = req.body;
       const { id } = req.params;
 
@@ -156,28 +164,28 @@ class OrderController {
           .status(400)
           .json({ message: "Trạng thái không được để trống!" });
       }
+
       const order = await Order.findById(id);
       if (!order) {
         return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
       }
 
-      // Kiểm tra trạng thái hợp lệ
-      if (!validClientTransitions[order.status].includes(status)) {
+      // Chỉ cho phép khách hàng cập nhật theo quy tắc
+      if (order.status === "Chưa xác nhận" && status === "Đã hủy") {
+        order.status = "Đã hủy";
+      } else if (order.status === "Hoàn thành" && status === "Hoàn đơn") {
+        if (!order.isConfirm) {
+          return res
+            .status(400)
+            .json({ message: "Bạn chưa được phép hoàn đơn!" });
+        }
+        order.status = "Hoàn đơn";
+      } else {
         return res.status(400).json({
           message: `Bạn không thể chuyển từ trạng thái "${order.status}" sang "${status}"!`,
         });
       }
 
-      // Ngăn khách hàng xác nhận "Hoàn thành" nếu đơn chưa được giao
-      if (status === "Hoàn thành" && order.status !== "Đang giao") {
-        return res.status(400).json({
-          message:
-            "Bạn chỉ có thể xác nhận 'Hoàn thành' khi đơn hàng đang được giao!",
-        });
-      }
-
-      // Cập nhật trạng thái đơn hàng
-      order.status = status;
       await order.save();
 
       return res.status(200).json({
@@ -185,9 +193,7 @@ class OrderController {
         data: order,
       });
     } catch (error) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
-      });
+      return res.status(500).json({ message: error.message });
     }
   }
 }
