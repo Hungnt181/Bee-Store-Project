@@ -10,10 +10,21 @@ const Signup = () => {
 
     const { mutate } = useMutation({
         mutationFn: async (formData) => {
-            await axios.post(`http://localhost:3000/api/signup_user`, formData);
+            try {
+                await axios.post(`http://localhost:3000/api/signup_user`, formData);
+            } catch (error) {
+                if (error.response && error.response.data.message) {
+                    throw new Error(error.response.data.message);
+                } else {
+                    throw new Error('Có lỗi xảy ra, vui lòng thử lại');
+                }
+            }
         },
         onSuccess: () => {
             message.success("Đăng ký thành công, Vui lòng vào hòm thư trong gmail để xác nhận tài khoản");
+        },
+        onError: (error) => {
+            message.error(error.message);
         }
     });
 
@@ -37,7 +48,7 @@ const Signup = () => {
                         }
                     ]}
                 >
-                    <Input placeholder="Họ tên" />
+                    <Input className="input" placeholder="Họ tên" />
                 </Form.Item>
                 <Form.Item
                     name="email"
@@ -52,7 +63,7 @@ const Signup = () => {
                         }
                     ]}
                 >
-                    <Input placeholder="Email" />
+                    <Input className="input" placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     name="tel"
@@ -71,7 +82,7 @@ const Signup = () => {
                         }
                     ]}
                 >
-                    <Input placeholder="Số điện thoại" />
+                    <Input className="input" placeholder="Số điện thoại" />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -90,7 +101,7 @@ const Signup = () => {
                         }
                     ]}
                 >
-                    <Input.Password placeholder="Mật khẩu" />
+                    <Input.Password className="input" placeholder="Mật khẩu" />
                 </Form.Item>
                 <Form.Item
                     name="confirmPassword"
@@ -111,7 +122,7 @@ const Signup = () => {
                         })
                     ]}
                 >
-                    <Input.Password placeholder="Nhập lại mật khẩu" />
+                    <Input.Password className="input" placeholder="Nhập lại mật khẩu" />
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 24 }}>
                     <Button type="primary" htmlType="submit" className="submit-button">

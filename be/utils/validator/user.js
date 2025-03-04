@@ -11,6 +11,11 @@ const signUpUserValidator = Joi.object({
     address: Joi.string(),
 })
 
+const updatePasswordUser = Joi.object({
+    password: Joi.string().required().min(6).max(25),
+    confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+})
+
 const signUpAdminValidator = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
@@ -29,4 +34,4 @@ const signInValidator = Joi.object({
     password: Joi.string().required().min(6),
 })
 
-export { signUpUserValidator, signUpAdminValidator, signInValidator, updateAdminValidator }
+export { signUpUserValidator, signUpAdminValidator, signInValidator, updateAdminValidator, updatePasswordUser }

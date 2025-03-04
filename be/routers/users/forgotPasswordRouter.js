@@ -14,38 +14,66 @@ router.post('/', async (req, res) => {
         });
     }
 
-    // Tạo token và thời gian hết hạn
-    const resetToken = user._id; // Sử dụng user ID làm token (có thể thay bằng token ngẫu nhiên)
-    const resetTokenExpiry = Date.now() + 3600000; // Token có hiệu lực trong 1 giờ
+    // Tạo token 
+    const resetToken = user._id;
 
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpiry = resetTokenExpiry;
     await user.save();
 
     // Cấu hình nodemailer
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'thinh07122002@gmail.com',
-            pass: 'jzrx aimw jdki cxqj'
+            user: 'beestore1802@gmail.com',
+            pass: 'jqst iupd chwk tnsx'
         }
     });
 
     const mailOptions = {
-        from: 'Bee-Store',
+        from: 'BeeStore',
         to: email,
-        subject: 'Đặt lại mật khẩu',
+        subject: 'BeeStore - Đặt lại mật khẩu',
         html: `
-            <div style="font-family: Arial, sans-serif; text-align: center;">
-                <h2>Xin chào ${user.name},</h2>
-                <p>Vui lòng đặt lại mật khẩu của bạn bằng cách nhấp vào nút dưới đây:</p>
-                <a href="http://${req.headers.host}/api/reset-password?token=${resetToken}" style="text-decoration: none;">
-                    <button style="padding: 10px 20px; color: black; background-color: yellow; border-radius: 5px;">
-                        Đặt Lại Mật Khẩu
+            <div style="
+                font-family:'Segoe UI';
+                margin: 0;
+                padding: 0;
+                width: max-content;
+                height: max-content;
+                background-color: #f4f4f4;">
+            <div class="email" style="max-width: 700px;
+                                margin: 20px auto;
+                                background-color: #fff;
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                overflow: hidden;">
+
+            <div class="content" style="padding: 14px 20px 20px 20px; color: #242424;">
+                <div style=" margin: 10px 0 16px 0; font-size: 26px; color: rgb(245, 245, 14); font-weight: bold;">
+                    BEESTORE
+                </div>
+
+                <div style="font-size: 20px; color: black">
+                    Thiết lập lại mật khẩu
+                </div>
+
+                <div style="margin-top: 20px; color: black">
+                    Click vào nút dưới đây để thiết lập mật khẩu tài khoản của bạn tại BeeStore. 
+                    Nếu bạn không có yêu cầu thay đổi mật khẩu, xin hãy xóa email này để bảo mật thông tin.
+                </div>
+
+                <div style="margin-top: 16px;;">
+                    <button
+                        style="padding: 8px 12px; background:yellow; border: 1px solid black;
+                 border-radius: 4px; font-weight: 600; color: black; font-size: 16px;cursor: pointer; margin-left:43%;">
+                        <a href="http://localhost:5173/reset/${resetToken}" style=" color: black; ">
+                            Thiết lập mật khẩu
+                        </a>
                     </button>
-                </a>
-                <p>Cảm ơn bạn!</p>
+                </div>
+
             </div>
+        </div>
+    </div>
         `
     };
 

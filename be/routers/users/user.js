@@ -2,7 +2,7 @@ import { Router } from "express";
 import UserController from "../../controllers/users/userController.js";
 import verifyEmailRouter from "./verifyEmailRouter.js";
 import forgotPasswordRouter from "./forgotPasswordRouter.js";
-import resetPasswordRouter from "./resetPasswordRouter.js";
+import { checkAdminPermission } from "../../middlewares/auth.js";
 
 const userRouter = Router();
 
@@ -14,7 +14,7 @@ userRouter.put('/update_user_account/:id', usercontroller.updateUserAccount);
 userRouter.put('/update_admin_account/:id', usercontroller.updateAdminAccount);
 userRouter.get('/admin_account/:id', usercontroller.getOneAdminAccount);
 userRouter.get('/user_account/:id', usercontroller.getOneUserAccount);
-userRouter.post('/signup_admin', usercontroller.signupAdmin);
+userRouter.post('/signup_admin', usercontroller.signUpAdmin);
 userRouter.post('/signup_user', usercontroller.signupUser);
 userRouter.post('/signin', usercontroller.signinAdmin);
 userRouter.post('/signin_user', usercontroller.signinUser);
@@ -22,6 +22,6 @@ userRouter.put('/update_status_admin_account/:id', usercontroller.updateStatusAd
 userRouter.put('/update_status_user_account/:id', usercontroller.updateStatusUserAccount);
 userRouter.use('/verify-email', verifyEmailRouter);
 userRouter.use('/forgot_password', forgotPasswordRouter);
-userRouter.use('/reset_password', resetPasswordRouter);
+userRouter.use('/update_password/:id', usercontroller.updatePasswordUser);
 
 export default userRouter

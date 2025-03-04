@@ -10,14 +10,29 @@ const Signin = () => {
 
     const { mutate } = useMutation({
         mutationFn: async (formData) => {
-            await axios.post(`http://localhost:3000/api/signin_user`, formData);
+            try {
+                const response = await axios.post(`http://localhost:3000/api/signin_user`, formData);
+                console.log(response.data.data.role)
+                localStorage.setItem('userRole', response.data.data.role)
+                return response.data.data.role;
+            } catch (error: any) {
+                if (error.response && error.response.data.message) {
+                    throw new Error(error.response.data.message);
+                } else {
+                    throw new Error('Có lỗi xảy ra, vui lòng thử lại');
+                }
+            }
         },
-        onSuccess: () => {
+        onSuccess: (role) => {
             message.success("Đăng nhập thành công");
-            navigate('/');
+            if (role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
         },
-        onError: () => {
-            message.error("Đăng nhập thất bại, vui lòng thử lại");
+        onError: (error) => {
+            message.error(error.message);
         }
     });
 
@@ -45,7 +60,7 @@ const Signin = () => {
                         }
                     ]}
                 >
-                    <Input placeholder="Email" />
+                    <Input className="input" placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -64,18 +79,16 @@ const Signin = () => {
                         }
                     ]}
                 >
-                    <Input.Password placeholder="Mật khẩu" />
+                    <Input.Password className="input" placeholder="Mật khẩu" />
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 24 }}>
                     <Button type="primary" htmlType="submit" className="submit-button">
                         Đăng nhập
                     </Button>
                 </Form.Item>
-                <Form.Item wrapperCol={{ span: 24 }}>
-                    <Button type="link" htmlType="button" className="forgot-password-link">
-                        Quên mật khẩu?
-                    </Button>
-                </Form.Item>
+                <div className="text-center">
+                    <a className="title1" href="/forgot">Quên mật khẩu</a>
+                </div>
             </Form>
         </div>
     );

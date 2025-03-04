@@ -18,9 +18,7 @@ router.get('/', async (req, res) => {
     user.isVerified = true;
     await user.save();
 
-    res.status(200).json({
-        'message': 'Xác nhận email thành công'
-    });
+    res.redirect('http://localhost:5173/success');
 });
 
 export default router;

@@ -5,7 +5,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 70vh;
     padding: 20px;
     background-color: #f8f9fa;
 }
@@ -18,10 +18,11 @@
 
 .tab {
     margin: 0 10px;
-    padding: 10px 20px;
+    padding: 17px 25px;
     border: 1px solid #ccc;
     border-radius: 8px;
     cursor: pointer;
+    font-size: 17px;
 }
 
 .tab.active {
@@ -32,7 +33,7 @@
 
 .signup-form {
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
@@ -44,17 +45,18 @@
     border-color: #000;
     color: #fff;
     width: 100%;
-    padding: 10px 0;
+    padding: 18px 0px;
+    font-size: 17px;
 }
 
-/* Login.css */
+/* Signin.css */
 
 .login-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 70vh;
     padding: 20px;
     background-color: #f8f9fa;
 }
@@ -67,7 +69,7 @@
 
 .tab {
     margin: 0 10px;
-    padding: 10px 20px;
+    padding: 17px 25px;
     border: 1px solid #ccc;
     border-radius: 8px;
     cursor: pointer;
@@ -81,7 +83,7 @@
 
 .login-form {
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
@@ -93,7 +95,8 @@
     border-color: #000;
     color: #fff;
     width: 100%;
-    padding: 10px 0;
+    padding: 18px 0px;
+    font-size: 17px;
 }
 
 .forgot-password-link {
@@ -101,4 +104,24 @@
     text-align: center;
     width: 100%;
     padding: 10px 0;
+    font-size: 17px;
+}
+
+.input {
+    font-size: 17px;
+}
+
+.title {
+    font-size: 17px;
+}
+
+.title1 {
+    font-size: 17px;
+    color: red;
+    margin-left: 10px;
+}
+
+.forgot {
+    text-align: center;
+    margin-bottom: 20px;
 }
