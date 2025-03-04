@@ -1,27 +1,109 @@
-import { CheckCircleFilled } from "@ant-design/icons";
 import { Button, InputNumber } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Variant } from "../../../interface/Variant";
+import Color from "../../../interface/Color";
+import Size from "../../../interface/Size";
 
-export default function ActionDetail() {
+interface ActionDetail {
+  variants: Variant[];
+  colors: Color[];
+  sizes: Size[];
+  newImage: (images: string[] | null) => void;
+}
+
+export default function ActionDetail({
+  variants,
+  colors,
+  sizes,
+  newImage,
+}: // onVariantChange,
+ActionDetail) {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const handleClickBuy = () => {
-    console.log(quantity);
+    // console.log(quantity);
   };
+
+  useEffect(() => {
+    if (variants.length > 0) {
+      setSelectedColor(variants[0].id_color.name);
+      setSelectedSize(variants[0].id_size.name);
+    }
+  }, [variants]);
+
+  // Xử lý vấn đề khi chọn xem pro => chuyển hướng nhận data của phần tử đầu => có màu cụ thể => select trực tiếp
+
+  const handleSelectColor = (value: string) => {
+    setSelectedColor(value);
+    setSelectedSize(null); // Reset size khi đổi màu
+  };
+
+  console.log("selectedColor", selectedColor);
+  console.log("selectedSize", selectedSize);
+
+  // Lọc size theo màu
+  const getSizesByColor = (variants: Variant[], selectedColor: string) => {
+    setQuantity(1);
+    return [
+      ...new Set(
+        variants
+          .filter(
+            (v: Variant) => v.id_color.name === selectedColor && v.quantity > 0
+          )
+          .map((v: Variant) => v.id_size.name)
+      ),
+    ];
+  };
+
+  useEffect(() => {
+    if (selectedColor) {
+      const sizes = getSizesByColor(variants, selectedColor);
+      setSizeOfColor(sizes);
+      // Nếu chỉ có 1 size, tự động chọn nó
+      if (sizes.length > 0) {
+        setSelectedSize(sizes[0]);
+      } else {
+        setSelectedSize(null); // Reset nếu có nhiều size
+      }
+    }
+  }, [selectedColor, variants]);
+
+  console.log("sizeOfColor", sizeOfColor);
+  // handle Size
+  const handleSelectSize = (size: string) => {
+    setSelectedSize(size);
+    setQuantity(1);
+  };
+
+  const selectedVariant = variants.find(
+    (v) => v.id_color.name === selectedColor && v.id_size.name === selectedSize
+  );
+  useEffect(() => {
+    if (selectedVariant) {
+      newImage(selectedVariant.image || null); // Gửi ảnh lên component cha
+    }
+  }, [selectedVariant, newImage]);
+
+  console.log("Selected Variant:", selectedVariant);
   return (
     <div>
       {/* INFOR MATION PRODUCT */}
       <div>
         <h3 className="uppercase text-xl font-normal">
-          Penta Suit | Be sọc kẻ đen
+          {variants[0]?.id_product?.name}
         </h3>
         <p className="font-thin text-base mt-1">
-          Mã sản phẩm: <span className="uppercase">BOBEBEN743</span>
+          Mã sản phẩm:{" "}
+          <span className="uppercase">{variants[0]?.id_product?.slug}</span>
         </p>
-        <p className="font-thin line-through text-base mt-1">
-          Giá cũ: <span className="uppercase">990.000 VNĐ</span>
-        </p>
+
         <p className="font-normal text-xl mt-1">
-          Giá: <span className="uppercase">840.000 VNĐ</span>
+          Giá:{" "}
+          <span className="uppercase">
+            {variants[0]?.id_product?.price} VNĐ
+          </span>
         </p>
       </div>
       {/* VARIANTS PRODUCT */}
@@ -29,16 +111,27 @@ export default function ActionDetail() {
       <div className="mt-4">
         <p className="font-medium">Màu</p>
         <div className="flex items-center gap-2 mt-2">
-          <div className="relative cursor-pointer border-2 border-[#c0c0c0]">
-            <img
-              src="https://pos.nvncdn.com/8ca22b-20641/ps/20241203_ADbovjN911.jpeg"
-              className="w-12"
-              alt=""
-            />
+          <div className="relative cursor-pointer  flex">
+            {colors.map((item: Color) => (
+              <div
+                className={`border ${
+                  item.name === selectedColor
+                    ? "border-b-black border-3"
+                    : item.hexcode === "#ffffff"
+                    ? "border-gray-400 border"
+                    : "border-none"
+                }`}
+                style={{
+                  marginLeft: "5px",
+                  backgroundColor: item.hexcode,
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: item?.name == selectedColor ? "10%" : "0px",
+                }}
+                onClick={() => handleSelectColor(item.name)}
+              ></div>
+            ))}
             {/* USE THIS ICON TO CHECK ACTIVE */}
-            <div className="absolute -right-2 -top-3">
-              <CheckCircleFilled />
-            </div>
           </div>
         </div>
       </div>
@@ -46,17 +139,25 @@ export default function ActionDetail() {
       <div className="mt-4">
         <p className="font-medium">Kích thước</p>
         <div className="flex items-center gap-2 mt-2">
-          {/* SIZE ACTIVE */}
-          <div className="border flex justify-center items-center bg-black cursor-pointer w-10 h-10">
-            <span className="uppercase text-white">S</span>
-          </div>
-          {/* NONE ACTIVE */}
-          <div className="border flex justify-center items-center border-[#c0c0c0] cursor-pointer w-10 h-10">
-            <span className="uppercase">M</span>
-          </div>
-          <div className="border flex justify-center items-center border-[#c0c0c0] cursor-pointer w-10 h-10">
-            <span className="uppercase">XL</span>
-          </div>
+          {sizes.map((item: Size) => (
+            <div
+              className={`border flex justify-center items-center cursor-pointer w-10 h-10 
+            ${
+              item.name === selectedSize
+                ? "bg-black text-white"
+                : "border-[#c0c0c0]"
+            } 
+            ${
+              sizeOfColor?.includes(item.name)
+                ? ""
+                : "opacity-50 pointer-events-none"
+            }`}
+              // handle fn
+              onClick={() => handleSelectSize(item.name)}
+            >
+              <span className="uppercase">{item.name}</span>
+            </div>
+          ))}
         </div>
       </div>
       {/* QUANTITY */}
@@ -83,7 +184,11 @@ export default function ActionDetail() {
           />
           <Button
             onClick={() => {
-              if (quantity > 0) {
+              if (
+                quantity > 0 &&
+                selectedVariant?.quantity !== undefined &&
+                quantity + 1 <= selectedVariant.quantity
+              ) {
                 setQuantity(quantity + 1);
               }
             }}
@@ -91,7 +196,7 @@ export default function ActionDetail() {
           >
             +
           </Button>
-          <span className="ml-2">Sẵn có 3</span>
+          <span className="ml-2">Sẵn có {selectedVariant?.quantity}</span>
         </div>
       </div>
       {/* BUTTON BUY */}

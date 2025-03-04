@@ -5,8 +5,6 @@ const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 export const CategoryService = {
   getAllCategories: async (param: string) => {
     try {
-      console.log(baseApiUrl);
-
       const { data } = await axios.get(
         `${baseApiUrl}/api/categories/search?key=${param}`
       );

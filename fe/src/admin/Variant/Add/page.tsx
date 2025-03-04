@@ -84,6 +84,10 @@ const AdminVariantAdd = (dataDtPro: any) => {
     if (info.file.status === "done") {
       const imageUrl = info.file.response.secure_url;
       setImageUrls((prevUrls) => {
+        if (prevUrls.length >= 5) {
+          message.error("Bạn chỉ có thể tải lên tối đa 5 ảnh.");
+          return prevUrls; // Không thêm ảnh mới vào
+        }
         const newUrls = [...prevUrls, imageUrl];
         form.setFieldsValue({ image: newUrls });
         return newUrls;
