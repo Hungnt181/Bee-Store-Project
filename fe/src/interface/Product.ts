@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { Category } from "./Category";
 
 export interface Product {
     _id: ObjectId;
@@ -46,6 +47,19 @@ export type ProductType = {
   updatedAt: string;
 };
 
+export type ProductType2 = {
+  _id: string;
+  name: string;
+  price: number;
+  about: string;
+  description: string;
+  status: boolean;
+  id_cate: Category;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export interface ProductResponse {
   products: ProductType[];
   totalDocs: number;
@@ -58,3 +72,45 @@ export interface ProductResponse {
   prevPage: number | null;
   nextPage: number | null;
 };
+
+export interface IVariant {
+  _id: string;
+  image: string[];
+  quantity: number;
+  status: boolean;
+  id_color: string;
+  id_size: string;
+  id_product: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IProductWithVariants {
+  _id: string;
+  name: string;
+  price: number;
+  about: string;
+  description: string;
+  status: boolean;
+  id_cate: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  variants: IVariant[];
+}
+
+export interface IPageProductConditions {
+  total: number;
+  content: {
+    products: IProductWithVariants[]
+  }
+}
+
+export interface IParamsProductCondition {
+  cate?: string | string[];
+  color?: string | string[];
+  size?: string | string[];
+  priceMin?: number | string;
+  priceMax?: number | string;
+  sortBy?: string;
+}

@@ -5,7 +5,7 @@ import StatusCodes from "http-status-codes";
 class CategoryController {
 	async list(req, res) {
 		try {
-			const category = await Category.find();
+			const category = await Category.find({status: true});
 			return res.status(StatusCodes.OK).json({
 				message: "Lấy danh sách danh mục thành công",
 				data: category,
