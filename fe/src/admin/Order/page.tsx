@@ -3,7 +3,9 @@ import { Order } from "../../interface/Order";
 import axios from "axios";
 import {
   Button,
+  Flex,
   Pagination,
+  Select,
   Skeleton,
   Table,
   TableProps,
@@ -18,9 +20,10 @@ const AdminOrderPage = () => {
   const [dataTable, setDataTable] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [curentPages, setCurentPages] = useState(1);
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const pageSize = 10;
 
-  const url = `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}`;
+  const url = `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}&status=${filterStatus}`;
   const key = "dataPageOrder";
 
   const { data: data_Order, isLoading } = useQuery({
@@ -40,6 +43,15 @@ const AdminOrderPage = () => {
   }, [data_Order]);
 
   //colums
+  const validTransitions = [
+    "Chưa xác nhận",
+    "Đã xác nhận",
+    "Đang giao",
+    "Hoàn thành",
+    "Hoàn đơn",
+    "Đã hủy",
+  ];
+
   const columns: TableProps<Order>["columns"] = [
     {
       title: "STT",
@@ -165,9 +177,56 @@ const AdminOrderPage = () => {
     },
   ];
 
+  // search
+  // Filter
+  // Hàm fetch API
+  const fetchOrder = async (key: string) => {
+    setFilterStatus(key);
+    const res = await fetch(
+      `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}&status=${key}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error fetching orders");
+    }
+    return res.json(); // Trả về dữ liệu từ API
+  };
+  const handleChangeSelect = async (value: string) => {
+    const encodedStatus = encodeURIComponent(value);
+
+    const newData = await fetchOrder(encodedStatus);
+    setDataTable(newData.orders);
+    setCurentPages(newData.page);
+    setTotalPages(newData.totalPages);
+  };
+
+  // Thay đổi trang
+  const handlePageChange = (page: number) => {
+    setCurentPages(page);
+  };
+
   return (
     <div>
-      <h1 style={{ margin: "0 0 5px 0" }}>DANH MỤC ĐƠN HÀNG</h1>
+      <h1 className="mb-1.5 text-2xl font-medium">DANH MỤC ĐƠN HÀNG</h1>
+      <Flex gap={0} style={{ marginBottom: "30px" }} justify="flex-end">
+        <Select
+          style={{ width: 150 }}
+          defaultValue={"Tất cả trạng thái"}
+          onChange={handleChangeSelect}
+        >
+          <Select.Option value="">Tất cả trạng thái</Select.Option>
+          {validTransitions?.map((item: string) => (
+            <Select.Option key={item} value={item}>
+              {item}
+            </Select.Option>
+          ))}
+        </Select>
+      </Flex>
       <Skeleton loading={isLoading}>
         <Table
           dataSource={dataTable}
@@ -179,7 +238,7 @@ const AdminOrderPage = () => {
           current={curentPages}
           total={totalPages * pageSize}
           pageSize={pageSize}
-          //   onChange={handlePageChange}
+          onChange={handlePageChange}
           style={{ marginTop: 20, textAlign: "center" }}
         ></Pagination>
       </Skeleton>

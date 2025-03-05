@@ -76,14 +76,22 @@ class OrderController {
 
   async getOrders(req, res) {
     try {
-      const { _page = 1, _limit = 10, _embed } = req.query;
+      const { _page = 1, _limit = 10, _embed, status = "" } = req.query;
       const options = {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
         sort: { createdAt: -1 },
       };
 
-      let query = Order.find();
+      const decodedStatus = decodeURIComponent(status);
+
+      let optionStatus = {};
+
+      if (status) {
+        optionStatus.status = decodedStatus;
+      }
+
+      let query = Order.find(optionStatus);
 
       if (_embed) {
         const embeds = _embed.split(",");
