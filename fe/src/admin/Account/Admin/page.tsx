@@ -46,6 +46,18 @@ const AdminAccountPage = () => {
             },
         },
         {
+            title: 'Kích hoạt',
+            dataIndex: 'isVerified',
+            key: 'isVerified',
+            render: (text: any) => {
+                return text ? (
+                    <Tag color="green">Đã kích hoạt</Tag>
+                ) : (
+                    <Tag color="red">Chưa kích hoạt</Tag>
+                );
+            },
+        },
+        {
             title: "Ngày sửa cuối",
             dataIndex: "updatedAt",
             key: "updatedAt",

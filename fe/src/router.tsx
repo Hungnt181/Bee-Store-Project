@@ -37,6 +37,12 @@ import OrderCancelled from "./pages/Payment/notify/cancel";
 import NotFoundPage from "./website/components/Errors/404";
 import AdminOrderPage from "./admin/Order/page";
 import AdminOrderDetail from "./admin/Order/Detail/page";
+import Signup from "./website/components/Signup/page";
+import Signin from "./website/components/Signin/page";
+import ResetPassword from "./website/components/ResetPassword/page";
+import ForgotPassword from "./website/components/ForgotPassword/page";
+import Success from "./website/components/Success/page";
+import PrivateRoute from "./website/components/PrivateRoute/page";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +53,10 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
+      { path: "/signup", element: <Signup /> },
+      { path: "/signin", element: <Signin /> },
+      { path: "/reset/:id", element: <ResetPassword /> },
+      { path: "/forgot", element: <ForgotPassword /> },
       {
         path: "/account",
         element: <AccountLayout />,
@@ -97,8 +107,16 @@ export const router = createBrowserRouter([
     element: <NotFoundPage />,
   },
   {
+    path: "/success",
+    element: <Success />
+  },
+  {
     path: "/admin",
-    element: <LayoutAdmin />,
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <LayoutAdmin />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" /> },
       { path: "/admin/dashboard", element: <AdminDashboarPage /> },

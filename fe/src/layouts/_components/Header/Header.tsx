@@ -1,20 +1,24 @@
 import {
   BankFilled,
   HeartFilled,
+  LogoutOutlined,
   PhoneFilled,
   SearchOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge } from "antd";
+import { Badge, Button } from "antd";
 import { useEffect, useState } from "react";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ListitemCateegory from "./_components/ListItemCategory";
 import PocilySlide from "./_components/PocilySlide";
 import logoImage from "../../../assets/logo.png";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
+  const [nameUser, setNameUser] = useState("");
   const location = useLocation();
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +27,30 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const idUser = localStorage.getItem("idUser");
+  // Thêm query để lấy thông tin user
+  const { data: userData } = useQuery({
+    queryKey: ["USER_INFO", idUser],
+    queryFn: async () => {
+      if (!idUser) return null;
+      const { data } = await axios.get(
+        `http://localhost:3000/api/user_account/${idUser}`
+      );
+      return data.data;
+    },
+    enabled: !!idUser,
+  });
+
+  useEffect(() => {
+    // Cập nhật tên từ API response
+    if (userData?.name) {
+      setNameUser(userData.name);
+    } else {
+      setNameUser("");
+    }
+  }, [userData, location]);
+
 
   return (
     <header>
@@ -61,15 +89,27 @@ export default function Header() {
             <span className="font-thin">180 Hàng Bông</span>
           </div>
           {/* LOGIN BOX */}
-          <Link
-            to={"/login"}
-            className="flex items-center gap-1 hover:text-[#cccccc] duration-300"
-          >
-            <div className="bg-[#cccccccc] rounded-full py-1 px-2">
-              <UserOutlined />
-            </div>
-            <span className="font-thin">Đăng nhập</span>
-          </Link>
+          {!nameUser ? (
+            <Link
+              to={"/signin"}
+              className="flex items-center gap-1 hover:text-[#cccccc] duration-300"
+            >
+              <div className="bg-[#cccccccc] rounded-full py-1 px-2">
+                <UserOutlined />
+              </div>
+              <span className="font-thin">Đăng nhập</span>
+            </Link>
+          ) : (
+            <Link
+              to={"/account"}
+              className="flex items-center gap-1 hover:text-[#cccccc] duration-300"
+            >
+              <div className="bg-[#cccccccc] rounded-full py-1 px-2">
+                <UserOutlined />
+              </div>
+              <span className="font-thin">Xin chào, {nameUser}</span>
+            </Link>
+          )}
           {/* WISHLIST AND CART BOX */}
           <div className="flex items-center">
             <Link to={"/wishlist"}>
@@ -87,18 +127,16 @@ export default function Header() {
       </div>
       {/* LINE 2 IN HEADER */}
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "block" : "hidden"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "block" : "hidden"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           <ListitemCateegory isSticky={isSticky} />
         </div>
       </div>
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (

@@ -4,14 +4,14 @@
   },
   "name": "adminthinh123",
   "email": "adminthinh123@gmail.com",
-  "password": "$2a$10$/l6l/3ZrwwkR2yQkNFzsuutNv6jv31H8ja4wGNc6ILtWWJIGz/Yna",
+  "password": "$2a$10$Vv1GYGND6WC/8gXa8PC4UuVeEj8crlpsNhwRPmrJUEQwPU09nsC/O",
   "role": "admin",
   "status": false,
   "createdAt": {
     "$date": "2025-02-13T23:28:42.468Z"
   },
   "updatedAt": {
-    "$date": "2025-02-14T14:33:06.640Z"
+    "$date": "2025-02-15T04:06:28.700Z"
   },
   "__v": 0
 },
@@ -55,16 +55,17 @@
   },
   "name": "user1",
   "email": "user1@gmail.com",
-  "password": "$2a$10$6yZwHHDMhcSsXDbLmy2oh.ljGoISF/m8slOJGSwhA7ZN2wANeCJe.",
+  "password": "$2a$10$sdODzksUzdirWZ.sxf/k9e50rnC4njB86oJrNFcIToe.rGHXcktIK",
   "role": "user",
-  "status": false,
+  "status": true,
   "createdAt": {
     "$date": "2025-02-14T14:45:05.839Z"
   },
   "updatedAt": {
-    "$date": "2025-02-14T15:10:33.407Z"
+    "$date": "2025-02-15T05:43:38.223Z"
   },
-  "__v": 0
+  "__v": 0,
+  "tel": "0123456789"
 },
 {
   "_id": {
@@ -80,6 +81,23 @@
   },
   "updatedAt": {
     "$date": "2025-02-14T15:11:44.817Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b013ed3cd4d1ef0830c3aa"
+  },
+  "name": "adminTest",
+  "email": "test@gmail.com",
+  "password": "$2a$10$ZG3XBLyMsfNX/Up8N4zQQOsG7oYJsxvBypZH5NfluO9eEvacFVOq2",
+  "role": "admin",
+  "status": true,
+  "createdAt": {
+    "$date": "2025-02-15T04:11:25.977Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-15T05:43:13.040Z"
   },
   "__v": 0
 }]
