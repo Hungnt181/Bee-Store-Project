@@ -7,7 +7,6 @@ const ItemOrderSchema = new mongoose.Schema(
       type: String,
       minLength: 3,
       required: true,
-      unique: true,
     },
     quantity: {
       type: Number,

@@ -22,6 +22,8 @@ ActionDetail) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [statusVariant, setStatusVariant] = useState(false);
+
   const handleClickBuy = () => {
     // console.log(quantity);
   };
@@ -30,6 +32,9 @@ ActionDetail) {
     if (variants.length > 0) {
       setSelectedColor(variants[0].id_color.name);
       setSelectedSize(variants[0].id_size.name);
+
+      const isStopped = variants.every((variant) => variant.status === false);
+      setStatusVariant(isStopped);
     }
   }, [variants]);
 
@@ -40,8 +45,8 @@ ActionDetail) {
     setSelectedSize(null); // Reset size khi đổi màu
   };
 
-  console.log("selectedColor", selectedColor);
-  console.log("selectedSize", selectedSize);
+  // console.log("selectedColor", selectedColor);
+  // console.log("selectedSize", selectedSize);
 
   // Lọc size theo màu
   const getSizesByColor = (variants: Variant[], selectedColor: string) => {
@@ -50,7 +55,10 @@ ActionDetail) {
       ...new Set(
         variants
           .filter(
-            (v: Variant) => v.id_color.name === selectedColor && v.quantity > 0
+            (v: Variant) =>
+              v.id_color.name === selectedColor &&
+              v.quantity > 0 &&
+              v.status === true
           )
           .map((v: Variant) => v.id_size.name)
       ),
@@ -70,7 +78,7 @@ ActionDetail) {
     }
   }, [selectedColor, variants]);
 
-  console.log("sizeOfColor", sizeOfColor);
+  // console.log("sizeOfColor", sizeOfColor);
   // handle Size
   const handleSelectSize = (size: string) => {
     setSelectedSize(size);
@@ -86,14 +94,21 @@ ActionDetail) {
     }
   }, [selectedVariant, newImage]);
 
-  console.log("Selected Variant:", selectedVariant);
+  // console.log("Selected Variant:", selectedVariant);
+
   return (
     <div>
       {/* INFOR MATION PRODUCT */}
       <div>
-        <h3 className="uppercase text-xl font-normal">
-          {variants[0]?.id_product?.name}
-        </h3>
+        <div className="flex">
+          <h3 className="uppercase text-xl font-normal mr-4">
+            {variants[0]?.id_product?.name}
+          </h3>
+          <p className={`text-red-700 ${statusVariant ? "block " : "hidden"}`}>
+            Sản phầm đã dừng bán
+          </p>
+        </div>
+
         <p className="font-thin text-base mt-1">
           Mã sản phẩm:{" "}
           <span className="uppercase">{variants[0]?.id_product?.slug}</span>
@@ -106,32 +121,37 @@ ActionDetail) {
           </span>
         </p>
       </div>
+
       {/* VARIANTS PRODUCT */}
       {/* COLORS */}
       <div className="mt-4">
         <p className="font-medium">Màu</p>
         <div className="flex items-center gap-2 mt-2">
-          <div className="relative cursor-pointer  flex">
-            {colors.map((item: Color) => (
-              <div
-                className={`border ${
-                  item.name === selectedColor
-                    ? "border-b-black border-3"
-                    : item.hexcode === "#ffffff"
-                    ? "border-gray-400 border"
-                    : "border-none"
-                }`}
-                style={{
-                  marginLeft: "5px",
-                  backgroundColor: item.hexcode,
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: item?.name == selectedColor ? "10%" : "0px",
-                }}
-                onClick={() => handleSelectColor(item.name)}
-              ></div>
-            ))}
-            {/* USE THIS ICON TO CHECK ACTIVE */}
+          <div className="flex items-center gap-2 mt-2">
+            {colors.map((item: Color) => {
+              // Kiểm tra xem có Variant nào thuộc màu này và có status === true không
+              const isDisabled = !variants.some(
+                (v) => v.id_color.name === item.name && v.status === true
+              );
+
+              return (
+                <div
+                  key={item.name} // Quan trọng để tránh lỗi key khi render danh sách
+                  className={`border cursor-pointer transition-all duration-300
+          ${item.name === selectedColor ? "border-b-black border-3" : ""}
+          ${isDisabled ? "opacity-50 pointer-events-none" : ""}
+        `}
+                  style={{
+                    marginLeft: "5px",
+                    backgroundColor: item.hexcode,
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: item.name === selectedColor ? "10%" : "0px",
+                  }}
+                  onClick={() => !isDisabled && handleSelectColor(item.name)}
+                ></div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -139,25 +159,35 @@ ActionDetail) {
       <div className="mt-4">
         <p className="font-medium">Kích thước</p>
         <div className="flex items-center gap-2 mt-2">
-          {sizes.map((item: Size) => (
-            <div
-              className={`border flex justify-center items-center cursor-pointer w-10 h-10 
-            ${
-              item.name === selectedSize
-                ? "bg-black text-white"
-                : "border-[#c0c0c0]"
-            } 
-            ${
-              sizeOfColor?.includes(item.name)
-                ? ""
-                : "opacity-50 pointer-events-none"
-            }`}
-              // handle fn
-              onClick={() => handleSelectSize(item.name)}
-            >
-              <span className="uppercase">{item.name}</span>
-            </div>
-          ))}
+          {sizes.map((item: Size) => {
+            // Kiểm tra xem size này có hợp lệ không
+            const isDisabled =
+              !sizeOfColor?.includes(item.name) || // Nếu size không nằm trong danh sách hợp lệ của màu đã chọn
+              !variants.some(
+                (v) =>
+                  v.id_color.name === selectedColor &&
+                  v.id_size.name === item.name &&
+                  v.status === true // Chỉ lấy những variant có trạng thái bán (status === true)
+              );
+
+            return (
+              <div
+                key={item.name} // Đảm bảo key duy nhất khi render danh sách
+                className={`border flex justify-center items-center cursor-pointer w-10 h-10 
+          transition-all duration-300 text-sm
+          ${
+            item.name === selectedSize
+              ? "bg-black text-white"
+              : "border-[#c0c0c0]"
+          } 
+          ${isDisabled ? "opacity-50 pointer-events-none" : ""}
+        `}
+                onClick={() => !isDisabled && handleSelectSize(item.name)}
+              >
+                <span className="uppercase">{item.name}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
       {/* QUANTITY */}

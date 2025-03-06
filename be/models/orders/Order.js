@@ -17,12 +17,20 @@ const OrderSchema = new Schema(
     createdAt: {
       type: Date,
     },
+    completedAt: {
+      type: Date,
+      default: null,
+    },
     updatedAt: {
       type: Date,
     },
     voucher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",
+    },
+    isConfirm: {
+      type: Boolean,
+      default: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
