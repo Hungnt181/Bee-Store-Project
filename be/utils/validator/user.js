@@ -11,6 +11,14 @@ const signUpUserValidator = Joi.object({
     address: Joi.string(),
 })
 
+const updateUserValidator = Joi.object({
+    name: Joi.string().required(),
+    tel: Joi.string().pattern(/^[0-9]{8,15}$/).required().messages({
+        'string.pattern.base': 'Số điện thoại không hợp lệ. Số điện thoại phải chứa từ 8 đến 15 chữ số.',
+    }),
+    address: Joi.string(),
+})
+
 const updatePasswordUser = Joi.object({
     password: Joi.string().required().min(6).max(25),
     confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
@@ -34,4 +42,4 @@ const signInValidator = Joi.object({
     password: Joi.string().required().min(6),
 })
 
-export { signUpUserValidator, signUpAdminValidator, signInValidator, updateAdminValidator, updatePasswordUser }
+export { signUpUserValidator, signUpAdminValidator, signInValidator, updateAdminValidator, updatePasswordUser, updateUserValidator }

@@ -12,8 +12,11 @@ const Signin = () => {
         mutationFn: async (formData) => {
             try {
                 const response = await axios.post(`http://localhost:3000/api/signin_user`, formData);
-                console.log(response.data.data.role)
+                // console.log(response.data.data._id)
                 localStorage.setItem('userRole', response.data.data.role)
+                localStorage.setItem('nameUser', response.data.data.name)
+                localStorage.setItem('idUser', response.data.data._id)
+                // localStorage.setItem('dataUser', JSON.stringify(response.data.data))
                 return response.data.data.role;
             } catch (error: any) {
                 if (error.response && error.response.data.message) {
@@ -38,15 +41,16 @@ const Signin = () => {
 
     return (
         <div className="login-container">
-            <div className="tabs">
-                <Button className="tab active">ĐĂNG NHẬP</Button>
-                <Button className="tab" onClick={() => navigate('/signup')}>ĐĂNG KÝ</Button>
-            </div>
+
             <Form
                 layout="vertical"
                 onFinish={(formData) => mutate(formData)}
                 className="login-form"
             >
+                <div className="tabs">
+                    <Button className="tab active">ĐĂNG NHẬP</Button>
+                    <Button className="tab" onClick={() => navigate('/signup')}>ĐĂNG KÝ</Button>
+                </div>
                 <Form.Item
                     name="email"
                     rules={[

@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes';
 import nodemailer from 'nodemailer';
-import { authValidator, signInValidator, signUpAdminValidator, signUpUserValidator, signUpValidator, updateAdminValidator, updatePasswordUser } from "../../utils/validator/user.js";
+import { authValidator, signInValidator, signUpAdminValidator, signUpUserValidator, signUpValidator, updateAdminValidator, updatePasswordUser, updateUserValidator } from "../../utils/validator/user.js";
 import emailExistence from 'email-existence';
 
 
@@ -137,18 +137,14 @@ class UserController {
     }
     async updateUserAccount(req, res) {
         try {
-            const { error } = signUpUserValidator.validate(req.body, { abortEarly: false });
+            const { error } = updateUserValidator.validate(req.body, { abortEarly: false });
             if (error) { //nếu có lỗi validate -> bắn ra lỗi
                 const listErrors = error.details.map((item) => item.message);
                 return res.status(400).json({
                     'message': listErrors
                 })
             }
-            const { password, ...updateData } = req.body;
-            if (password) {
-                updateData.password = await bcryptjs.hash(password, 10);
-            }
-            const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
             res.status(200).json({
                 'message': 'Cập nhật thành công',
                 'data': updatedUser
@@ -251,7 +247,7 @@ class UserController {
         const existedEmail = await User.findOne({ email });
 
         if (existedEmail) {
-            return res.status(200).json({
+            return res.status(400).json({
                 'message': 'Email đã tồn tại'
             });
         }
@@ -360,9 +356,9 @@ class UserController {
         }
 
         const existedEmail = await User.findOne({ email });
-
+        console.log(existedEmail)
         if (existedEmail) {
-            return res.status(200).json({
+            return res.status(400).json({
                 'message': 'Email đã tồn tại'
             });
         }

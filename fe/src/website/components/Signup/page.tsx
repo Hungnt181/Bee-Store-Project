@@ -12,7 +12,7 @@ const Signup = () => {
         mutationFn: async (formData) => {
             try {
                 await axios.post(`http://localhost:3000/api/signup_user`, formData);
-            } catch (error) {
+            } catch (error: any) {
                 if (error.response && error.response.data.message) {
                     throw new Error(error.response.data.message);
                 } else {
