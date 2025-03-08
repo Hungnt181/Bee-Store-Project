@@ -1,4 +1,11 @@
-import { ConfigProvider, Form, FormProps, Input, message, Skeleton } from "antd";
+import {
+  ConfigProvider,
+  Form,
+  FormProps,
+  Input,
+  message,
+  Skeleton,
+} from "antd";
 import ChangePasswordModal from "./_components/ChangePasswordModal";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -20,7 +27,6 @@ const rules = {
   ],
 };
 export default function MyProfile() {
-
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
 
@@ -63,14 +69,12 @@ export default function MyProfile() {
       // Cập nhật cache và localStorage
       queryClient.setQueryData(["USER_INFO", id], data);
       // localStorage.setItem("dataUser", JSON.stringify({ ...userData, ...data }));
-      localStorage.setItem('nameUser', data.data.name);
+      localStorage.setItem("nameUser", data.data.name);
 
       queryClient.invalidateQueries({ queryKey: ["USER_INFO", id] });
     },
     onError: (error: any) => {
-      message.error(
-        error.response?.data?.message || "Cập nhật thất bại"
-      );
+      message.error(error.response?.data?.message || "Cập nhật thất bại");
     },
   });
 
@@ -116,7 +120,11 @@ export default function MyProfile() {
               name="email"
               style={{ maxWidth: 600 }}
             >
-              <Input placeholder="Nhập Email của bạn" className="h-[42px]" disabled />
+              <Input
+                placeholder="Nhập Email của bạn"
+                className="h-[42px]"
+                disabled
+              />
             </Form.Item>
 
             <Form.Item<FieldType>

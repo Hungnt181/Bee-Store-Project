@@ -2,36 +2,28 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Button,
-  Form,
   Image,
-  Input,
   message,
-  Modal,
-  Select,
+  Popconfirm,
   Skeleton,
   Table,
   TableProps,
   Tag,
 } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Order } from "../../../interface/Order";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { ItemOrder } from "../../../interface/ItemOrder";
-import { useForm } from "antd/es/form/Form";
+import { Order } from "../../../../interface/Order";
+import { ItemOrder } from "../../../../interface/ItemOrder";
 
-const AdminOrderDetail = () => {
+const OrderDetail = () => {
   const [dataOrder, setDataOrder] = useState<Order>();
   const [dataItemOrder, setDataItemOrder] = useState<ItemOrder[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isEdit, setIsEdit] = useState(true);
-  const [form] = useForm();
-  const queryClient = useQueryClient();
   const { id } = useParams();
+  const queryClient = useQueryClient();
+  const [canCancel, setCanCancel] = useState(false);
 
   //Thông tin admin
-  const userName = localStorage.getItem("nameUser");
 
   const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder`;
   const key = "dataPageOrder";
@@ -41,7 +33,6 @@ const AdminOrderDetail = () => {
     queryFn: async () => {
       const response = await axios.get(url);
       console.log("response", response);
-
       return response.data;
     },
   });
@@ -50,24 +41,9 @@ const AdminOrderDetail = () => {
     if (orderDetail) {
       setDataOrder(orderDetail);
       setDataItemOrder(orderDetail.itemsOrder);
-      form.setFieldsValue({
-        status: orderDetail.status,
-      });
-      if (
-        orderDetail?.status === "Đã hủy" ||
-        orderDetail?.status === "Hoàn đơn"
-      ) {
-        setIsDisabled(true);
-      }
     }
-  }, [orderDetail, form]);
+  }, [orderDetail]);
 
-  // console.log("dataItemOrder", dataItemOrder);
-  useEffect(() => {
-    setIsDisabled(
-      orderDetail?.status === "Đã hủy" || orderDetail?.status === "Hoàn đơn"
-    );
-  }, [orderDetail?.status]);
   //colums
   const columns: TableProps<ItemOrder>["columns"] = [
     {
@@ -146,49 +122,77 @@ const AdminOrderDetail = () => {
         );
       },
     },
+    {
+      title: "Thao tác",
+      dataIndex: "action",
+      key: "action",
+      width: 50,
+      render: (_: unknown, item: ItemOrder) => {
+        return (
+          <div>
+            <Link to={`/products/${item.id_variant.id_product._id}`}>
+              <Button type="primary">Mua hàng</Button>
+            </Link>
+          </div>
+        );
+      },
+    },
   ];
 
-  // Modal edit status
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const [availableStatuses, setAvailableStatuses] = useState<string[]>([]);
-  useEffect(() => {
-    const validTransitions: Record<string, string[]> = {
-      "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
-      "Đã xác nhận": ["Đang giao", "Đã hủy"],
-      "Đang giao": ["Hoàn thành"],
-      "Hoàn thành": ["Đã hủy"],
-      "Đã hủy": [],
-    };
-
-    // Lấy trạng thái hiện tại của đơn hàng từ form
-    const currentStatus = form.getFieldValue("status") || orderDetail?.status;
-    setAvailableStatuses(validTransitions[currentStatus] || []);
-  }, [form, orderDetail?.status]);
-
-  const { mutate } = useMutation({
-    mutationFn: async (formData) => {
-      await axios.patch(`http://localhost:3000/api/orders/${id}`, formData);
+  // Isconfirm
+  const handleIsConfirm = useMutation({
+    mutationFn: async () => {
+      await axios.patch(
+        `http://localhost:3000/api/orders/client/confirm/${id}`
+      );
     },
-
     onSuccess: () => {
       message.success("Cập nhật trạng thái đơn hàng thành công");
-      setIsModalOpen(false);
       queryClient.invalidateQueries({ queryKey: [key] });
     },
   });
 
+  // Status
+  useEffect(() => {
+    if (!orderDetail?.completedAt) return;
+
+    const completedTime = new Date(orderDetail.completedAt);
+    const threeMinutesLater = new Date(completedTime);
+    threeMinutesLater.setMinutes(completedTime.getMinutes() + 3);
+
+    const checkTime = () => {
+      const now = new Date();
+      setCanCancel(now < threeMinutesLater);
+    };
+
+    // Kiểm tra ngay lập tức
+    checkTime();
+
+    // Cập nhật mỗi giây để ẩn nút đúng thời điểm
+    const interval = setInterval(checkTime, 1000);
+
+    return () => clearInterval(interval);
+  }, [orderDetail?.completedAt]);
+
+  //
+  const handleCancel = useMutation({
+    mutationFn: async () => {
+      await axios.patch(`http://localhost:3000/api/orders/client/${id}`);
+    },
+    onSuccess: () => {
+      message.success("Cập nhật trạng thái đơn hàng thành công");
+      queryClient.invalidateQueries({ queryKey: [key] });
+    },
+    onError: (error) => {
+      console.error("Lỗi từ API:", error);
+      // Kiểm tra nếu có response từ backend
+      if (axios.isAxiosError(error) && error.response) {
+        message.error(error.response.data.message || "Có lỗi xảy ra!");
+      } else {
+        message.error("Lỗi không xác định!");
+      }
+    },
+  });
   return (
     <div>
       <h1 className="mb-2 text-[24px]">CHI TIẾT ĐƠN HÀNG</h1>
@@ -202,15 +206,7 @@ const AdminOrderDetail = () => {
             <p className="min-w-[200px]">Ngày tạo:</p>
             <p>{dayjs(dataOrder?.createdAt).format("DD/MM/YYYY HH:mm:ss")}</p>
           </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Khách hàng: </p>
-            <p>{dataOrder?.user?.name}</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Thông tin người nhận: </p>
-            {/* <p>{dataOrder?.receiverInfo}</p> */}
-          </div>
-          <div className="flex m-1 text-[16px]">
+          <div className="flex m-1 text-[16px] items-center">
             <p className="min-w-[200px]">Xác nhận của khách </p>
             <p>
               {dataOrder?.isConfirm ? (
@@ -219,6 +215,19 @@ const AdminOrderDetail = () => {
                 <Tag color="red">Chưa nhận</Tag>
               )}
             </p>
+
+            <div className="mt-2 ml-2">
+              <Button
+                type="primary"
+                onClick={() => handleIsConfirm.mutate()}
+                hidden={
+                  dataOrder?.isConfirm ||
+                  dataOrder?.status.trim() !== "Hoàn thành"
+                }
+              >
+                Xác nhận đơn hàng
+              </Button>
+            </div>
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Phí vận chuyển: </p>
@@ -264,82 +273,45 @@ const AdminOrderDetail = () => {
               {dataOrder?.status}
             </p>
             <div className="mt-2 ml-2">
-              <Button type="primary" onClick={showModal} disabled={isDisabled}>
-                Cập nhật trạng thái
-              </Button>
-              <Modal
-                title="Cập nhật trạng thái đơn hàng"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                footer={null}
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn chắc chắn muốn hủy đơn hàng này không?"
+                onConfirm={() => handleCancel.mutate()}
+                okText="Hủy"
+                cancelText="Không hủy"
               >
-                <div>
-                  <div className="flex mb-3 ml-2">
-                    <p className="min-w-[100px]">Mã đơn hàng:</p>
-                    <p>{dataOrder?._id.toString()}</p>
-                  </div>
-                  <div>
-                    <Form
-                      form={form}
-                      initialValues={dataItemOrder}
-                      labelCol={{
-                        span: 4,
-                      }}
-                      wrapperCol={{
-                        span: 14,
-                      }}
-                      layout="horizontal"
-                      style={{
-                        maxWidth: 600,
-                        margin: "0 auto",
-                      }}
-                      onFinish={(values) => {
-                        values.updatedStatusByAdmin = userName;
-                        mutate(values);
-                      }}
-                    >
-                      <Form.Item name="updatedStatusByAdmin" hidden>
-                        <Input value={userName || ""} readOnly />
-                      </Form.Item>
-                      <Form.Item
-                        label="Trạng thái"
-                        name="status"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Vui lòng chọn trạng thái",
-                          },
-                        ]}
-                      >
-                        <Select onChange={() => setIsEdit(false)}>
-                          {availableStatuses?.map((item: string) => (
-                            <Select.Option value={item}>{item}</Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-
-                      <Form.Item
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Button htmlType="submit" disabled={isEdit}>
-                          Edit
-                        </Button>
-                      </Form.Item>
-                    </Form>
-                  </div>
-                </div>
-              </Modal>
+                <Button
+                  type="primary"
+                  danger
+                  hidden={
+                    dataOrder?.status === "Đang giao" ||
+                    dataOrder?.status === "Đã hủy" ||
+                    dataOrder?.status === "Hoàn thành"
+                  }
+                >
+                  Hủy đơn hàng
+                </Button>
+              </Popconfirm>
+            </div>
+            <div className="mt-2 ml-2">
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn chắc chắn muốn hoàn đơn này không?"
+                onConfirm={() => handleCancel.mutate()}
+                okText="Có"
+                cancelText="Không "
+              >
+                <Button
+                  type="primary"
+                  danger
+                  hidden={!canCancel || dataOrder?.status === "Đã hủy"}
+                >
+                  Hoàn đơn
+                </Button>
+              </Popconfirm>
             </div>
           </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Cập nhật trạng thái đơn : </p>
-            <p>
-              {dataOrder?.updatedStatusByAdmin
-                ? dataOrder?.updatedStatusByAdmin
-                : "Chưa được cập nhật"}
-            </p>
-          </div>
+
           <div className="flex">
             <p className="min-w-[200px] text-[18px]">
               Thông tin sản phẩm đã mua{" "}
@@ -360,4 +332,4 @@ const AdminOrderDetail = () => {
   );
 };
 
-export default AdminOrderDetail;
+export default OrderDetail;

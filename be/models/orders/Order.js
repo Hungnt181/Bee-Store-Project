@@ -24,6 +24,10 @@ const OrderSchema = new Schema(
     updatedAt: {
       type: Date,
     },
+    updatedStatusByAdmin: {
+      type: String,
+      default: null,
+    },
     voucher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",

@@ -43,6 +43,7 @@ import ResetPassword from "./website/components/ResetPassword/page";
 import ForgotPassword from "./website/components/ForgotPassword/page";
 import Success from "./website/components/Success/page";
 import PrivateRoute from "./website/components/PrivateRoute/page";
+import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
           {
             path: "orders",
             element: <MyOrders />,
+          },
+          {
+            path: "orders/:id",
+            element: <OrderDetail />,
           },
           {
             path: "address",
@@ -108,7 +113,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/success",
-    element: <Success />
+    element: <Success />,
   },
   {
     path: "/admin",

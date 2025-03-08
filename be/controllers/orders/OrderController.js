@@ -112,6 +112,52 @@ class OrderController {
     }
   }
 
+  // Get order by Id_User
+  async getOrdersByUser(req, res) {
+    try {
+      const { id_user } = req.params;
+      const { _embed } = req.query;
+      const options = {
+        page: parseInt(req.query._page, 10) || 1,
+        limit: parseInt(req.query._limit, 10) || 10,
+        sort: { createdAt: -1 }, // Sắp xếp giảm dần theo ngày tạo
+        populate: [],
+      };
+
+      if (_embed) {
+        const embeds = _embed.split(",");
+        if (embeds.includes("itemsOrder")) {
+          options.populate.push({
+            path: "itemsOrder",
+            populate: [
+              {
+                path: "id_variant",
+                populate: ["id_color", "id_size", "id_product"],
+              },
+            ],
+          });
+        }
+        embeds.forEach((embed) => {
+          if (embed !== "itemsOrder" && embed !== "id_variant") {
+            options.populate.push(embed);
+          }
+        });
+      }
+
+      // Gọi paginate
+      const result = await Order.paginate({ user: id_user }, options);
+      const { docs: orders, ...paginationData } = result;
+
+      if (!orders.length) {
+        return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+      }
+
+      return res.status(200).json({ orders, ...paginationData });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   // Update trạng thái đơn hàng :"Chưa xác nhận", "Đã xác nhận", "Đang giao", "Hoàn thành", "Đã hủy"
   // Các trạng thái hợp lệ
   async updateStatusByAdmin(req, res) {
@@ -124,7 +170,7 @@ class OrderController {
         "Đã hủy": [],
       };
 
-      const { status } = req.body;
+      const { status, updatedStatusByAdmin } = req.body;
       const { id } = req.params;
 
       const order = await Order.findById(id);
@@ -141,11 +187,12 @@ class OrderController {
 
       // Cập nhật trạng thái
       order.status = status;
+      order.updatedStatusByAdmin = updatedStatusByAdmin || "Admin"; // Lưu tên người cập nhật
       // Đỏi trạng thái isPaid
       if (status === "Hoàn thành") {
         order.isPaid = true;
         order.completedAt = new Date(); // Lưu thời gian hoàn thành
-        console.log(order.completedAt);
+        // console.log(order.completedAt);
       }
       await order.save();
 
@@ -161,17 +208,53 @@ class OrderController {
   }
 
   // Update trạng thái đơn hàng :"Chưa xác nhận", "Hoàn thành", "Đã hủy"
-  // Các trạng thái hợp lệ
   async updateStatusByClient(req, res) {
     try {
-      const { status } = req.body;
       const { id } = req.params;
 
-      if (!status) {
-        return res
-          .status(400)
-          .json({ message: "Trạng thái không được để trống!" });
+      const order = await Order.findById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
       }
+
+      // Tính thời gian 3 phút trước
+      const threeMinutesAgo = new Date();
+      threeMinutesAgo.setMinutes(threeMinutesAgo.getMinutes() - 3);
+
+      // Nếu đơn hàng đã hoàn thành hơn 3 phút trước, không thể hủy
+      if (
+        order.status === "Hoàn thành" &&
+        order.completedAt <= threeMinutesAgo
+      ) {
+        return res.status(400).json({
+          message:
+            "Bạn không thể hoàn đơn hàng đã hoàn thành hơn 3 phút trước! ",
+        });
+      }
+
+      // Chỉ cho phép khách hàng cập nhật theo quy tắc
+      if (order.status === "Chưa xác nhận" || order.status === "Đã xác nhận") {
+        order.status = "Đã hủy";
+      } else if (order.status === "Hoàn thành" && order.isConfirm) {
+        order.status = "Đã hủy";
+      } else {
+        return res.status(400).json({
+          message: `Bạn không thể cập nhật trạng thái khi chưa xác nhận đơn hàng!`,
+        });
+      }
+      await order.save();
+      return res.status(200).json({
+        message: "Cập nhật trạng thái đơn hàng thành công",
+        data: order,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+  // Các trạng thái hợp lệ
+  async updateIsConnfirmByClient(req, res) {
+    try {
+      const { id } = req.params;
 
       const order = await Order.findById(id);
       if (!order) {
@@ -179,27 +262,18 @@ class OrderController {
       }
 
       // Chỉ cho phép khách hàng cập nhật theo quy tắc
-      if (order.status === "Chưa xác nhận" && status === "Đã hủy") {
-        order.status = "Đã hủy";
-      } else if (order.status === "Hoàn thành" && status === "Hoàn đơn") {
-        if (!order.isConfirm) {
-          return res
-            .status(400)
-            .json({ message: "Bạn chưa được phép hoàn đơn!" });
-        }
-        order.status = "Hoàn đơn";
+      if (order.status === "Hoàn thành" && !order.isConfirm) {
+        order.isConfirm = true;
+        await order.save();
+        return res.status(200).json({
+          message: "Cập nhật trạng thái đơn hàng thành công",
+          data: order,
+        });
       } else {
         return res.status(400).json({
-          message: `Bạn không thể chuyển từ trạng thái "${order.status}" sang "${status}"!`,
+          message: `Bạn không thể chuyển từ trạng thái đã nhận hàng"!`,
         });
       }
-
-      await order.save();
-
-      return res.status(200).json({
-        message: "Cập nhật trạng thái đơn hàng thành công",
-        data: order,
-      });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

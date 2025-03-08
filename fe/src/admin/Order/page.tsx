@@ -48,7 +48,6 @@ const AdminOrderPage = () => {
     "Đã xác nhận",
     "Đang giao",
     "Hoàn thành",
-    "Hoàn đơn",
     "Đã hủy",
   ];
 

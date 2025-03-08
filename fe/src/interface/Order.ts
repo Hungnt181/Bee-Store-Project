@@ -12,6 +12,7 @@ export interface Order {
     isConfirm?: boolean;
     createdAt: Date;
     updatedAt: Date;
+    updatedStatusByAdmin?: string
     voucher?: VoucherInput
     user?: User;
     payment?:Payment
