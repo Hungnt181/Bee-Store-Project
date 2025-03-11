@@ -34,18 +34,19 @@ const items: MenuItem[] = [
   getItem("Thống kê", "1", <PieChartOutlined />, undefined, "dashboard"),
   getItem("Sản phẩm", "2", <SkinOutlined />, undefined, "product"),
   getItem("Danh mục", "3", <DesktopOutlined />, undefined, "category"),
-  getItem("Quản lý size", "5", <DesktopOutlined />, undefined, "size"),
-  getItem("Voucher", "4", <GiftFilled />, undefined, "voucher"),
-  getItem("Account", "5", <UserOutlined />, [
+  getItem("Quản lý size", "4", <DesktopOutlined />, undefined, "size"),
+  getItem("Voucher", "5", <GiftFilled />, undefined, "voucher"),
+  getItem("Account", "6", <UserOutlined />, [
     getItem("Tài khoản admin", "sub1", undefined, undefined, "admin_account"),
     getItem("Tài khoản khách", "sub2", undefined, undefined, "user_account"),
   ]),
-  getItem("Quản lý màu", "6", <DesktopOutlined />, undefined, "color"),
-  getItem("Team", "7", <TeamOutlined />, [
+  getItem("Quản lý màu sắc", "7", <DesktopOutlined />, undefined, "color"),
+  getItem("Quản lý bình luận", "8", <DesktopOutlined />, undefined, "comment"),
+  getItem("Team", "9", <TeamOutlined />, [
     getItem("Team 1", "sub3"),
     getItem("Team 2", "sub4"),
   ]),
-  getItem("Files", "9", <FileOutlined />),
+  getItem("Files", "10", <FileOutlined />),
 ];
 
 const Sidebar = () => {

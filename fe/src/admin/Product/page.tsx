@@ -14,7 +14,7 @@ import {
   Tag,
   Tooltip,
 } from "antd";
-import {Product} from "../../interface/Product";
+import { Product } from "../../interface/Product";
 import { Link, useNavigate } from "react-router-dom";
 import {
   MoreOutlined,
@@ -62,7 +62,7 @@ const AdminProductList = () => {
       setDataTable(dataPage.products);
     }
   }, [dataPage]);
-  const urlDelete = "http://localhost:3000/api/products/status/";
+  const urlDelete = "c/status/";
   const { mutate } = useDelete(urlDelete, key);
 
   const handleSearchVariant = (id: string) => {

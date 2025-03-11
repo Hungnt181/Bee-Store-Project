@@ -34,6 +34,7 @@ import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
 import PaymentSuccess from "./pages/Payment/notify/success";
 import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
+import AdminCommentList from "./admin/Comment/page";
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +103,7 @@ export const router = createBrowserRouter([
       { path: "/admin/size/detail/:id", element: <AdminSizeDetail /> },
       { path: "/admin/color", element: <AdminColorList /> },
       { path: "/admin/color/add", element: <AdminColorAdd /> },
+      { path: "/admin/comment", element: <AdminCommentList /> },
       { path: "/admin/color/edit/:id", element: <AdminColorEdit /> },
       { path: "/admin/color/detail/:id", element: <AdminColorDetail /> },
       { path: "/admin/product/:id/edit", element: <ProductEditPage /> },
