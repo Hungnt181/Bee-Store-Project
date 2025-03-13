@@ -11,10 +11,11 @@ import {
   notification,
   Form,
   Input,
+  Flex,
   Row,
   Col,
 } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -175,8 +176,7 @@ const AdminColorList = () => {
 
   return (
     <div>
-      <h2>DANH SÁCH MÀU SẮC</h2>
-
+      <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH MÀU SẮC</h1>
       {/* Ô tìm kiếm */}
       <Form style={{ marginBottom: 10 }}>
         <Row gutter={8} align="middle">

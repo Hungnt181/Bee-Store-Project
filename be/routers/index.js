@@ -10,6 +10,7 @@ import voucherApiRouter from "./vouchers/voucherApi.js";
 import orderApiRouter from "./orders/orderApi.js";
 import itemOrderRouter from "./itemOrder/itemOrder.js";
 import { commentRouter } from "./comments/comment.js";
+import { receiverRouter } from "./receiverInfor/receiverInfor.js";
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use(`/api`, voucherApiRouter);
 router.use(`/api`, orderApiRouter);
 router.use(`/api`, itemOrderRouter);
 router.use(`/api`, commentRouter);
+router.use(`/api`, receiverRouter);
 
 export default router;
