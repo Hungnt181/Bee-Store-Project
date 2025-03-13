@@ -26,6 +26,17 @@ import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import CartPage from "./pages/Cart/CartPage";
 import OrderPage from "./pages/Order/OrderPage";
+import AccountLayout from "./layouts/client/AccountLayout";
+import MyProfile from "./pages/Account/Profile/MyProfile";
+import MyOrders from "./pages/Account/Orders/MyOrders";
+import MyAddress from "./pages/Account/Address/MyAddress";
+import PaymentPage from "./pages/Payment/pagePayment";
+import OrderConfirmation from "./pages/Payment/pageInvoice";
+import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
+import PaymentSuccess from "./pages/Payment/notify/success";
+import PaymentSuccess2 from "./pages/Payment/notify/success2";
+import OrderCancelled from "./pages/Payment/notify/cancel";
+import AdminCommentList from "./admin/Comment/page";
 
 export const router = createBrowserRouter([
   {
@@ -38,8 +49,48 @@ export const router = createBrowserRouter([
       { path: "/products/:id", element: <ProductDetail /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/order", element: <OrderPage /> },
+      { path: "/payment", element: <PaymentPage />},
+      {
+        path: "/account",
+        element: <AccountLayout />,
+        children: [
+          {
+            index: true,
+            element: <MyProfile />,
+          },
+          {
+            path: "orders",
+            element: <MyOrders />,
+          },
+          {
+            path: "address",
+            element: <MyAddress />,
+          },
+        ],
+      },
     ],
   },
+  {
+    path: "/invoice",
+    element: <OrderConfirmation />,
+  },
+  {
+    path: "/VnPayQR",
+    element: <PaymentPageOl />,
+  },
+  {
+    path: "/notify",
+    element: <PaymentSuccess />,
+  },
+  {
+    path: "/notify2",
+    element: <PaymentSuccess2 />,
+  },
+  {
+    path: "/cancel",
+    element: <OrderCancelled />,
+  },
+
   {
     path: "/admin",
     element: <LayoutAdmin />,
@@ -53,6 +104,7 @@ export const router = createBrowserRouter([
       { path: "/admin/size/detail/:id", element: <AdminSizeDetail /> },
       { path: "/admin/color", element: <AdminColorList /> },
       { path: "/admin/color/add", element: <AdminColorAdd /> },
+      { path: "/admin/comment", element: <AdminCommentList /> },
       { path: "/admin/color/edit/:id", element: <AdminColorEdit /> },
       { path: "/admin/color/detail/:id", element: <AdminColorDetail /> },
       { path: "/admin/product/:id/edit", element: <ProductEditPage /> },

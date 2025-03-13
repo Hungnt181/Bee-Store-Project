@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react"; // Import các hook của React
-import { Form, Input, Button, message, Skeleton, Flex } from "antd"; // Import các thành phần UI từ Ant Design
-import axios from "axios"; // Import axios để gọi API
-import { useNavigate, useParams } from "react-router-dom"; // Import hook để điều hướng và lấy tham số URL
-import { useMutation, useQuery } from "@tanstack/react-query"; // Import react-query để quản lý dữ liệu bất đồng bộ
+import { useEffect, useState } from "react";
+import { Form, Input, Button, message, Skeleton, Flex } from "antd";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 // Định nghĩa kiểu dữ liệu cho màu
 interface ColorData {
-  id?: string; // Một số API có thể trả về `id`
-  _id?: string; // Một số API khác có thể dùng `_id`
-  name: string; // Tên màu
+  id?: string;
+  _id?: string;
+  name: string;
   hexcode: string; // Mã màu (hex)
 }
 
 const AdminColorEdit = () => {
-  const { id } = useParams(); // Lấy ID của màu từ URL
-  const [colorData, setColorData] = useState<ColorData | null>(null); // State lưu dữ liệu của màu đang chỉnh sửa
-  const navigate = useNavigate(); // Hook để điều hướng trang
+  const { id } = useParams();
+  const [colorData, setColorData] = useState<ColorData | null>(null);
+  const navigate = useNavigate();
 
   // Fetch danh sách tất cả các màu để kiểm tra trùng lặp
   const { data: colors } = useQuery<ColorData[]>({
-    queryKey: ["colors"], // Key để react-query quản lý cache
+    queryKey: ["colors"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/api/colors"); // Gọi API lấy danh sách màu
-      return res.data.data; // Trả về danh sách màu từ API
+      const res = await axios.get("http://localhost:3000/api/colors");
+      return res.data.data;
     },
   });
 
@@ -30,15 +30,15 @@ const AdminColorEdit = () => {
   useEffect(() => {
     const fetchColorData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/colors/${id}`); // Gọi API lấy dữ liệu màu theo ID
-        setColorData(res.data.data); // Lưu dữ liệu vào state
+        const res = await axios.get(`http://localhost:3000/api/colors/${id}`);
+        setColorData(res.data.data);
       } catch {
-        message.error("Không thể lấy thông tin màu!"); // Hiển thị thông báo lỗi nếu API thất bại
+        message.error("Không thể lấy thông tin màu!");
       }
     };
 
     if (id) {
-      fetchColorData(); // Gọi hàm fetch nếu có ID
+      fetchColorData();
     }
   }, [id]);
 
@@ -47,16 +47,16 @@ const AdminColorEdit = () => {
     mutationFn: async (updateColor: ColorData) => {
       const color = await axios.put(
         `http://localhost:3000/api/colors/${id}`,
-        updateColor // Gửi dữ liệu màu đã chỉnh sửa lên server
+        updateColor
       );
-      return color.data; // Trả về dữ liệu phản hồi từ API
+      return color.data;
     },
     onSuccess() {
-      message.success("Cập nhật màu sắc thành công"); // Hiển thị thông báo thành công
-      navigate("/admin/color"); // Chuyển hướng về trang danh sách màu
+      message.success("Cập nhật màu sắc thành công");
+      navigate("/admin/color");
     },
     onError() {
-      message.error("Cập nhật màu sắc thất bại!!"); // Hiển thị thông báo lỗi
+      message.error("Cập nhật màu sắc thất bại!!");
     },
   });
 
@@ -66,7 +66,7 @@ const AdminColorEdit = () => {
 
     const isNameDuplicate = colors.some(
       (color) =>
-        (color.id || color._id) !== id && // Bỏ qua chính màu đang chỉnh sửa
+        (color.id || color._id) !== id &&
         color.name.toLowerCase() === values.name.toLowerCase()
     );
 
@@ -77,33 +77,33 @@ const AdminColorEdit = () => {
     );
 
     if (isNameDuplicate && isHexDuplicate) {
-      message.error("Tên màu và mã màu đã tồn tại!"); // Báo lỗi nếu cả tên và mã màu đều bị trùng
+      message.error("Tên màu và mã màu đã tồn tại!");
     } else if (isNameDuplicate) {
-      message.error("Tên màu đã tồn tại!"); // Báo lỗi nếu chỉ trùng tên
+      message.error("Tên màu đã tồn tại!");
     } else if (isHexDuplicate) {
-      message.error("Mã màu đã tồn tại!"); // Báo lỗi nếu chỉ trùng mã màu
+      message.error("Mã màu đã tồn tại!");
     } else {
-      mutate(values); // Nếu không trùng, tiến hành cập nhật
+      mutate(values);
     }
   };
 
   if (!colorData) {
-    return <Skeleton>Đang tải dữ liệu...</Skeleton>; // Hiển thị loading nếu chưa có dữ liệu
+    return <Skeleton>Đang tải dữ liệu...</Skeleton>;
   }
 
   return (
     <div>
       <h2>CẬP NHẬT MÀU SẮC</h2>
       <Form
-        initialValues={colorData} // Set giá trị ban đầu từ dữ liệu màu
-        onFinish={checkDuplicate} // Gọi hàm kiểm tra trùng lặp khi submit
+        initialValues={colorData}
+        onFinish={checkDuplicate}
         layout="vertical"
-        style={{ width: "400px" }} // Định dạng form
+        style={{ width: "400px" }}
       >
         <Form.Item
           label="Tên màu sắc"
           name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên màu sắc!" }]} // Bắt buộc nhập tên màu
+          rules={[{ required: true, message: "Vui lòng nhập tên màu sắc!" }]}
         >
           <Input placeholder="Nhập tên màu" />
         </Form.Item>
@@ -112,7 +112,7 @@ const AdminColorEdit = () => {
           label="Mã màu sắc"
           name="hexcode"
           rules={[
-            { required: true, message: "Vui lòng nhập mã màu sắc!" }, // Bắt buộc nhập mã màu
+            { required: true, message: "Vui lòng nhập mã màu sắc!" },
             {
               pattern: /^#[0-9A-Fa-f]{6}$/, // Kiểm tra định dạng mã màu hex (ví dụ: #FFFFFF)
               message: "Mã màu không hợp lệ (ví dụ: #FFFFFF).",
@@ -126,14 +126,14 @@ const AdminColorEdit = () => {
           <Flex justify="right" gap={10}>
             <Button
               type="default"
-              onClick={() => navigate("/admin/color")} // Quay về trang danh sách màu nếu hủy
+              onClick={() => navigate("/admin/color")}
               style={{ marginBottom: 20 }}
             >
               Hủy bỏ
             </Button>
             <Button
               type="primary"
-              htmlType="submit" // Submit form khi nhấn "Cập nhật"
+              htmlType="submit"
               style={{ marginRight: 10 }}
             >
               Cập nhật
@@ -145,4 +145,4 @@ const AdminColorEdit = () => {
   );
 };
 
-export default AdminColorEdit; // Xuất component để sử dụng ở nơi khác
+export default AdminColorEdit;
