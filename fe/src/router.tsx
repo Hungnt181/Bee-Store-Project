@@ -36,11 +36,8 @@ import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
 import PaymentSuccess from "./pages/Payment/notify/success";
 import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
-<<<<<<< HEAD
 import AdminCommentList from "./admin/Comment/page";
-=======
 import NotFoundPage from "./website/components/Errors/404";
->>>>>>> quynhht
 
 export const router = createBrowserRouter([
   {
