@@ -22,7 +22,29 @@ interface ItemCheckout {
   quantity: number,
   totalPrice: number,
 }
+interface VoucherItem {
+  _id: string,
+  title: string,
+  codeName: string,
+  value: number,
+  quantity: number
+}
+interface receiverInfo {
+  name: string,
+  email: string,
+  phone: string,
+  address: string,
+}
 
+interface orderSubmit {
+
+  shippingFee: number,
+  total: number,
+  cartItems: CartItemDetail[],
+  receiverInfo: string,
+  isPaid: boolean,
+  voucher: string,
+}
 
 //Tỉnh và Thành phố
 const provinces = [
@@ -98,17 +120,22 @@ const PaymentPage = () => {
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  // dữ liệu mẫu
-  const orders = [
-    {
-      id: 1,
-      name: "CHACO J105375 - ĐEN - 8",
-      code: "J105375-8",
-      oldPrice: 2290000,
-      newPrice: 1900000,
-      image: "https://picsum.photos/100/100",
-    },
-  ];
+
+  //tiền thanh toán
+  const [paymentPrice, setPaymentPrice] = useState<number>(0);
+
+  // voucher
+  const [voucherList, setVoucherList] = useState<VoucherItem[]>([]);
+  const [promotionValue, setPromotionValue] = useState<number>(0);
+  const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
+  const [idSelectedVoucher, setIdSelectedVoucher] = useState<string>("");
+
+  //checkbox trước khi tha toan
+  const [isChecked, setIsChecked] = useState(false);
+  //disable neu chua checbox 
+  const handleCheckboxChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+  };
 
   // lấy cartItems từ localstorage
   useEffect(() => {
@@ -116,7 +143,18 @@ const PaymentPage = () => {
     if (storedCartItems) {
       setCartItems(JSON.parse(storedCartItems));
     }
+    //lay list voucher
+    (async () => {
+      try {
+        const { data } = await axios.get('http://localhost:3000/api/vouchers');
+        setVoucherList(data.data);
+
+      } catch (error) {
+        console.log("ko lấy đc danh sách voucher");
+      }
+    })();
   }, []);
+  console.log(voucherList);
   //lấy sp tu id
   const getPdts = async (idProduct: string) => {
     try {
@@ -165,7 +203,7 @@ const PaymentPage = () => {
     setListCheckout(updatedListCheckout);
     calculateTotalPrice(updatedListCheckout)
     console.log(listCheckout);
-    
+
   };
   useEffect(() => {
     fetchProducts();
@@ -176,7 +214,65 @@ const PaymentPage = () => {
   const calculateTotalPrice = (items: ItemCheckout[]) => {
     const total = items.reduce((sum, item) => sum + item.totalPrice, 0);
     setTotalPrice(total);
+    setPaymentPrice(total)
   };
+
+  //lấy gia tri voucher từ select
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = Number(e.target.value);
+    const selectedId = String(e.target.options[e.target.selectedIndex].getAttribute('data-id'));
+    setSelectedVoucher(selectedValue);
+    setIdSelectedVoucher(selectedId);
+  };
+
+  const getPromotionValue = () => {
+    if (selectedVoucher !== null) {
+      setPromotionValue(selectedVoucher);
+      console.log(`gia tri voucher: ${selectedVoucher}`);
+      setPaymentPrice(totalPrice - selectedVoucher)
+    }
+  };
+
+  // form state
+  const [customerName, setCustomerName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+
+  //handleSubmitOrder
+  const handleSubmitOrder = async () => {
+    // get data form
+    const newReceiverInfo: receiverInfo = {
+      name: customerName,
+      email: email,
+      phone: phoneNumber,
+      address: address
+    };
+    console.log(newReceiverInfo);
+
+    const newOrderSubmit: orderSubmit = {
+      shippingFee: 0,
+      total: paymentPrice,
+      cartItems: cartItems,
+      receiverInfo: "ID cua ng nhan sau khi tao",
+      isPaid: false,
+      voucher: idSelectedVoucher,
+    }
+    console.log(newOrderSubmit);
+
+    // sau khi api tạo thông tin người nhận + order thì chạy cái này
+    // //clear cart items
+    // setCartItems([]);
+    // localStorage.removeItem('cartItems');
+    // // clear list checkout
+    // setListCheckout([]);
+    // setPaymentPrice(0);
+    // setSelectedVoucher(null);
+    // setPromotionValue(0);
+  };
+
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -186,7 +282,7 @@ const PaymentPage = () => {
           Thông tin sản phẩm
         </h2>
         <div className="border border-gray-300 p-4 mb-6 rounded-lg bg-gray-50">
-          {listCheckout.map((item:ItemCheckout, index:number) => (
+          {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
               key={index}
               className="flex gap-4 mb-4 border-b border-gray-300 pb-4 last:border-b-0"
@@ -231,6 +327,9 @@ const PaymentPage = () => {
               placeholder="Tên khách hàng"
               className="border border-gray-300 p-3 pl-10 rounded w-full 
                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+
             />
           </div>
           <div className="relative w-full">
@@ -240,6 +339,8 @@ const PaymentPage = () => {
               placeholder="Số điện thoại"
               className="border border-gray-300 p-3 pl-10 rounded w-full
                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
           <div className="relative w-full">
@@ -249,48 +350,9 @@ const PaymentPage = () => {
               placeholder="Địa chỉ email (không bắt buộc)"
               className="border border-gray-300 p-3 pl-10 rounded w-full
                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
-          <div className="flex gap-2">
-            <label htmlFor="province" className="sr-only">
-              Chọn tỉnh/thành
-            </label>
-            <select
-              id="province"
-              className="border border-gray-300 p-3 rounded flex-1"
-              onChange={(e) => {
-                setSelectedProvince(e.target.value);
-                setSelectedDistrict(""); // Reset quận/huyện khi chọn tỉnh mới
-              }}
-              value={selectedProvince}
-              aria-label="Chọn tỉnh/thành"
-            >
-              <option value="">Chọn Tỉnh/Thành Phố</option>
-              {provinces.map((province, index) => (
-                <option key={index} value={province}>
-                  {province}
-                </option>
-              ))}
-            </select>
-
-            <label htmlFor="district" className="sr-only">
-              Chọn quận/huyện
-            </label>
-            <select
-              id="district"
-              className="border border-gray-300 p-3 rounded flex-1"
-              value={selectedDistrict}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              aria-label="Chọn quận/huyện"
-              disabled={!selectedProvince} // Disable khi chưa chọn tỉnh/thành
-            >
-              <option value="">Chọn Quận/Huyện</option>
-              {districts[selectedProvince]?.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
           </div>
           <div className="relative w-full">
             <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
@@ -299,6 +361,8 @@ const PaymentPage = () => {
               placeholder="Nhập địa chỉ cụ thể"
               className="border border-gray-300 p-3 pl-10 rounded w-full
                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div className="relative w-full">
@@ -351,36 +415,38 @@ const PaymentPage = () => {
               Tổng giá trị sản phẩm <span>{totalPrice} đ</span>
             </p>
             <p className="flex justify-between text-gray-500">
-              Giảm giá <span>0 đ</span>
-            </p>
-            <p className="flex justify-between text-gray-500">
-              Vận chuyển <span>20,000 đ</span>
-            </p>
-            <p className="flex justify-between border-b border-gray-300 text-gray-500 pb-2">
-              Giảm giá vận chuyển{" "}
-              <span className="text-red-500">- 20,000 đ</span>
+              Giảm giá từ voucher <span>{promotionValue} đ</span>
             </p>
             <p className="flex justify-between text-lg font-semibold text-red-500  pt-2 ">
               Tổng thanh toán{" "}
-              <span className="text-xl font-bold">1,900,000 đ</span>
+              <span className="text-xl font-bold">{paymentPrice} đ</span>
             </p>
             <p className="text-right text-red-500">
-              Bạn đã tiết kiệm được <span>20,000 đ</span>
+              Bạn đã tiết kiệm được <span>{promotionValue} đ</span>
             </p>
           </div>
           {/* Giảm giá */}
           <div className="w-full md:w-1/3 border border-gray-300 p-6 bg-gray-100 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">Mã giảm giá</h3>
-            <div className="relative w-full">
+            <div className="relative w-full mb-3">
               <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Nhập mã giảm giá"
-                className="border border-gray-300 p-3 pl-10 rounded w-full mb-2
-                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              />
+              <select onChange={handleSelectChange}
+                className="w-full ps-8 pe-4 py-2 border rounded-xl"
+              >
+                <option value="" disabled selected>
+                  Mời bạn chọn voucher
+                </option>
+                <option value={0} >
+                  Ko dùng voucher
+                </option>
+                {voucherList.map((voucher: VoucherItem) => (
+                  <option key={voucher._id} value={voucher.value}>
+                    {voucher.title}
+                  </option>
+                ))}
+              </select>
             </div>
-            <button
+            <button onClick={getPromotionValue}
               className="bg-black text-white px-4 py-2 w-full rounded 
                    hover:bg-yellow-500 transition duration-300"
             >
@@ -390,12 +456,19 @@ const PaymentPage = () => {
         </div>
 
         <label className="flex items-center gap-2 mt-6">
-          <input type="checkbox" className="w-4 h-4" /> Đồng ý với các điều
+          <input
+            type="checkbox"
+            className="w-4 h-4"
+            checked={isChecked}
+            onChange={handleCheckboxChecked}
+          /> Đồng ý với các điều
           khoản và quy định của website
         </label>
         <button
-          className="bg-black text-white px-6 py-3 w-full mt-4 rounded-lg text-lg font-semibold 
-                   hover:bg-yellow-500 transition duration-300"
+          className={`bg-black text-white px-6 py-3 w-full mt-4 rounded-lg text-lg font-semibold transition duration-300
+        ${isChecked ? 'hover:bg-yellow-500' : 'cursor-not-allowed opacity-50'}`}
+          disabled={!isChecked}
+          onClick={handleSubmitOrder}
         >
           ĐẶT HÀNG
         </button>
