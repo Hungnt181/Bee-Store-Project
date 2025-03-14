@@ -33,6 +33,7 @@ class OrderController {
       res.status(400).json({ message: error.message });
     }
   }
+
   async getOrderById(req, res) {
     try {
       const { id } = req.params;

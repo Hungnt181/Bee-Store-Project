@@ -23,10 +23,12 @@ const OrderSchema = new Schema(
     voucher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",
+      required: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     payment: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +36,7 @@ const OrderSchema = new Schema(
     },
     receiverInfo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ReceiverInfo",
+      ref: "Receiver",
     },
     itemsOrder: [
       {

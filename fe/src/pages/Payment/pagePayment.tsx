@@ -1,56 +1,61 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import mongoose from "mongoose";
 import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
 import axios from "axios";
+import { message } from "antd";
 
 interface Districts {
   [key: string]: string[];
 }
 
 interface CartItemDetail {
-  idProduct: string,
-  idVariant: string,
-  color: string,
-  size: string,
-  quantity: number,
+  idProduct: string;
+  idVariant: string;
+  color: string;
+  size: string;
+  quantity: number;
+}
+
+interface ItemOrder {
+  name: string;
+  quantity: number;
+  id_variant: string;
 }
 interface ItemCheckout {
-  nameProduct: string,
-  imgVariant: string,
-  price: number,
-  color: string,
-  size: string,
-  quantity: number,
-  totalPrice: number,
+  nameProduct: string;
+  imgVariant: string;
+  price: number;
+  color: string;
+  size: string;
+  quantity: number;
+  totalPrice: number;
 }
 interface VoucherItem {
-  _id: string,
-  title: string,
-  codeName: string,
-  value: number,
-  quantity: number
+  _id: string;
+  title: string;
+  codeName: string;
+  value: number;
+  quantity: number;
 }
 interface receiverInfo {
-  name: string,
-  email: string,
-  phone: string,
-  address: string,
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
 }
 
 interface orderSubmit {
-
-  shippingFee: number,
-  total: number,
-  cartItems: CartItemDetail[],
-  receiverInfo: string,
-  isPaid: boolean,
-  voucher: string,
+  shippingFee: number;
+  total: number;
+  cartItems: CartItemDetail[];
+  receiverInfo: string;
+  isPaid: boolean;
+  voucher: string;
 }
 
 //Tỉnh và Thành phố
-const provinces = [
-  "Hà Nội",
-  "Hồ Chí Minh",
-];
+const provinces = ["Hà Nội", "Hồ Chí Minh"];
 //Quận và Huyện
 const districts: Districts = {
   "Hà Nội": [
@@ -110,14 +115,16 @@ const districts: Districts = {
   ],
 };
 
-
 const PaymentPage = () => {
   const [quantity] = useState(1);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState<string>("cod"); // Mặc định chọn "cod"
+  const [selectedPayment, setSelectedPayment] = useState<string>(
+    "67bfce96db17315614fced6f"
+  ); // Mặc định chọn "cod"
 
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
@@ -132,60 +139,63 @@ const PaymentPage = () => {
 
   //checkbox trước khi tha toan
   const [isChecked, setIsChecked] = useState(false);
-  //disable neu chua checbox 
-  const handleCheckboxChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //disable neu chua checbox
+  const handleCheckboxChecked = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setIsChecked(event.target.checked);
   };
 
   // lấy cartItems từ localstorage
   useEffect(() => {
-    const storedCartItems = localStorage.getItem('cartItems');
+    const storedCartItems = localStorage.getItem("cartItems");
     if (storedCartItems) {
       setCartItems(JSON.parse(storedCartItems));
     }
     //lay list voucher
     (async () => {
       try {
-        const { data } = await axios.get('http://localhost:3000/api/vouchers');
+        const { data } = await axios.get("http://localhost:3000/api/vouchers");
         setVoucherList(data.data);
-
       } catch (error) {
         console.log("ko lấy đc danh sách voucher");
       }
     })();
   }, []);
-  console.log(voucherList);
+  // console.log(voucherList);
   //lấy sp tu id
   const getPdts = async (idProduct: string) => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/products/' + idProduct);
+      const { data } = await axios.get(
+        "http://localhost:3000/api/products/" + idProduct
+      );
       // console.log(data.data);
-      return data.data
-    }
-    catch (error) {
+      return data.data;
+    } catch (error) {
       console.log("ko lấy đc sp từ id");
     }
-  }
+  };
   // lấy variant tu id
   const getVariant = async (idVariant: string) => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/variants/' + idVariant);
-      console.log(data.variants[0]);
-      return data.variants[0]
-    }
-    catch (error) {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/variants/" + idVariant
+      );
+      // console.log(data.variants[0]);
+      return data.variants[0];
+    } catch (error) {
       console.log("ko lấy đc bien the từ id");
     }
-  }
+  };
 
   // tao item cho listCheckout
   const fetchProducts = async () => {
     const updatedListCheckout: ItemCheckout[] = [];
+    const updatedListItemOrder: ItemOrder[] = [];
     for (const cartItem of cartItems) {
       const productData = await getPdts(cartItem.idProduct);
       const variantData = await getVariant(cartItem.idVariant);
-      console.log('var' + variantData.image[0]);
-
+      console.log("var" + variantData.image[0]);
 
       if (productData && variantData) {
         const newItemCheckout: ItemCheckout = {
@@ -198,12 +208,19 @@ const PaymentPage = () => {
           totalPrice: productData.price * cartItem.quantity,
         };
         updatedListCheckout.push(newItemCheckout);
-      }
-    };
-    setListCheckout(updatedListCheckout);
-    calculateTotalPrice(updatedListCheckout)
-    console.log(listCheckout);
 
+        const newItemOrder: ItemOrder = {
+          name: productData.name,
+          quantity: cartItem.quantity,
+          id_variant: cartItem.idVariant,
+        };
+        updatedListItemOrder.push(newItemOrder);
+      }
+    }
+    setItemOrder(updatedListItemOrder);
+    setListCheckout(updatedListCheckout);
+    calculateTotalPrice(updatedListCheckout);
+    // console.log(listCheckout);
   };
   useEffect(() => {
     fetchProducts();
@@ -214,14 +231,16 @@ const PaymentPage = () => {
   const calculateTotalPrice = (items: ItemCheckout[]) => {
     const total = items.reduce((sum, item) => sum + item.totalPrice, 0);
     setTotalPrice(total);
-    setPaymentPrice(total)
+    setPaymentPrice(total);
   };
 
   //lấy gia tri voucher từ select
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = Number(e.target.value);
-    const selectedId = String(e.target.options[e.target.selectedIndex].getAttribute('data-id'));
+    const selectedId = String(
+      e.target.options[e.target.selectedIndex].getAttribute("data-id")
+    );
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
@@ -229,27 +248,139 @@ const PaymentPage = () => {
   const getPromotionValue = () => {
     if (selectedVoucher !== null) {
       setPromotionValue(selectedVoucher);
-      console.log(`gia tri voucher: ${selectedVoucher}`);
-      setPaymentPrice(totalPrice - selectedVoucher)
+      // console.log(`gia tri voucher: ${selectedVoucher}`);
+      setPaymentPrice(totalPrice - selectedVoucher);
     }
   };
 
   // form state
-  const [customerName, setCustomerName] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
+  const [customerName, setCustomerName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   //handleSubmitOrder
   const handleSubmitOrder = async () => {
     // get data form
-    const newReceiverInfo: receiverInfo = {
-      name: customerName,
-      email: email,
-      phone: phoneNumber,
-      address: address
-    };
-    console.log(newReceiverInfo);
+    // const newReceiverInfo: receiverInfo = {
+    //   name: customerName,
+    //   email: email,
+    //   phone: phoneNumber,
+    //   address: address,
+    // };
+    // console.log(newReceiverInfo);
+    setLoading(true);
+    let receiverId = "";
+    let itemOrderIds: string[] = [];
+    try {
+      // Api tạo thông tin người nhận
+      try {
+        const receiverInfo = await fetch(
+          `http://localhost:3000/api/receivers`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: customerName,
+              phone: phoneNumber,
+              address: address,
+            }),
+          }
+        );
+        const receiverData = await receiverInfo.json();
+        if (!receiverInfo.ok) {
+          // Đẩy message ra UI
+          message.error(
+            receiverData.message || "Tạo thông tin người nhận thất bại"
+          );
+          return; // dừng xử lý tiếp
+        }
+        receiverId = receiverData.data._id;
+        // console.log("receiverId:", receiverId);
+      } catch (error) {
+        // Bắt lỗi fetch, parse hoặc throw error thủ công
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+      }
+
+      // Api tạo item order
+      try {
+        const itemOrders = await fetch(`http://localhost:3000/api/itemOrder`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            itemOrder.map((item: ItemOrder) => ({
+              name: item.name,
+              quantity: item.quantity,
+              id_variant: item.id_variant,
+            }))
+          ),
+        });
+        const itemOrderData = await itemOrders.json();
+        if (!itemOrders.ok) {
+          // Đẩy message ra UI
+          message.error(itemOrderData.message || "Tạo item order thất bại");
+          return; // dừng xử lý tiếp
+        }
+        itemOrderIds = itemOrderData.data.map((item: any) => item._id);
+        // console.log("itemOrderId:", itemOrderIds);
+      } catch (error) {
+        // Bắt lỗi fetch, parse hoặc throw error thủ công
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+      }
+
+      // Api tạo order
+      try {
+        const newOrder = await fetch(`http://localhost:3000/api/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            total: paymentPrice,
+            shippingFee: 0,
+            isPaid: false,
+            voucher: idSelectedVoucher == "" ? null : idSelectedVoucher,
+            user: null,
+            payment: selectedPayment,
+            receiverInfo: receiverId,
+            itemsOrder: itemOrderIds,
+            status: "Chưa xác nhận",
+          }),
+        });
+
+        const orderData = await newOrder.json();
+        if (!orderData.success) throw new Error("Tạo đơn hàng thất bại");
+
+        message.success("Đặt hàng thành công!");
+      } catch (error) {
+        // Bắt lỗi fetch, parse hoặc throw error thủ công
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+      }
+
+      ///////// kết thúc
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        message.error(err.message || "Có lỗi xảy ra");
+      } else {
+        message.error("Có lỗi xảy ra");
+      }
+    } finally {
+      setLoading(false);
+    }
+
+    ///////
 
     const newOrderSubmit: orderSubmit = {
       shippingFee: 0,
@@ -258,7 +389,7 @@ const PaymentPage = () => {
       receiverInfo: "ID cua ng nhan sau khi tao",
       isPaid: false,
       voucher: idSelectedVoucher,
-    }
+    };
     console.log(newOrderSubmit);
 
     // sau khi api tạo thông tin người nhận + order thì chạy cái này
@@ -271,8 +402,6 @@ const PaymentPage = () => {
     // setSelectedVoucher(null);
     // setPromotionValue(0);
   };
-
-
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -329,7 +458,6 @@ const PaymentPage = () => {
                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-
             />
           </div>
           <div className="relative w-full">
@@ -388,8 +516,8 @@ const PaymentPage = () => {
               name="payment"
               className="w-4 h-4"
               value="cod"
-              checked={selectedPayment === "cod"}
-              onChange={() => setSelectedPayment("cod")}
+              checked={selectedPayment === "67bfce96db17315614fced6f"}
+              onChange={() => setSelectedPayment("67bfce96db17315614fced6f")}
             />
             Thanh toán khi nhận hàng
           </label>
@@ -400,8 +528,8 @@ const PaymentPage = () => {
               name="payment"
               className="w-4 h-4"
               value="bank"
-              checked={selectedPayment === "bank"}
-              onChange={() => setSelectedPayment("bank")}
+              checked={selectedPayment === "67bfcec4db17315614fced70"}
+              onChange={() => setSelectedPayment("67bfcec4db17315614fced70")}
             />
             Thanh toán qua ví điện tử VNPAY
           </label>
@@ -430,15 +558,14 @@ const PaymentPage = () => {
             <h3 className="text-lg font-semibold mb-2">Mã giảm giá</h3>
             <div className="relative w-full mb-3">
               <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <select onChange={handleSelectChange}
+              <select
+                onChange={handleSelectChange}
                 className="w-full ps-8 pe-4 py-2 border rounded-xl"
               >
                 <option value="" disabled selected>
                   Mời bạn chọn voucher
                 </option>
-                <option value={0} >
-                  Ko dùng voucher
-                </option>
+                <option value={0}>Ko dùng voucher</option>
                 {voucherList.map((voucher: VoucherItem) => (
                   <option key={voucher._id} value={voucher.value}>
                     {voucher.title}
@@ -446,7 +573,8 @@ const PaymentPage = () => {
                 ))}
               </select>
             </div>
-            <button onClick={getPromotionValue}
+            <button
+              onClick={getPromotionValue}
               className="bg-black text-white px-4 py-2 w-full rounded 
                    hover:bg-yellow-500 transition duration-300"
             >
@@ -461,12 +589,12 @@ const PaymentPage = () => {
             className="w-4 h-4"
             checked={isChecked}
             onChange={handleCheckboxChecked}
-          /> Đồng ý với các điều
-          khoản và quy định của website
+          />{" "}
+          Đồng ý với các điều khoản và quy định của website
         </label>
         <button
           className={`bg-black text-white px-6 py-3 w-full mt-4 rounded-lg text-lg font-semibold transition duration-300
-        ${isChecked ? 'hover:bg-yellow-500' : 'cursor-not-allowed opacity-50'}`}
+        ${isChecked ? "hover:bg-yellow-500" : "cursor-not-allowed opacity-50"}`}
           disabled={!isChecked}
           onClick={handleSubmitOrder}
         >
