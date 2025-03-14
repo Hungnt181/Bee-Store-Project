@@ -23,29 +23,25 @@ class ItemOrderController {
         page: parseInt(_page, 10),
         limit: parseInt(_limit, 10),
       };
-      let query = ItemOrder.find().populate({
+
+      // Lấy dữ liệu từ MongoDB với phân trang
+      const result = await ItemOrder.paginate({}, options);
+
+      // Sau khi lấy dữ liệu, thực hiện populate cho từng document
+      const populatedDocs = await ItemOrder.populate(result.docs, {
         path: "id_variant",
         select: "id_color id_size id_product -_id",
         populate: [
-          {
-            path: "id_product",
-            select: "name price -_id",
-          },
-          {
-            path: "id_color",
-            select: "name -_id",
-          },
-          {
-            path: "id_size",
-            select: "name -_id",
-          },
+          { path: "id_product", select: "name price -_id" },
+          { path: "id_color", select: "name -_id" },
+          { path: "id_size", select: "name -_id" },
         ],
       });
-      const result = await ItemOrder.paginate(query, options);
+
       const { docs, ...paginationData } = result;
 
       return res.status(StatusCodes.OK).json({
-        itemOrders: docs,
+        itemOrders: populatedDocs,
         ...paginationData,
       });
     } catch (error) {

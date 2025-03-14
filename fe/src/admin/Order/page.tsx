@@ -1,22 +1,32 @@
-import { Table, TableProps } from "antd/lib";
-import { Button, Pagination, Space, Tag, Tooltip } from "antd";
 import { useEffect, useState } from "react";
-import { Order } from "../../../../interface/Order";
-import { useQuery } from "@tanstack/react-query";
+import { Order } from "../../interface/Order";
 import axios from "axios";
+import {
+  Button,
+  Flex,
+  Pagination,
+  Select,
+  Skeleton,
+  Table,
+  TableProps,
+  Tag,
+  Tooltip,
+} from "antd";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-export default function OrderTable() {
-  const id_user = localStorage.getItem("idUser");
+
+const AdminOrderPage = () => {
   const [dataTable, setDataTable] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [curentPages, setCurentPages] = useState(1);
-  const pageSize = 5;
+  const [filterStatus, setFilterStatus] = useState<string>("");
+  const pageSize = 10;
 
-  const url = `http://localhost:3000/api/orders/user/${id_user}?_embed=user,voucher,payment,itemsOrder,id_variant&_page=${curentPages}&_limit=${pageSize}`;
+  const url = `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}&status=${filterStatus}`;
   const key = "dataPageOrder";
 
-  const { data: data_Order } = useQuery({
+  const { data: data_Order, isLoading } = useQuery({
     queryKey: [key, curentPages],
     queryFn: async () => {
       const response = await axios.get(url);
@@ -32,14 +42,21 @@ export default function OrderTable() {
     }
   }, [data_Order]);
 
-  console.log("dataTable: ", dataTable);
+  //colums
+  const validTransitions = [
+    "Chưa xác nhận",
+    "Đã xác nhận",
+    "Đang giao",
+    "Hoàn thành",
+    "Đã hủy",
+  ];
 
   const columns: TableProps<Order>["columns"] = [
     {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      width: 20,
+      width: 60,
       render: (_: unknown, __: unknown, index: number) => {
         const stt =
           curentPages && pageSize
@@ -47,6 +64,11 @@ export default function OrderTable() {
             : "";
         return stt;
       },
+    },
+    {
+      title: "Mã đơn hàng",
+      dataIndex: "_id",
+      key: "_id",
     },
     {
       title: "Ngày đặt",
@@ -61,6 +83,21 @@ export default function OrderTable() {
       },
     },
     {
+      title: "Khách hàng",
+      dataIndex: "user",
+      key: "user",
+      render: (_: unknown, item: Order) => {
+        return (
+          <div>
+            <div>{item?.user?.name}</div>
+            <div>{item?.user?.address}</div>
+            <div>{item?.user?.tel}</div>
+          </div>
+        );
+      },
+    },
+
+    {
       title: "Tổng tiền",
       dataIndex: "total",
       key: "total",
@@ -71,11 +108,8 @@ export default function OrderTable() {
       title: "Hình thức thanh toán",
       dataIndex: "payment",
       key: "payment",
-      width: 150,
       render: (_: unknown, item: Order) => {
-        return item?.payment?.name === "Thanh toán khi nhận hàng"
-          ? "COD"
-          : "VNPay";
+        return item?.payment?.name;
       },
     },
     {
@@ -133,7 +167,7 @@ export default function OrderTable() {
       render: (_: unknown, item: Order) => {
         return (
           <div>
-            <Link to={`/account/orders/${item._id}`}>
+            <Link to={`/admin/order/${item._id}`}>
               <Button type="primary">Xem chi tiết</Button>
             </Link>
           </div>
@@ -142,27 +176,73 @@ export default function OrderTable() {
     },
   ];
 
+  // search
+  // Filter
+  // Hàm fetch API
+  const fetchOrder = async (key: string) => {
+    setFilterStatus(key);
+    const res = await fetch(
+      `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}&status=${key}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error fetching orders");
+    }
+    return res.json(); // Trả về dữ liệu từ API
+  };
+  const handleChangeSelect = async (value: string) => {
+    const encodedStatus = encodeURIComponent(value);
+
+    const newData = await fetchOrder(encodedStatus);
+    setDataTable(newData.orders);
+    setCurentPages(newData.page);
+    setTotalPages(newData.totalPages);
+  };
+
+  // Thay đổi trang
   const handlePageChange = (page: number) => {
     setCurentPages(page);
   };
+
   return (
-    <>
-      <Table
-        rowKey="_id"
-        bordered={true}
-        columns={columns}
-        dataSource={dataTable}
-        pagination={false}
-      />
-      <Space className="-ml-5 mt-4 flex w-full justify-end">
-        <Pagination
-          pageSize={5}
-          onChange={handlePageChange}
-          showSizeChanger={false}
-          total={totalPages * pageSize}
-          current={curentPages}
+    <div>
+      <h1 className="mb-1.5 text-2xl font-medium">DANH MỤC ĐƠN HÀNG</h1>
+      <Flex gap={0} style={{ marginBottom: "30px" }} justify="flex-end">
+        <Select
+          style={{ width: 150 }}
+          defaultValue={"Tất cả trạng thái"}
+          onChange={handleChangeSelect}
+        >
+          <Select.Option value="">Tất cả trạng thái</Select.Option>
+          {validTransitions?.map((item: string) => (
+            <Select.Option key={item} value={item}>
+              {item}
+            </Select.Option>
+          ))}
+        </Select>
+      </Flex>
+      <Skeleton loading={isLoading}>
+        <Table
+          dataSource={dataTable}
+          columns={columns}
+          pagination={false}
+          scroll={{ y: 55 * 8 }}
         />
-      </Space>
-    </>
+        <Pagination
+          current={curentPages}
+          total={totalPages * pageSize}
+          pageSize={pageSize}
+          onChange={handlePageChange}
+          style={{ marginTop: 20, textAlign: "center" }}
+        ></Pagination>
+      </Skeleton>
+    </div>
   );
-}
+};
+
+export default AdminOrderPage;

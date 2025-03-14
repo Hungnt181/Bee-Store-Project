@@ -38,6 +38,15 @@ import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
 import AdminCommentList from "./admin/Comment/page";
 import NotFoundPage from "./website/components/Errors/404";
+import AdminOrderPage from "./admin/Order/page";
+import AdminOrderDetail from "./admin/Order/Detail/page";
+import Signup from "./website/components/Signup/page";
+import Signin from "./website/components/Signin/page";
+import ResetPassword from "./website/components/ResetPassword/page";
+import ForgotPassword from "./website/components/ForgotPassword/page";
+import Success from "./website/components/Success/page";
+import PrivateRoute from "./website/components/PrivateRoute/page";
+import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +60,10 @@ export const router = createBrowserRouter([
       { path: "/cart", element: <CartPage /> },
       { path: "/order", element: <OrderPage /> },
       { path: "/payment", element: <PaymentPage />},
+      { path: "/signup", element: <Signup /> },
+      { path: "/signin", element: <Signin /> },
+      { path: "/reset/:id", element: <ResetPassword /> },
+      { path: "/forgot", element: <ForgotPassword /> },
       {
         path: "/account",
         element: <AccountLayout />,
@@ -62,6 +75,10 @@ export const router = createBrowserRouter([
           {
             path: "orders",
             element: <MyOrders />,
+          },
+          {
+            path: "orders/:id",
+            element: <OrderDetail />,
           },
           {
             path: "address",
@@ -97,8 +114,16 @@ export const router = createBrowserRouter([
     element: <NotFoundPage />,
   },
   {
+    path: "/success",
+    element: <Success />,
+  },
+  {
     path: "/admin",
-    element: <LayoutAdmin />,
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <LayoutAdmin />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" /> },
       { path: "/admin/dashboard", element: <AdminDashboarPage /> },
@@ -122,6 +147,8 @@ export const router = createBrowserRouter([
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
       { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
+      { path: "/admin/order", element: <AdminOrderPage /> },
+      { path: "/admin/order/:id", element: <AdminOrderDetail /> },
     ],
   },
 ]);

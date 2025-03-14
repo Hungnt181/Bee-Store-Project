@@ -17,13 +17,25 @@ const OrderSchema = new Schema(
     createdAt: {
       type: Date,
     },
+    completedAt: {
+      type: Date,
+      default: null,
+    },
     updatedAt: {
       type: Date,
+    },
+    updatedStatusByAdmin: {
+      type: String,
+      default: null,
     },
     voucher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",
       required: false,
+    },
+    isConfirm: {
+      type: Boolean,
+      default: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

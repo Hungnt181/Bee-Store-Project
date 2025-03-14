@@ -48,7 +48,7 @@ export default function ProductDetail() {
   async function fetchData(id: string) {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/products/category/${id}?_limit=4`
+        `http://localhost:3000/api/products/category/${id}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -153,19 +153,24 @@ export default function ProductDetail() {
       <div className="mt-8">
         <h3 className="text-xl font-medium">CÓ THỂ BẠN QUAN TÂM</h3>
         <div className="grid grid-cols-4 items-center gap-2 mt-4">
-          {dataPro_Cate.map((item: ProductType, index) => (
-            <ProductCard product={item as ProductType} key={index}/>
-          ))}
+          {dataPro_Cate
+            .filter((item: ProductType) => item.status === true)
+            .map(
+              (item: ProductType, index: number) =>
+                index < 4 && <ProductCard product={item as ProductType} />
+            )}
         </div>
       </div>
       {/* NEWS PRODUCTS */}
       <div className="mt-8">
         <h3 className="text-xl font-medium">SẢN PHẨM MỚI</h3>
         <div className="grid grid-cols-4 items-center gap-2 mt-4">
-          {dataNewPro?.products.map(
-            (item: ProductType, index: number) =>
-              index < 4 && <ProductCard product={item as ProductType} key={index}/>
-          )}
+          {dataNewPro?.products
+            .filter((item: ProductType) => item.status === true)
+            .map(
+              (item: ProductType, index: number) =>
+                index < 4 && <ProductCard product={item as ProductType} />
+            )}
         </div>
       </div>
     </div>
