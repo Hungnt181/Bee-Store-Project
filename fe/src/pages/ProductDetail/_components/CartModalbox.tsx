@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Modal, Table } from 'antd';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Table } from "antd";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface CartItemDetail {
-  idProduct: string,
-  idVariant: string,
-  color: string,
-  size: string,
-  quantity: number,
+  idProduct: string;
+  idVariant: string;
+  color: string;
+  size: string;
+  quantity: number;
 }
 interface CartModalItemDetail {
-  nameProduct: string,
-  price: number,
-  color: string,
-  size: string,
-  quantity: number,
-  totalPrice: number,
+  nameProduct: string;
+  price: number;
+  color: string;
+  size: string;
+  quantity: number;
+  totalPrice: number;
 }
 
 interface CartModalData {
@@ -24,23 +25,29 @@ interface CartModalData {
   onClose: () => void;
 }
 
-const CartModalbox: React.FC<CartModalData> = ({ isOpen, cartItems, onClose }) => {
-
-  const [cartModalItems, setCartModalItems] = useState<CartModalItemDetail[]>([]);
+const CartModalbox: React.FC<CartModalData> = ({
+  isOpen,
+  cartItems,
+  onClose,
+}) => {
+  const [cartModalItems, setCartModalItems] = useState<CartModalItemDetail[]>(
+    []
+  );
 
   if (cartItems && cartItems[0]) {
     console.log(cartItems[0]);
   }
   const getPdts = async (idProduct: string) => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/products/' + idProduct);
+      const { data } = await axios.get(
+        "http://localhost:3000/api/products/" + idProduct
+      );
       // console.log(data.data);
-      return data.data
-    }
-    catch (error) {
+      return data.data;
+    } catch (error) {
       console.log("ko lấy đc sp từ id");
     }
-  }
+  };
 
   const fetchProducts = async () => {
     const updatedCartModalItems: CartModalItemDetail[] = [];
@@ -57,10 +64,9 @@ const CartModalbox: React.FC<CartModalData> = ({ isOpen, cartItems, onClose }) =
         };
         updatedCartModalItems.push(newCartModalItem);
       }
-    };
+    }
     setCartModalItems(updatedCartModalItems);
     console.log(cartModalItems);
-
   };
   useEffect(() => {
     if (isOpen) {
@@ -69,52 +75,57 @@ const CartModalbox: React.FC<CartModalData> = ({ isOpen, cartItems, onClose }) =
   }, [isOpen, cartItems]);
 
   const handleRemove = (index: number) => {
-    const afterFilterCartModalItems = cartModalItems.filter((_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index);
+    const afterFilterCartModalItems = cartModalItems.filter(
+      (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
+    );
     setCartModalItems(afterFilterCartModalItems);
   };
 
-  const onCheckout = ()=>{
+  const onCheckout = () => {
     console.log("checkout clicked");
-  }
+  };
 
   const columns = [
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'nameProduct',
-      key: 'nameProduct',
+      title: "Tên sản phẩm",
+      dataIndex: "nameProduct",
+      key: "nameProduct",
     },
     {
-      title: 'Giá',
-      dataIndex: 'price',
-      key: 'price',
+      title: "Giá",
+      dataIndex: "price",
+      key: "price",
     },
     {
-      title: 'Màu sắc',
-      dataIndex: 'color',
-      key: 'color',
-      className: 'text-center',
+      title: "Màu sắc",
+      dataIndex: "color",
+      key: "color",
+      className: "text-center",
       render: (color: string) => (
-        <div className={`w-[20px] h-[20px] border bg-[${color}]`} style={{ backgroundColor: color }}></div>
+        <div
+          className={`w-[20px] h-[20px] border bg-[${color}]`}
+          style={{ backgroundColor: color }}
+        ></div>
       ),
     },
     {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
+      title: "Size",
+      dataIndex: "size",
+      key: "size",
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
-      title: 'Giá',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
+      title: "Giá",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
     },
     {
-      title: '#',
-      key: 'action',
+      title: "#",
+      key: "action",
       render: (text, record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Remove</Button>
       ),
@@ -134,9 +145,11 @@ const CartModalbox: React.FC<CartModalData> = ({ isOpen, cartItems, onClose }) =
             <Button key="close" onClick={onClose}>
               Đóng
             </Button>
-            <Button key="checkout" onClick={onCheckout}>
-              Thanh toán
-            </Button>
+            <Link to="/payment">
+              <Button key="checkout" onClick={onCheckout}>
+                Thanh toán
+              </Button>
+            </Link>
           </>
         )}
       >

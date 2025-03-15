@@ -23,7 +23,7 @@ const AdminOrderPage = () => {
   const [filterStatus, setFilterStatus] = useState<string>("");
   const pageSize = 10;
 
-  const url = `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder&_page=${curentPages}&_limit=${pageSize}&status=${filterStatus}`;
+  const url = `http://localhost:3000/api/orders?_embed=user,voucher,payment,itemsOrder,receiverInfo&_page=${curentPages}&_limit=${pageSize}&status=${filterStatus}`;
   const key = "dataPageOrder";
 
   const { data: data_Order, isLoading } = useQuery({
@@ -89,9 +89,9 @@ const AdminOrderPage = () => {
       render: (_: unknown, item: Order) => {
         return (
           <div>
-            <div>{item?.user?.name}</div>
-            <div>{item?.user?.address}</div>
-            <div>{item?.user?.tel}</div>
+            <div>{item?.receiverInfo?.name?.toString()}</div>
+            <div>{item?.receiverInfo?.phone?.toString()}</div>
+            <div>{item?.receiverInfo?.address?.toString()}</div>
           </div>
         );
       },

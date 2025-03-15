@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import mongoose from "mongoose";
 import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
 import axios from "axios";
 import { message } from "antd";
-
-interface Districts {
-  [key: string]: string[];
-}
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 interface CartItemDetail {
   idProduct: string;
@@ -38,91 +35,28 @@ interface VoucherItem {
   value: number;
   quantity: number;
 }
-interface receiverInfo {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-}
-
-interface orderSubmit {
-  shippingFee: number;
-  total: number;
-  cartItems: CartItemDetail[];
-  receiverInfo: string;
-  isPaid: boolean;
-  voucher: string;
-}
-
-//Tỉnh và Thành phố
-const provinces = ["Hà Nội", "Hồ Chí Minh"];
-//Quận và Huyện
-const districts: Districts = {
-  "Hà Nội": [
-    "Ba Đình",
-    "Hoàn Kiếm",
-    "Hai Bà Trưng",
-    "Đống Đa",
-    "Tây Hồ",
-    "Cầu Giấy",
-    "Thanh Xuân",
-    "Hoàng Mai",
-    "Long Biên",
-    "Nam Từ Liêm",
-    "Bắc Từ Liêm",
-    "Hà Đông",
-    "Sóc Sơn",
-    "Đông Anh",
-    "Gia Lâm",
-    "Thanh Trì",
-    "Thường Tín",
-    "Phú Xuyên",
-    "Ứng Hòa",
-    "Mỹ Đức",
-    "Chương Mỹ",
-    "Thanh Oai",
-    "Thạch Thất",
-    "Quốc Oai",
-    "Ba Vì",
-    "Phúc Thọ",
-    "Đan Phượng",
-    "Hoài Đức",
-    "Mê Linh",
-  ],
-  "Hồ Chí Minh": [
-    "Quận 1",
-    "Quận 3",
-    "Quận 4",
-    "Quận 5",
-    "Quận 6",
-    "Quận 7",
-    "Quận 8",
-    "Quận 10",
-    "Quận 11",
-    "Quận 12",
-    "Bình Tân",
-    "Tân Phú",
-    "Gò Vấp",
-    "Phú Nhuận",
-    "Tân Bình",
-    "Bình Thạnh",
-    "Thủ Đức",
-    "Bình Chánh",
-    "Cần Giờ",
-    "Củ Chi",
-    "Hóc Môn",
-    "Nhà Bè",
-  ],
-};
 
 const PaymentPage = () => {
-  const [quantity] = useState(1);
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const nav = useNavigate();
+
   const [selectedPayment, setSelectedPayment] = useState<string>(
     "67bfce96db17315614fced6f"
   ); // Mặc định chọn "cod"
 
+  // Lấy thông tin tài khoản nếu có
+  const id = localStorage.getItem("idUser");
+
+  // Fetch user data từ API
+  const { data: userDataApi } = useQuery({
+    queryKey: ["USER_INFO", id],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/user_account/${id}`
+      );
+      return data.data;
+    },
+    enabled: !!id, // Chỉ chạy khi có ID
+  });
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
@@ -135,7 +69,9 @@ const PaymentPage = () => {
   const [voucherList, setVoucherList] = useState<VoucherItem[]>([]);
   const [promotionValue, setPromotionValue] = useState<number>(0);
   const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
-  const [idSelectedVoucher, setIdSelectedVoucher] = useState<string>("");
+  const [idSelectedVoucher, setIdSelectedVoucher] = useState<string | null>(
+    null
+  );
 
   //checkbox trước khi tha toan
   const [isChecked, setIsChecked] = useState(false);
@@ -158,7 +94,7 @@ const PaymentPage = () => {
         const { data } = await axios.get("http://localhost:3000/api/vouchers");
         setVoucherList(data.data);
       } catch (error) {
-        console.log("ko lấy đc danh sách voucher");
+        console.log("ko lấy đc danh sách voucher" + error);
       }
     })();
   }, []);
@@ -172,7 +108,7 @@ const PaymentPage = () => {
       // console.log(data.data);
       return data.data;
     } catch (error) {
-      console.log("ko lấy đc sp từ id");
+      console.log("ko lấy đc sp từ id" + error);
     }
   };
   // lấy variant tu id
@@ -184,7 +120,7 @@ const PaymentPage = () => {
       // console.log(data.variants[0]);
       return data.variants[0];
     } catch (error) {
-      console.log("ko lấy đc bien the từ id");
+      console.log("ko lấy đc bien the từ id" + error);
     }
   };
 
@@ -195,7 +131,7 @@ const PaymentPage = () => {
     for (const cartItem of cartItems) {
       const productData = await getPdts(cartItem.idProduct);
       const variantData = await getVariant(cartItem.idVariant);
-      console.log("var" + variantData.image[0]);
+      // console.log("var" + variantData.image[0]);
 
       if (productData && variantData) {
         const newItemCheckout: ItemCheckout = {
@@ -259,17 +195,21 @@ const PaymentPage = () => {
   const [email, setEmail] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [userInForm, setUserInForm] = useState<string | null>(null);
+
+  // Nếu có tài khoản thì tự render vào
+  useEffect(() => {
+    if (userDataApi) {
+      setCustomerName(userDataApi.name);
+      setPhoneNumber(userDataApi.tel);
+      setEmail(userDataApi.email);
+      setAddress(userDataApi.address);
+      setUserInForm(userDataApi._id);
+    }
+  }, [userDataApi]);
 
   //handleSubmitOrder
   const handleSubmitOrder = async () => {
-    // get data form
-    // const newReceiverInfo: receiverInfo = {
-    //   name: customerName,
-    //   email: email,
-    //   phone: phoneNumber,
-    //   address: address,
-    // };
-    // console.log(newReceiverInfo);
     setLoading(true);
     let receiverId = "";
     let itemOrderIds: string[] = [];
@@ -345,9 +285,10 @@ const PaymentPage = () => {
           body: JSON.stringify({
             total: paymentPrice,
             shippingFee: 0,
-            isPaid: false,
+            isPaid:
+              selectedPayment === "67bfce96db17315614fced6f" ? false : true,
             voucher: idSelectedVoucher == "" ? null : idSelectedVoucher,
-            user: null,
+            user: userInForm,
             payment: selectedPayment,
             receiverInfo: receiverId,
             itemsOrder: itemOrderIds,
@@ -356,9 +297,21 @@ const PaymentPage = () => {
         });
 
         const orderData = await newOrder.json();
-        if (!orderData.success) throw new Error("Tạo đơn hàng thất bại");
+        if (!orderData.ok) {
+          throw new Error(orderData.message || "Tạo đơn hàng thất bại");
+        }
 
         message.success("Đặt hàng thành công!");
+        setCartItems([]);
+        localStorage.removeItem("cartItems");
+        // clear list checkout
+        setListCheckout([]);
+        setPaymentPrice(0);
+        setSelectedVoucher(null);
+        setPromotionValue(0);
+        setTimeout(() => {
+          nav("/");
+        }, 3000);
       } catch (error) {
         // Bắt lỗi fetch, parse hoặc throw error thủ công
         if (error instanceof Error) {
@@ -378,29 +331,8 @@ const PaymentPage = () => {
       }
     } finally {
       setLoading(false);
+      //clear cart items
     }
-
-    ///////
-
-    const newOrderSubmit: orderSubmit = {
-      shippingFee: 0,
-      total: paymentPrice,
-      cartItems: cartItems,
-      receiverInfo: "ID cua ng nhan sau khi tao",
-      isPaid: false,
-      voucher: idSelectedVoucher,
-    };
-    console.log(newOrderSubmit);
-
-    // sau khi api tạo thông tin người nhận + order thì chạy cái này
-    // //clear cart items
-    // setCartItems([]);
-    // localStorage.removeItem('cartItems');
-    // // clear list checkout
-    // setListCheckout([]);
-    // setPaymentPrice(0);
-    // setSelectedVoucher(null);
-    // setPromotionValue(0);
   };
 
   return (
@@ -567,7 +499,11 @@ const PaymentPage = () => {
                 </option>
                 <option value={0}>Ko dùng voucher</option>
                 {voucherList.map((voucher: VoucherItem) => (
-                  <option key={voucher._id} value={voucher.value}>
+                  <option
+                    key={voucher._id}
+                    value={voucher.value}
+                    data-id={voucher._id}
+                  >
                     {voucher.title}
                   </option>
                 ))}

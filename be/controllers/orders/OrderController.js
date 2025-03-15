@@ -3,6 +3,8 @@ import StatusCodes from "http-status-codes";
 
 import ItemsOrder from "../../models/itemOrder/itemOrder"; //bang itemOrder
 import { orderValidator } from "../../utils/validator/order";
+import Variant from "../../models/variants/variants";
+import Voucher from "../../models/vouchers/Voucher";
 class OrderController {
   async createOrder(req, res) {
     try {
@@ -15,6 +17,32 @@ class OrderController {
           .json({ message: error.message });
       }
       const { orderItemsOrder } = req.body;
+      // Kiểm tra tồn kho của biến thể trong itemOrder
+      // console.log("req.body", req.body.itemsOrder);
+      for (let item of req.body.itemsOrder) {
+        const itemOrder = await ItemsOrder.findById(item);
+        // console.log("itemOrder", itemOrder);
+        const variantQuantity = await Variant.findById(
+          itemOrder.id_variant
+        ).populate({
+          path: "id_color id_size",
+        });
+        // console.log("variantQuantity", variantQuantity);
+        if (itemOrder.quantity > variantQuantity.quantity) {
+          console.log("Số lượng đặt hàng vượt quá số lượng tồn kho");
+          return res.status(400).json({
+            message:
+              "Số lượng đặt hàng vượt quá số lượng tồn kho tại sản phẩm: " +
+              itemOrder.name +
+              " - " +
+              "Màu: " +
+              variantQuantity.id_color.name +
+              " - " +
+              "Kích cỡ: " +
+              variantQuantity.id_size.name,
+          });
+        }
+      }
 
       // Kiểm tra so item order
       const itemsOrders = await ItemsOrder.find({
@@ -27,8 +55,32 @@ class OrderController {
       }
       // có thể ko cần thiết check phần này
 
+      //  Nếu không quá số lượng tồn kho, tạo order
       const order = await Order.create(req.body);
-      res.status(201).json(order);
+
+      // Cập nhật số lượng tồn kho của biến thể
+      for (let item of req.body.itemsOrder) {
+        const itemOrder = await ItemsOrder.findById(item);
+        // console.log("itemOrder", itemOrder);
+        const variantQuantity = await Variant.findById(itemOrder.id_variant);
+        // console.log("variantQuantity", variantQuantity);
+        await Variant.findByIdAndUpdate(itemOrder.id_variant, {
+          $inc: { quantity: -itemOrder.quantity },
+        });
+      }
+
+      // Cập nhật lại số lượng voucher nếu có
+      // console.log("voucher", req.body.voucher);
+      if (req.body.voucher) {
+        await Voucher.findByIdAndUpdate(req.body.voucher, {
+          $inc: { quantity: -1 },
+        });
+      }
+
+      res.status(201).json({
+        ok: true,
+        data: order,
+      });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

@@ -3,6 +3,7 @@ import User from "./User";
 import Payment from "./Payment";
 import { VoucherInput } from "./Voucher";
 import { ItemOrder } from "./ItemOrder";
+import { ReceiverInfo } from "./ReceiverInfo";
 
 export interface Order {
     _id: ObjectId;
@@ -16,10 +17,7 @@ export interface Order {
     voucher?: VoucherInput
     user?: User;
     payment?:Payment
-    receiverInfo?: {
-        type: ObjectId;
-        ref: "ReceiverInfo"
-    };
+    receiverInfo?: ReceiverInfo
     itemsOrder:ItemOrder
     status: "Chưa xác nhận" | "Đã xác nhận" | "Đang giao" | "Hoàn thành" | "Hoàn đơn" | "Đã hủy";
 }

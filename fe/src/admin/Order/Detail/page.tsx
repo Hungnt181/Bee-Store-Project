@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Button,
+  Card,
   Form,
   Image,
   Input,
@@ -33,7 +34,7 @@ const AdminOrderDetail = () => {
   //Thông tin admin
   const userName = localStorage.getItem("nameUser");
 
-  const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder`;
+  const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder,receiverInfo`;
   const key = "dataPageOrder";
 
   const { data: orderDetail, isLoading } = useQuery({
@@ -146,6 +147,12 @@ const AdminOrderDetail = () => {
         );
       },
     },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+      width: 50,
+    },
   ];
 
   // Modal edit status
@@ -208,7 +215,13 @@ const AdminOrderDetail = () => {
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Thông tin người nhận: </p>
-            {/* <p>{dataOrder?.receiverInfo}</p> */}
+            <Card style={{ width: 600, backgroundColor: "#f5f2e5" }}>
+              <p className="mb-1">{dataOrder?.receiverInfo?.name.toString()}</p>
+              <p className="mb-1">
+                {dataOrder?.receiverInfo?.phone.toString()}
+              </p>
+              <p>{dataOrder?.receiverInfo?.address.toString()}</p>
+            </Card>
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Xác nhận của khách </p>
@@ -254,7 +267,7 @@ const AdminOrderDetail = () => {
                   ? "text-green-500"
                   : dataOrder?.status === "Chưa xác nhận"
                   ? "text-yellow-500"
-                  : dataOrder?.status === "Hoàn đơn"
+                  : dataOrder?.status === "Đang giao"
                   ? "text-purple-500"
                   : dataOrder?.status === "Đã hủy"
                   ? "text-red-500"

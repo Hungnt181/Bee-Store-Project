@@ -123,6 +123,12 @@ const OrderDetail = () => {
       },
     },
     {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+      width: 50,
+    },
+    {
       title: "Thao tác",
       dataIndex: "action",
       key: "action",
@@ -131,7 +137,7 @@ const OrderDetail = () => {
         return (
           <div>
             <Link to={`/products/${item.id_variant.id_product._id}`}>
-              <Button type="primary">Mua hàng</Button>
+              <Button type="primary">Mua lại</Button>
             </Link>
           </div>
         );
@@ -263,7 +269,7 @@ const OrderDetail = () => {
                   ? "text-green-500"
                   : dataOrder?.status === "Chưa xác nhận"
                   ? "text-yellow-500"
-                  : dataOrder?.status === "Hoàn đơn"
+                  : dataOrder?.status === "Đang giao"
                   ? "text-purple-500"
                   : dataOrder?.status === "Đã hủy"
                   ? "text-red-500"
