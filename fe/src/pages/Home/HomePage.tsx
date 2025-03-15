@@ -100,10 +100,12 @@ export default function HomePage() {
         {!isPending && data ? (
           <>
             <div className=" mt-8 grid grid-cols-4 gap-8">
-              {data.products.map(
-                (item, index) =>
-                  index < 4 && <ProductCard key={index} product={item} />
-              )}
+              {data.products
+                .filter((item: ProductType) => item.status == true)
+                .map(
+                  (item, index) =>
+                    index < 4 && <ProductCard key={index} product={item} />
+                )}
             </div>
             <div className="flex justify-center mt-14">
               <button

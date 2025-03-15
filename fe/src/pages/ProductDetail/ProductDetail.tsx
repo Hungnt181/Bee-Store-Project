@@ -76,6 +76,8 @@ export default function ProductDetail() {
     }
   }, [variants]);
 
+  // console.log("dataPro_Cate", dataPro_Cate);
+
   useEffect(() => {
     if (dataVariant) {
       const data = dataVariant.variants;

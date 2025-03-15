@@ -1,6 +1,20 @@
 import StatusCodes from "http-status-codes";
 import ItemOrder from "../../models/itemOrder/itemOrder";
 class ItemOrderController {
+  // Add a new item in the order
+  async addItemOrder(req, res) {
+    try {
+      const data = await ItemOrder.create(req.body);
+      return res.status(StatusCodes.CREATED).json({
+        message: "Thêm thành công itemOrder",
+        data,
+      });
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+      });
+    }
+  }
   // Get all items in the order
   async getAllItemOrder(req, res) {
     try {

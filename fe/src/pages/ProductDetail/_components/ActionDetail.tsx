@@ -1,14 +1,24 @@
-import { Button, InputNumber } from "antd";
+import { Button, InputNumber, message } from "antd";
 import { useEffect, useState } from "react";
 import { Variant } from "../../../interface/Variant";
 import Color from "../../../interface/Color";
 import Size from "../../../interface/Size";
+import CartModalbox from "./CartModalbox";
+import { useParams } from "react-router-dom";
 
 interface ActionDetail {
   variants: Variant[];
   colors: Color[];
   sizes: Size[];
   newImage: (images: string[] | null) => void;
+}
+
+interface CartItemDetail {
+  idProduct: string;
+  idVariant: string;
+  color: string;
+  size: string;
+  quantity: number;
 }
 
 export default function ActionDetail({
@@ -24,9 +34,9 @@ ActionDetail) {
   const [quantity, setQuantity] = useState<number>(1);
   const [statusVariant, setStatusVariant] = useState(false);
 
-  const handleClickBuy = () => {
-    // console.log(quantity);
-  };
+  // const handleClickBuy = () => {
+  //   // console.log(quantity);
+  // };
 
   useEffect(() => {
     if (variants.length > 0) {
@@ -94,7 +104,77 @@ ActionDetail) {
     }
   }, [selectedVariant, newImage]);
 
-  // console.log("Selected Variant:", selectedVariant);
+  // console.log("Selected Variant:", selectedVariant?.id_size.name);
+
+  //CART
+  const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  let { id } = useParams();
+  const handleClickBuy = () => {
+    // Lấy các mặt hàng giỏ hàng từ localStorage
+    const storedCartItems = localStorage.getItem("cartItems");
+    const initialCartItems = storedCartItems ? JSON.parse(storedCartItems) : [];
+
+    if (
+      selectedVariant &&
+      selectedVariant._id &&
+      id &&
+      selectedVariant.id_color.hexcode &&
+      selectedVariant?.id_size.name
+    ) {
+      const newItem = {
+        idProduct: id,
+        idVariant: selectedVariant._id.toString(),
+        color: selectedVariant.id_color.hexcode,
+        size: selectedVariant?.id_size.name,
+        quantity: quantity,
+      };
+
+      const existingItemIndex = initialCartItems.findIndex(
+        (item: CartItemDetail) =>
+          item.idProduct === newItem.idProduct &&
+          item.idVariant === newItem.idVariant &&
+          item.color === newItem.color &&
+          item.size === newItem.size
+      );
+
+      let updatedCartItems;
+
+      if (existingItemIndex !== -1) {
+        const updatedItem = {
+          ...initialCartItems[existingItemIndex],
+          quantity:
+            initialCartItems[existingItemIndex].quantity + newItem.quantity,
+        };
+        if (updatedItem.quantity > selectedVariant?.quantity) {
+          updatedItem.quantity = selectedVariant?.quantity;
+          message.warning(
+            `Sản phẩm chỉ còn ${selectedVariant?.quantity} cái trong kho. Đã cập nhật lại số lượng tối đa.`
+          );
+        }
+
+        updatedCartItems = [
+          ...initialCartItems.slice(0, existingItemIndex),
+          updatedItem,
+          ...initialCartItems.slice(existingItemIndex + 1),
+        ];
+      } else {
+        updatedCartItems = [...initialCartItems, newItem];
+      }
+
+      setCartItems(updatedCartItems);
+      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    } else {
+      // setCartItems([])
+    }
+    setIsModalOpen(true);
+  };
+  // const handleCheckout = () => {
+  //   console.log("checkout clicked");
+  // }
 
   return (
     <div>
@@ -237,6 +317,11 @@ ActionDetail) {
         >
           Đặt mua
         </button>
+        <CartModalbox
+          isOpen={isModalOpen}
+          cartItems={cartItems}
+          onClose={handleCloseModal}
+        />
       </div>
     </div>
   );

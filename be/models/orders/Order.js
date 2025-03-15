@@ -24,9 +24,14 @@ const OrderSchema = new Schema(
     updatedAt: {
       type: Date,
     },
+    updatedStatusByAdmin: {
+      type: String,
+      default: null,
+    },
     voucher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",
+      required: false,
     },
     isConfirm: {
       type: Boolean,
@@ -35,6 +40,7 @@ const OrderSchema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     payment: {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +48,7 @@ const OrderSchema = new Schema(
     },
     receiverInfo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ReceiverInfo",
+      ref: "Receiver",
     },
     itemsOrder: [
       {
