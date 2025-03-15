@@ -336,7 +336,7 @@ const AdminOrderDetail = () => {
                         style={{ display: "flex", justifyContent: "center" }}
                       >
                         <Button htmlType="submit" disabled={isEdit}>
-                          Edit
+                          Cập nhật
                         </Button>
                       </Form.Item>
                     </Form>

@@ -28,14 +28,20 @@ const PaymentSuccess2 = () => {
               Chúc quý khách có trải nghiệm mua sắm tuyệt vời và hẹn gặp lại!
             </p>
             <p className="text-gray-600 mt-4 text-lg font-medium">⬇️</p>
+            <p className="text-3 mt-4">
+              Chú ý:{" "}
+              <i>
+                Quý khách được hoàn đơn trong vòng 3 ngày kể từ ngày nhận hàng
+              </i>
+            </p>
             <div className="flex flex-col gap-4 w-full mt-6">
-              <Button
+              {/* <Button
                 type="primary"
                 className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-lg py-3 rounded-full w-full shadow-lg transform transition duration-300 hover:scale-105"
                 onClick={() => (window.location.href = "/invoice")}
               >
                 Xem hóa đơn
-              </Button>
+              </Button> */}
               <Button
                 type="default"
                 className="border-blue-500 text-blue-500 bg-white hover:bg-blue-500 hover:text-white text-lg py-3 rounded-full w-full shadow-lg transform transition duration-300 hover:scale-105"

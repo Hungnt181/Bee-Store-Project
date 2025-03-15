@@ -301,7 +301,7 @@ const PaymentPage = () => {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
 
-        message.success("Đặt hàng thành công!");
+        // message.success("Đặt hàng thành công!");
         setCartItems([]);
         localStorage.removeItem("cartItems");
         // clear list checkout
@@ -309,9 +309,7 @@ const PaymentPage = () => {
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
-        setTimeout(() => {
-          nav("/");
-        }, 3000);
+        nav("/notify2");
       } catch (error) {
         // Bắt lỗi fetch, parse hoặc throw error thủ công
         if (error instanceof Error) {
