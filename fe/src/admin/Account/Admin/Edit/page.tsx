@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Input, message, Skeleton } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
@@ -9,6 +9,7 @@ const AdminAccountEditPage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [form] = useForm();
+    const queryClient = useQueryClient();
 
     // Lấy dữ liệu tài khoản admin dựa vào ID
     const { data, isLoading } = useQuery({
@@ -36,6 +37,7 @@ const AdminAccountEditPage = () => {
         },
         onSuccess: () => {
             message.success("Cập nhật tài khoản admin thành công");
+            queryClient.invalidateQueries({ queryKey: ['USER_INFO'] });
             navigate("/admin/admin_account");
         },
     });

@@ -2,7 +2,6 @@ import { Router } from "express";
 import UserController from "../../controllers/users/userController.js";
 import verifyEmailRouter from "./verifyEmailRouter.js";
 import forgotPasswordRouter from "./forgotPasswordRouter.js";
-import { checkAdminPermission } from "../../middlewares/auth.js";
 
 const userRouter = Router();
 
@@ -23,5 +22,7 @@ userRouter.put('/update_status_user_account/:id', usercontroller.updateStatusUse
 userRouter.use('/verify-email', verifyEmailRouter);
 userRouter.use('/forgot_password', forgotPasswordRouter);
 userRouter.use('/update_password/:id', usercontroller.updatePasswordUser);
+userRouter.post('/login_google', usercontroller.loginGoogle);
+
 
 export default userRouter

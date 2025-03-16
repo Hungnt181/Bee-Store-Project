@@ -6,11 +6,15 @@ import {
   PrinterOutlined,
   SkinOutlined,
   UserOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Menu, MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import userAvatar from "./hacker.png"
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
@@ -47,7 +51,15 @@ const items: MenuItem[] = [
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [nameUser, setNameUser] = useState("");
+  const [emailUser, setEmailUser] = useState("");
+
+
   const handleMenuClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "logout") {
+      handleLogout();
+      return;
+    }
     const item: any = items.find((item) => item?.key === e.key) || null;
     if (item && item.url) {
       navigate(item.url); // Chuyển hướng đến URL
@@ -57,6 +69,37 @@ const Sidebar = () => {
       navigate("user_account"); // Chuyển hướng đến Tài khoản khách
     }
   };
+  const idUser = localStorage.getItem("idUser");
+  // Thêm query để lấy thông tin user
+  const { data: userData } = useQuery({
+    queryKey: ["USER_INFO", idUser],
+    queryFn: async () => {
+      if (!idUser) return null;
+      const { data } = await axios.get(
+        `http://localhost:3000/api/admin_account/${idUser}`
+      );
+      return data.data;
+    },
+    enabled: !!idUser,
+  });
+
+  useEffect(() => {
+    // Cập nhật tên từ API response
+    if (userData?.name) {
+      setNameUser(userData.name);
+      setEmailUser(userData.email)
+    } else {
+      setNameUser("");
+      setEmailUser("");
+    }
+  }, [userData]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("nameUser");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("idUser");
+    navigate("/signin");
+  };
   return (
     <>
       <Sider
@@ -64,7 +107,26 @@ const Sidebar = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical mt-3" />
+        {nameUser && (
+          <div className="relative flex flex-col items-center gap-2 border-b border-white/10 mb-[2vh] px-2 pb-3 text-white">
+            <div className="flex items-center justify-center w-full group relative">
+              <img className="w-16 h-16 rounded-full object-cover cursor-pointer" src={userAvatar} alt="" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <LogoutOutlined
+                  className="text-xl text-white cursor-pointer"
+                  onClick={handleLogout}
+                />
+              </div>
+            </div>
+            {!collapsed && (
+              <div className="flex flex-col items-center overflow-hidden w-full">
+                <span className="font-medium text-sm truncate w-full text-center">{nameUser || "Loading"}</span>
+                <span className="text-xs text-white/70 truncate w-full text-center">{emailUser || "Loading"}</span>
+              </div>
+            )}
+          </div>
+        )}
         <Menu
           theme="dark"
           defaultSelectedKeys={["1"]}
