@@ -16,8 +16,7 @@ const orderValidator = Joi.object({
     "boolean.base": "Trạng thái thanh toán phải là true hoặc false",
   }),
   voucher: Joi.string().optional().allow(null, ""),
-  user: Joi.string().required().messages({
-    "any.required": "Người dùng là bắt buộc",
+  user: Joi.string().allow(null, "").messages({
     "string.base": "Người dùng phải là một chuỗi ID hợp lệ",
   }),
   payment: Joi.string().optional().allow(null, ""),

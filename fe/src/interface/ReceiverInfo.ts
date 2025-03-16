@@ -1,17 +1,18 @@
 import { ObjectId } from "mongoose";
-import { Variant } from "./Variant";
 
-export interface ItemOrder {
+export interface ReceiverInfo {
     _id: ObjectId;
   name: {
     type: string;
-    minLength: 3;
     required: true;
     unique: true;
   };
-  quantity: {
-    type: number;
+  phone: {
+    type: string;
     required: true;
   };
-  id_variant: Variant
+  address: {
+    type: string;
+    required: true;
+  }
 }

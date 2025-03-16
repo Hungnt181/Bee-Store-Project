@@ -24,6 +24,8 @@ import ClientLayout from "./layouts/client/Layout";
 import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import CartPage from "./pages/Cart/CartPage";
+import OrderPage from "./pages/Order/OrderPage";
 import AccountLayout from "./layouts/client/AccountLayout";
 import MyProfile from "./pages/Account/Profile/MyProfile";
 import MyOrders from "./pages/Account/Orders/MyOrders";
@@ -34,6 +36,7 @@ import PaymentPageOl from "./pages/Payment/pagePaymentOnline";
 import PaymentSuccess from "./pages/Payment/notify/success";
 import PaymentSuccess2 from "./pages/Payment/notify/success2";
 import OrderCancelled from "./pages/Payment/notify/cancel";
+import AdminCommentList from "./admin/Comment/page";
 import NotFoundPage from "./website/components/Errors/404";
 import AdminOrderPage from "./admin/Order/page";
 import AdminOrderDetail from "./admin/Order/Detail/page";
@@ -43,6 +46,7 @@ import ResetPassword from "./website/components/ResetPassword/page";
 import ForgotPassword from "./website/components/ForgotPassword/page";
 import Success from "./website/components/Success/page";
 import PrivateRoute from "./website/components/PrivateRoute/page";
+import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +57,9 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
+      { path: "/cart", element: <CartPage /> },
+      { path: "/order", element: <OrderPage /> },
+      { path: "/payment", element: <PaymentPage />},
       { path: "/signup", element: <Signup /> },
       { path: "/signin", element: <Signin /> },
       { path: "/reset/:id", element: <ResetPassword /> },
@@ -70,16 +77,16 @@ export const router = createBrowserRouter([
             element: <MyOrders />,
           },
           {
+            path: "orders/:id",
+            element: <OrderDetail />,
+          },
+          {
             path: "address",
             element: <MyAddress />,
           },
         ],
       },
     ],
-  },
-  {
-    path: "/payment",
-    element: <PaymentPage />,
   },
   {
     path: "/invoice",
@@ -108,7 +115,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/success",
-    element: <Success />
+    element: <Success />,
   },
   {
     path: "/admin",
@@ -127,6 +134,7 @@ export const router = createBrowserRouter([
       { path: "/admin/size/detail/:id", element: <AdminSizeDetail /> },
       { path: "/admin/color", element: <AdminColorList /> },
       { path: "/admin/color/add", element: <AdminColorAdd /> },
+      { path: "/admin/comment", element: <AdminCommentList /> },
       { path: "/admin/color/edit/:id", element: <AdminColorEdit /> },
       { path: "/admin/color/detail/:id", element: <AdminColorDetail /> },
       { path: "/admin/product/:id/edit", element: <ProductEditPage /> },

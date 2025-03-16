@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"; // Import useEffect và useState để quản lý trạng thái và hiệu ứng
-import { Button, Skeleton, message, Tag, Input, Form } from "antd"; // Import các thành phần UI từ Ant Design
-import { useNavigate, useParams } from "react-router-dom"; // Import useNavigate và useParams để điều hướng và lấy tham số từ URL
-import axios from "axios"; // Import axios để gọi API
-import dayjs from "dayjs"; // Import dayjs để xử lý thời gian
+import { useEffect, useState } from "react";
+import { Button, Skeleton, message, Tag, Input, Form } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
 
 // Định nghĩa kiểu dữ liệu cho màu sắc
 interface ColorData {
@@ -13,30 +13,30 @@ interface ColorData {
 }
 
 const AdminColorDetail = () => {
-  const { id } = useParams(); // Lấy ID của màu từ URL
-  const [colorData, setColorData] = useState<ColorData | null>(null); // State lưu dữ liệu chi tiết màu sắc
-  const navigate = useNavigate(); // Hook để điều hướng trang
+  const { id } = useParams();
+  const [colorData, setColorData] = useState<ColorData | null>(null);
+  const navigate = useNavigate();
 
   // Gọi API để lấy thông tin chi tiết của màu sắc theo ID
   useEffect(() => {
     const fetchColorData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/colors/${id}`); // Gửi request GET để lấy chi tiết màu sắc
+        const res = await axios.get(`http://localhost:3000/api/colors/${id}`);
         const detailData = res.data.data;
         setColorData({
           ...detailData,
-          createdAt: dayjs(detailData.createdAt).format("DD/MM/YYYY HH:mm:ss"), // Định dạng lại ngày tạo
-          updatedAt: dayjs(detailData.updatedAt).format("DD/MM/YYYY HH:mm:ss"), // Định dạng lại ngày cập nhật
+          createdAt: dayjs(detailData.createdAt).format("DD/MM/YYYY HH:mm:ss"),
+          updatedAt: dayjs(detailData.updatedAt).format("DD/MM/YYYY HH:mm:ss"),
         });
       } catch {
-        message.error("Không thể lấy thông tin màu!"); // Hiển thị thông báo lỗi nếu API bị lỗi
+        message.error("Không thể lấy thông tin màu!");
       }
     };
 
     if (id) {
-      fetchColorData(); // Nếu có ID thì gọi API
+      fetchColorData();
     }
-  }, [id]); // Chạy lại useEffect nếu ID thay đổi
+  }, [id]);
 
   // Nếu chưa có dữ liệu, hiển thị hiệu ứng tải
   if (!colorData) {
@@ -65,7 +65,7 @@ const AdminColorDetail = () => {
               style={{
                 color: /^#fffff[a-z0-9]/i.test(colorData.hexcode)
                   ? "#000"
-                  : "#fff", // Kiểm tra mã màu và chọn màu chữ phù hợp
+                  : "#fff",
               }}
             >
               {colorData.hexcode}
@@ -74,15 +74,15 @@ const AdminColorDetail = () => {
 
           <Form.Item label="Ngày tạo" name="createdAt">
             <Input
-              value={dayjs(colorData.createdAt).format("DD/MM/YYYY")} // Hiển thị ngày tạo với định dạng ngắn gọn
-              style={{ color: "black", maxWidth: "300px" }} // Giới hạn chiều dài của trường
+              value={dayjs(colorData.createdAt).format("DD/MM/YYYY")}
+              style={{ color: "black", maxWidth: "300px" }}
             />
           </Form.Item>
 
           <Form.Item label="Ngày sửa cuối" name="updatedAt">
             <Input
-              value={dayjs(colorData.updatedAt).format("DD/MM/YYYY")} // Hiển thị ngày cập nhật cuối cùng
-              style={{ color: "black", maxWidth: "300px" }} // Giới hạn chiều dài của trường
+              value={dayjs(colorData.updatedAt).format("DD/MM/YYYY")}
+              style={{ color: "black", maxWidth: "300px" }}
             />
           </Form.Item>
         </Form>
@@ -92,7 +92,7 @@ const AdminColorDetail = () => {
         {/* Nút chỉnh sửa, điều hướng đến trang chỉnh sửa màu */}
         <Button
           type="primary"
-          onClick={() => navigate(`/admin/color/edit/${id}`)} // Điều hướng đến trang chỉnh sửa
+          onClick={() => navigate(`/admin/color/edit/${id}`)}
           style={{ marginRight: 10 }}
         >
           Chỉnh sửa
