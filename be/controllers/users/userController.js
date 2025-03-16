@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import nodemailer from 'nodemailer';
 import { authValidator, signInValidator, signUpAdminValidator, signUpUserValidator, signUpValidator, updateAdminValidator, updatePasswordUser, updateUserValidator } from "../../utils/validator/user.js";
 import emailExistence from 'email-existence';
+import { jwtDecode } from 'jwt-decode'
 
 
 class UserController {
@@ -493,6 +494,79 @@ class UserController {
             'data': user,
             token
         })
+    }
+
+    async loginGoogle(req, res) {
+        try {
+            const { tokenGoogle } = req.body;
+
+            if (!tokenGoogle) {
+                return res.status(400).json({ message: "Token không được cung cấp" });
+            }
+
+            const dataUser = jwtDecode(tokenGoogle);
+            // console.log("User data:", dataUser);
+
+            // Kiểm tra xem email đã tồn tại trong database chưa
+            const existedUser = await User.findOne({ email: dataUser.email });
+
+            let user
+
+            if (!existedUser) {
+                // Nếu email chưa tồn tại, tạo user mới
+
+                const randomPassword = Math.random().toString(36).slice(-10);
+                const hashedPass = await bcryptjs.hash(randomPassword, 10);
+
+                user = await User.create({
+                    name: dataUser.name,
+                    email: dataUser.email,
+                    password: hashedPass,
+                    role: "user",
+                    isVerified: true,
+                    status: true
+                });
+
+                // console.log("Đã tạo user mới:", user);
+            } else {
+                // Nếu email đã tồn tại, sử dụng thông tin user đã có
+                user = existedUser;
+                // console.log("User đã tồn tại:", user);
+            }
+
+            if (!user.status) {
+                return res.status(400).json({
+                    'message': 'Tài khoản đã ngừng hoạt động'
+                })
+            }
+
+            // Tạo JWT token để đăng nhập
+            // const token = jwt.sign(
+            //     { id: user._id, role: user.role },
+            //     process.env.JWT_SECRET || "mysecret",
+            //     { expiresIn: "1d" }
+            // );
+
+            // Trả về phản hồi với thông tin user và token
+            return res.status(200).json({
+                success: true,
+                message: "Đăng nhập thành công",
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    tel: user.tel,
+                    isVerified: user.isVerified
+                },
+            });
+        } catch (error) {
+            console.error("Login Google error:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Đăng nhập thất bại: " + error.message
+            });
+        }
     }
 
     async signinUser(req, res) {
