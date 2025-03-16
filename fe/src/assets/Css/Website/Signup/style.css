@@ -1,128 +1,77 @@
-/* Signup.css */
+/* signin-custom.css */
 
-.signup-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
-    padding: 20px;
-    background-color: #f8f9fa;
+/* Tùy chỉnh các input và input-wrapper của Ant Design */
+.ant-input,
+.ant-input-affix-wrapper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
-.tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+/* Khi focus vào input */
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-bottom: 1px solid #000 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-.tab {
-    margin: 0 10px;
-    padding: 17px 25px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 17px;
+/* Thay đổi màu placeholder thành đen khi focus */
+.ant-input:focus::placeholder {
+  color: #000 !important;
+  transition: color 0.3s ease;
 }
 
-.tab.active {
-    background-color: #000;
-    color: #fff;
-    border-color: #000;
+.ant-input-affix-wrapper:focus input::placeholder,
+.ant-input-affix-wrapper-focused input::placeholder {
+  color: #000 !important;
+  transition: color 0.3s ease;
 }
 
-.signup-form {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Xử lý input trong thành phần Input.Password */
+.ant-input-password {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
-.submit-button {
-    background-color: #000;
-    border-color: #000;
-    color: #fff;
-    width: 100%;
-    height: 25px;
-    padding: 18px 0px;
-    font-size: 25px;
+.ant-input-affix-wrapper .ant-input {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* Signin.css */
-
-.login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
-    padding: 20px;
-    background-color: #f8f9fa;
+/* Style cho icon hiển thị/ẩn mật khẩu */
+.ant-input-password-icon {
+  margin-right: 0 !important;
+  color: #d9d9d9;
 }
 
-.tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+.ant-input-password-icon:hover {
+  color: #000;
 }
 
-.tab {
-    margin: 0 10px;
-    padding: 17px 25px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
+/* Loại bỏ các style mặc định của Ant Design khi focus */
+.ant-form-item-has-error .ant-input:focus,
+.ant-form-item-has-error .ant-input-affix-wrapper:focus,
+.ant-form-item-has-error .ant-input-focused,
+.ant-form-item-has-error .ant-input-affix-wrapper-focused {
+  box-shadow: none !important;
+  border-color: #ff4d4f !important;
+  border-width: 0 0 1px 0 !important;
 }
 
-.tab.active {
-    background-color: #000;
-    color: #fff;
-    border-color: #000;
+/* Style cho input khi có lỗi */
+.ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-input-affix-wrapper {
+  border-color: #ff4d4f !important;
+  border-width: 0 0 1px 0 !important;
 }
 
-.login-form {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.submit-button {
-    background-color: #000;
-    border-color: #000;
-    color: #fff;
-    width: 100%;
-    padding: 18px 0px;
-    font-size: 17px;
-}
-
-.forgot-password-link {
-    color: red;
-    text-align: center;
-    width: 100%;
-    padding: 10px 0;
-    font-size: 17px;
-}
-
-.input {
-    font-size: 25px;
-}
-
-.title {
-    font-size: 17px;
-}
-
-.title1 {
-    font-size: 17px;
-    color: red;
-    margin-left: 10px;
-}
-
-.forgot {
-    text-align: center;
-    margin-bottom: 20px;
+.font-all {
+  font-size: 1.7vh;
 }

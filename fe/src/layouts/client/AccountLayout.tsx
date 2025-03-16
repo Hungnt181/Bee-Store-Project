@@ -4,7 +4,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "antd";
+import { Skeleton } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -44,6 +44,8 @@ export default function AccountLayout() {
     localStorage.removeItem("idUser");
     navigate("/signin");
   };
+
+  if (isLoading) return <Skeleton />;
 
   return (
     <div className="max-w-[1240px] mx-6 xl:mx-auto mt-12">

@@ -6,15 +6,14 @@ import {
   message,
   Skeleton,
 } from "antd";
-import ChangePasswordModal from "./_components/ChangePasswordModal";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 type FieldType = {
   name?: string;
   email?: string;
   tel?: string;
+  address?: string;
 };
 const rules = {
   name: [
@@ -50,6 +49,8 @@ export default function MyProfile() {
       form.setFieldsValue({
         name: userDataApi.name,
         tel: userDataApi.tel,
+        email: userDataApi.email,
+        address: userDataApi.address,
       });
     }
   }, [userDataApi, form]);
@@ -57,18 +58,28 @@ export default function MyProfile() {
   // Mutation để cập nhật thông tin
   const { mutate } = useMutation({
     mutationFn: async (values: FieldType) => {
+      // Loại bỏ email khỏi dữ liệu cập nhật
+      const { email, ...updateData } = values;
+
       const { data } = await axios.put(
         `http://localhost:3000/api/update_user_account/${id}`,
-        values
+        updateData
       );
       return data;
     },
     onSuccess: (data) => {
-      // console.log(data.data.name)
       message.success("Cập nhật thành công");
-      // Cập nhật cache và localStorage
-      queryClient.setQueryData(["USER_INFO", id], data);
-      // localStorage.setItem("dataUser", JSON.stringify({ ...userData, ...data }));
+
+      // Đảm bảo dữ liệu cache vẫn giữ nguyên email
+      const updatedData = {
+        ...data.data,
+        email: userDataApi?.email || form.getFieldValue("email"),
+      };
+
+      queryClient.setQueryData(["USER_INFO", id], {
+        ...data,
+        data: updatedData,
+      });
       localStorage.setItem("nameUser", data.data.name);
 
       queryClient.invalidateQueries({ queryKey: ["USER_INFO", id] });
@@ -141,6 +152,13 @@ export default function MyProfile() {
               rules={rules.tel}
             >
               <Input placeholder="Nhập số điện thoại" className="h-[42px]" />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label={<span className="font-medium text-sm">Địa chỉ</span>}
+              name="address"
+            >
+              <Input placeholder="Nhập địa chỉ" className="h-[42px]" />
             </Form.Item>
           </ConfigProvider>
 
