@@ -353,8 +353,11 @@ const PaymentPage = () => {
               />
               <div className="flex-1">
                 <p className="font-semibold">{item.nameProduct}</p>
+                <div className="text-sm text-gray-600 flex items-center gap-2">
+                  Loại màu: <div className="border rounded w-[20px] h-[20px]" style={{backgroundColor: item.color}}></div>
+                </div>
                 <p className="text-sm text-gray-600">
-                  Mã sản phẩm: {item.color}
+                  Loại cỡ: {item.size}
                 </p>
                 {/* <p className="line-through text-gray-500">
                   {item.price} đ
