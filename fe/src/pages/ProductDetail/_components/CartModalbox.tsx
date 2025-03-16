@@ -79,6 +79,12 @@ const CartModalbox: React.FC<CartModalData> = ({
       (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
     );
     setCartModalItems(afterFilterCartModalItems);
+
+     //cập nhật local
+     const updatedCartItems = cartItems.filter(
+      (_cartItem, cartItemIndex) => cartItemIndex !== index
+    );
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
   };
 
   const onCheckout = () => {
@@ -142,7 +148,7 @@ const CartModalbox: React.FC<CartModalData> = ({
         onCancel={onClose}
         footer={() => (
           <>
-            <Button key="close" onClick={onClose}>
+            <Button key="close" onClick={onClose} className="mr-2">
               Đóng
             </Button>
             <Link to="/payment">

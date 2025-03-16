@@ -11,6 +11,7 @@ interface CartItemDetail {
   quantity: number;
 }
 interface CartModalItemDetail {
+  idProduct: string;
   nameProduct: string;
   price: number;
   color: string;
@@ -77,6 +78,7 @@ const CartPage: React.FC = () => {
       const productData = await getPdts(cartItem.idProduct);
       if (productData) {
         const newCartModalItem: CartModalItemDetail = {
+          idProduct: cartItem.idProduct,
           nameProduct: productData.name,
           price: productData.price,
           color: cartItem.color,
@@ -155,6 +157,9 @@ const CartPage: React.FC = () => {
       title: "Tên sản phẩm",
       dataIndex: "nameProduct",
       key: "nameProduct",
+      render: (nameProduct: string, record: CartModalItemDetail) => (
+        <Link to={`/products/${record.idProduct}`} ><span className="text-black">{nameProduct}</span></Link>
+      ),
     },
     {
       title: "Giá",

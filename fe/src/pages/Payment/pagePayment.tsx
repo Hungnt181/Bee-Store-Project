@@ -4,7 +4,7 @@ import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
 import axios from "axios";
 import { message } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CartItemDetail {
   idProduct: string;
@@ -20,6 +20,7 @@ interface ItemOrder {
   id_variant: string;
 }
 interface ItemCheckout {
+  idProduct: string;
   nameProduct: string;
   imgVariant: string;
   price: number;
@@ -135,6 +136,7 @@ const PaymentPage = () => {
 
       if (productData && variantData) {
         const newItemCheckout: ItemCheckout = {
+          idProduct: cartItem.idProduct,
           nameProduct: productData.name,
           imgVariant: variantData.image[0],
           price: productData.price,
@@ -352,9 +354,13 @@ const PaymentPage = () => {
                 className="w-24 h-24 object-cover rounded-lg"
               />
               <div className="flex-1">
-                <p className="font-semibold">{item.nameProduct}</p>
+                <p className="font-semibold">
+                  <Link to={`/products/${item.idProduct}`}>
+                    <span className="text-black">{item.nameProduct}</span>
+                  </Link>
+                </p>
                 <div className="text-sm text-gray-600 flex items-center gap-2">
-                  Loại màu: <div className="border rounded w-[20px] h-[20px]" style={{backgroundColor: item.color}}></div>
+                  Loại màu: <div className="border rounded w-[20px] h-[20px]" style={{ backgroundColor: item.color }}></div>
                 </div>
                 <p className="text-sm text-gray-600">
                   Loại cỡ: {item.size}
@@ -495,7 +501,7 @@ const PaymentPage = () => {
                 onChange={handleSelectChange}
                 className="w-full ps-8 pe-4 py-2 border rounded-xl"
               >
-                <option value="" disabled selected>
+                <option value="" disabled selected hidden={true}>
                   Mời bạn chọn voucher
                 </option>
                 <option value={0}>Ko dùng voucher</option>
