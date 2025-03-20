@@ -17,5 +17,14 @@ orderApiRouter.patch(
   "/orders/client/confirm/:id",
   orderController.updateIsConnfirmByClient
 );
+// thống kê
+orderApiRouter.get(
+  "/statistics/revenue",
+  orderController.getRevenueStatisticsasync
+);
+orderApiRouter.get(
+  "/statistics/best-selling-products",
+  orderController.getBestSellingProducts
+);
 
 export default orderApiRouter;
