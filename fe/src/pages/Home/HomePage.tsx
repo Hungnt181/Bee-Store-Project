@@ -93,7 +93,7 @@ export default function HomePage() {
       <hr className=" max-w-[1240px] mx-6 xl:mx-auto my-8" />
       <section className="mt-12 max-w-[1240px] mx-6 xl:mx-auto">
         <div className="flex justify-center items-center flex-col">
-          <h3 className="text-3xl uppercase font-thin">Sản bán chạy</h3>
+          <h3 className="text-3xl uppercase font-thin">Sản phẩm bán chạy</h3>
           <p className="text-sm font-thin">
             Những sản phẩm bán chạy nhất hiện tại
           </p>

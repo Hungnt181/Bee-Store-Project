@@ -1,22 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 
 declare global {
   interface Window {
-    CozeWebSDK: {
-      WebChatClient: new (config: {
-        config: { bot_id: string };
-        componentProps: {
-          title: string;
-          placeholder: string;
-          sendButtonText: string;
-        };
-        auth: {
-          type: string;
-          token: string;
-          onRefreshToken: () => string;
-        };
-      }) => void;
-    };
+    CozeWebSDK: any;
   }
 }
 
@@ -26,7 +13,6 @@ const Chatbot = () => {
     script.src =
       "https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.5/libs/oversea/index.js";
     script.async = true;
-
     script.onload = () => {
       if (window.CozeWebSDK) {
         new window.CozeWebSDK.WebChatClient({
@@ -35,25 +21,19 @@ const Chatbot = () => {
           },
           componentProps: {
             title: "Trợ lý ảo Bee-Store",
-            placeholder: "Nhập câu hỏi của bạn...",
-            sendButtonText: "Gửi",
           },
           auth: {
             type: "token",
-            token: "pat_********", // <- thay bằng token thật
-            onRefreshToken: function () {
-              return "pat_********"; // <- thay bằng token thật
+            token:
+              "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM", // <-- Thay bằng token thật của bạn
+            onRefreshToken: function (): string {
+              return "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM"; // <-- Thay bằng token mới nếu cần refresh
             },
           },
         });
       }
     };
-
     document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
   }, []);
 
   return null;
