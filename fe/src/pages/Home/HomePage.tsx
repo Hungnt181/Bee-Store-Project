@@ -3,6 +3,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
 import SlideShowBanner from "./_components/SlideShowBanner";
 import { ProductType } from "../../interface/Product";
+import Chatbot from "./ChatBot";
 
 export default function HomePage() {
   const { data, isPending } = useGetAllProducts();
@@ -122,6 +123,9 @@ export default function HomePage() {
           </div>
         )}
       </section>
+      <div>
+        <Chatbot></Chatbot>
+      </div>
     </div>
   );
 }

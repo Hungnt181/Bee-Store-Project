@@ -22,13 +22,13 @@ const AdminDashboardPage = () => {
   const [range, setRange] = useState<moment.Moment[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
   const [chartType, setChartType] = useState("bar"); // line chart type
-  const [type, setType] = useState("daily");
+  const [type, setType] = useState("monthly");
 
   // Thống kê sản phẩm bán chạy
   const [date2, setDate2] = useState<moment.Moment>(moment());
   const [year, setYear] = useState<moment.Moment>(moment());
   const [range2, setRange2] = useState<moment.Moment[]>([]);
-  const [type2, setType2] = useState("daily");
+  const [type2, setType2] = useState("monthly");
   const [products, setProducts] = useState([]);
 
   const fetchData = async () => {
@@ -129,10 +129,10 @@ const AdminDashboardPage = () => {
   };
 
   useEffect(() => {
-    if (type === "daily" && date) {
+    if (type === "monthly" && date) {
       handleFetchData();
     }
-    if (type2 === "daily" && date) {
+    if (type2 === "monthly" && date) {
       fetchData();
     }
   }, []);
