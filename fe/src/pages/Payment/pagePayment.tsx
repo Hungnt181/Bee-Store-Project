@@ -38,7 +38,6 @@ interface VoucherItem {
 
 const PaymentPage = () => {
   const nav = useNavigate();
-
   const [selectedPayment, setSelectedPayment] = useState<string>(
     "67bfce96db17315614fced6f"
   ); // Mặc định chọn "cod"
@@ -208,128 +207,144 @@ const PaymentPage = () => {
     }
   }, [userDataApi]);
 
+  // Thanh toán VNPay
+  const handlePayment = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
+        amount: totalPrice,
+        orderId: itemOrder[0].id_variant + "_" + Date.now(),
+      });
+      window.location.href = response.data.paymentUrl;
+    } catch (error) {
+      console.error("Payment error:", error);
+    }
+  };
+
   //handleSubmitOrder
   const handleSubmitOrder = async () => {
-    setLoading(true);
-    let receiverId = "";
-    let itemOrderIds: string[] = [];
-    try {
-      // Api tạo thông tin người nhận
+    if (selectedPayment && selectedPayment === "id_cod") {
+      handlePayment()
+    }
+    if (selectedPayment === "67bfce96db17315614fced6f") {
+      setLoading(true);
+      let receiverId = "";
+      let itemOrderIds: string[] = [];
       try {
-        const receiverInfo = await fetch(
-          `http://localhost:3000/api/receivers`,
-          {
+        // Api tạo thông tin người nhận
+        try {
+          const receiverInfo = await fetch(
+            `http://localhost:3000/api/receivers`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: customerName,
+                phone: phoneNumber,
+                address: address,
+              }),
+            }
+          );
+          const receiverData = await receiverInfo.json();
+          if (!receiverInfo.ok) {
+            // Đẩy message ra UI
+            message.error(
+              receiverData.message || "Tạo thông tin người nhận thất bại"
+            );
+            return; // dừng xử lý tiếp
+          }
+          receiverId = receiverData.data._id;
+          // console.log("receiverId:", receiverId);
+        } catch (error) {
+          // Bắt lỗi fetch, parse hoặc throw error thủ công
+          if (error instanceof Error) {
+            message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+          } else {
+            message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+          }
+        }
+
+        // Api tạo item order
+        try {
+          const itemOrders = await fetch(`http://localhost:3000/api/itemOrder`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(
+              itemOrder.map((item: ItemOrder) => ({
+                name: item.name,
+                quantity: item.quantity,
+                id_variant: item.id_variant,
+              }))
+            ),
+          });
+          const itemOrderData = await itemOrders.json();
+          if (!itemOrders.ok) {
+            // Đẩy message ra UI
+            message.error(itemOrderData.message || "Tạo item order thất bại");
+            return; // dừng xử lý tiếp
+          }
+          itemOrderIds = itemOrderData.data.map((item: any) => item._id);
+          // console.log("itemOrderId:", itemOrderIds);
+        } catch (error) {
+          // Bắt lỗi fetch, parse hoặc throw error thủ công
+          if (error instanceof Error) {
+            message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+          } else {
+            message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+          }
+        }
+
+        // Api tạo order
+        try {
+          const newOrder = await fetch(`http://localhost:3000/api/orders`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              name: customerName,
-              phone: phoneNumber,
-              address: address,
+              total: paymentPrice,
+              shippingFee: 0,
+              isPaid:
+                selectedPayment === "67bfce96db17315614fced6f" ? false : true,
+              voucher: idSelectedVoucher == "" ? null : idSelectedVoucher,
+              user: userInForm,
+              payment: selectedPayment,
+              receiverInfo: receiverId,
+              itemsOrder: itemOrderIds,
+              status: "Chưa xác nhận",
             }),
+          });
+
+          const orderData = await newOrder.json();
+          if (!orderData.ok) {
+            throw new Error(orderData.message || "Tạo đơn hàng thất bại");
           }
-        );
-        const receiverData = await receiverInfo.json();
-        if (!receiverInfo.ok) {
-          // Đẩy message ra UI
-          message.error(
-            receiverData.message || "Tạo thông tin người nhận thất bại"
-          );
-          return; // dừng xử lý tiếp
+
+          // message.success("Đặt hàng thành công!");
+          setCartItems([]);
+          localStorage.removeItem("cartItems");
+          // clear list checkout
+          setListCheckout([]);
+          setPaymentPrice(0);
+          setSelectedVoucher(null);
+          setPromotionValue(0);
+          nav("/notify2");
+        } catch (error) {
+          // Bắt lỗi fetch, parse hoặc throw error thủ công
+          if (error instanceof Error) {
+            message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+          } else {
+            message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+          }
         }
-        receiverId = receiverData.data._id;
-        // console.log("receiverId:", receiverId);
-      } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
-        if (error instanceof Error) {
-          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+      } catch (err) {
+        console.error(err);
+        if (err instanceof Error) {
+          message.error(err.message || "Có lỗi xảy ra");
         } else {
-          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+          message.error("Có lỗi xảy ra");
         }
+      } finally {
+        setLoading(false);
+        //clear cart items
       }
-
-      // Api tạo item order
-      try {
-        const itemOrders = await fetch(`http://localhost:3000/api/itemOrder`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            itemOrder.map((item: ItemOrder) => ({
-              name: item.name,
-              quantity: item.quantity,
-              id_variant: item.id_variant,
-            }))
-          ),
-        });
-        const itemOrderData = await itemOrders.json();
-        if (!itemOrders.ok) {
-          // Đẩy message ra UI
-          message.error(itemOrderData.message || "Tạo item order thất bại");
-          return; // dừng xử lý tiếp
-        }
-        itemOrderIds = itemOrderData.data.map((item: any) => item._id);
-        // console.log("itemOrderId:", itemOrderIds);
-      } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
-        if (error instanceof Error) {
-          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
-        } else {
-          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
-        }
-      }
-
-      // Api tạo order
-      try {
-        const newOrder = await fetch(`http://localhost:3000/api/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            total: paymentPrice,
-            shippingFee: 0,
-            isPaid:
-              selectedPayment === "67bfce96db17315614fced6f" ? false : true,
-            voucher: idSelectedVoucher == "" ? null : idSelectedVoucher,
-            user: userInForm,
-            payment: selectedPayment,
-            receiverInfo: receiverId,
-            itemsOrder: itemOrderIds,
-            status: "Chưa xác nhận",
-          }),
-        });
-
-        const orderData = await newOrder.json();
-        if (!orderData.ok) {
-          throw new Error(orderData.message || "Tạo đơn hàng thất bại");
-        }
-
-        // message.success("Đặt hàng thành công!");
-        setCartItems([]);
-        localStorage.removeItem("cartItems");
-        // clear list checkout
-        setListCheckout([]);
-        setPaymentPrice(0);
-        setSelectedVoucher(null);
-        setPromotionValue(0);
-        nav("/notify2");
-      } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
-        if (error instanceof Error) {
-          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
-        } else {
-          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
-        }
-      }
-
-      ///////// kết thúc
-    } catch (err) {
-      console.error(err);
-      if (err instanceof Error) {
-        message.error(err.message || "Có lỗi xảy ra");
-      } else {
-        message.error("Có lỗi xảy ra");
-      }
-    } finally {
-      setLoading(false);
-      //clear cart items
     }
   };
 
@@ -458,8 +473,8 @@ const PaymentPage = () => {
               name="payment"
               className="w-4 h-4"
               value="bank"
-              checked={selectedPayment === "67bfcec4db17315614fced70"}
-              onChange={() => setSelectedPayment("67bfcec4db17315614fced70")}
+              checked={selectedPayment === "id_cod"}
+              onChange={() => setSelectedPayment("id_cod")}
             />
             Thanh toán qua ví điện tử VNPAY
           </label>
