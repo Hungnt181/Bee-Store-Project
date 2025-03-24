@@ -59,6 +59,7 @@ const PaymentPage = () => {
     enabled: !!id, // Chỉ chạy khi có ID
   });
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [storedCartItems, setStoredCartItems] = useState<CartItemDetail[]>([]);
   const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -85,10 +86,11 @@ const PaymentPage = () => {
 
   // lấy cartItems từ localstorage
   useEffect(() => {
-    // const storedCartItems = localStorage.getItem("cartItems");
-    const storedCartItems = localStorage.getItem("selectedItemArray");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
+    const storedCartItems = localStorage.getItem("cartItems");
+    const storedPayCartItems = localStorage.getItem("selectedItemArray");
+    if (storedPayCartItems && storedCartItems) {
+      setCartItems(JSON.parse(storedPayCartItems));
+      setStoredCartItems(JSON.parse(storedCartItems));
     }
     //lay list voucher
     (async () => {
@@ -100,6 +102,8 @@ const PaymentPage = () => {
       }
     })();
   }, []);
+  console.log(storedCartItems);
+  
   // console.log(voucherList);
   //lấy sp tu id
   const getPdts = async (idProduct: string) => {
@@ -119,7 +123,7 @@ const PaymentPage = () => {
       const { data } = await axios.get(
         "http://localhost:3000/api/variants/" + idVariant
       );
-      // console.log(data.variants[0]);
+      console.log(data.variants[0]);
       return data.variants[0];
     } catch (error) {
       console.log("ko lấy đc bien the từ id" + error);
@@ -348,6 +352,12 @@ const PaymentPage = () => {
       }
     } finally {
       setLoading(false);
+
+      //loại bỏ các sản phẩm đã thanh toán
+      const listItemAfterPay = storedCartItems.filter(item => !cartItems.includes(item));
+      localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+
+      localStorage.removeItem("selectedItemArray");
       //clear cart items
     }
   };

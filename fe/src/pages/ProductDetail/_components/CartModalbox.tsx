@@ -133,7 +133,7 @@ const CartModalbox: React.FC<CartModalData> = ({
       title: "#",
       key: "action",
       render: (text, record: CartModalItemDetail, index: number) => (
-        <Button onClick={() => handleRemove(index)}>Remove</Button>
+        <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
   ];
