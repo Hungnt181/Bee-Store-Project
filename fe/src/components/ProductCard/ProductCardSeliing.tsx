@@ -1,33 +1,36 @@
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { useState } from "react";
-import { ProductType } from "../../interface/Product";
-import { useGetVariantByProduct } from "../../hooks/queries/variants/useGetVariantByProduct";
 import { Spin } from "antd";
 import { Link } from "react-router-dom";
+import { bestSelling } from "../../interface/Order";
 
-export default function ProductCard({ product }: { product: ProductType }) {
+export default function ProductCardSelling({
+  product,
+}: {
+  product: bestSelling;
+}) {
   const [isHovered, setIsHovered] = useState(false); // State to track hover status
-  const { data: variants, isPending } = useGetVariantByProduct(product._id);
-  return variants && !isPending ? (
+
+  return product ? (
     <>
       <div className="relative cursor-pointer group hover:border hover:border-black overflow-hidden">
-        <Link to={`/products/${product._id}`}>
+        <Link to={`/products/${product.productID}`}>
           <img
             className="w-auto h-auto min-h-[356px] object-cover transition-transform duration-300 group-hover:scale-105"
-            src={variants?.variants[0]?.image[0]}
+            src={product.variantImage[0]}
             alt=""
           />
         </Link>
         <Link
-          to={`/products/${product._id}`}
+          to={`/products/${product.productID}`}
           className="mt-3.5 text-center flex flex-col gap-2"
         >
           <h3 className="text-base capitalize underline hover:text-[#cccccc]">
-            {product?.name}
+            {product?.productName}
           </h3>
           <p className="text-[#f7040f] flex gap-2 justify-center items-center">
             {/* <span className="line-through text-black font-medium">990.000đ</span> */}
-            {Number(product?.price).toLocaleString("vi-VN")} VNĐ
+            {Number(product?.productPrice).toLocaleString("vi-VN")} VNĐ
           </p>
           <p className="text-sm font-thin uppercase">{product?.slug}</p>
         </Link>

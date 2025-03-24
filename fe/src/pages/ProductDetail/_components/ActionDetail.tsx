@@ -212,7 +212,7 @@ ActionDetail) {
         <p className="font-normal text-xl mt-1">
           Giá:{" "}
           <span className="uppercase">
-            {variants[0]?.id_product?.price} VNĐ
+            {Number(variants[0]?.id_product?.price).toLocaleString("vi-VN")} VNĐ
           </span>
         </p>
       </div>
@@ -302,10 +302,12 @@ ActionDetail) {
           </Button>
           <InputNumber
             min={1}
+            max={selectedVariant?.quantity}
             defaultValue={1}
             value={quantity}
             className="flex items-center"
             controls={false}
+            onChange={(value) => setQuantity(value || 1)}
           />
           <Button
             onClick={() => {

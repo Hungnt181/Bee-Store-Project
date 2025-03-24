@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Variant } from "../../../interface/Variant";
 import Color from "../../../interface/Color";
 import Size from "../../../interface/Size";
+import { Image } from "antd";
 
 interface TabDescriptionProps {
   variants: Variant[];
@@ -15,6 +16,9 @@ export default function TabDescription({
   sizes,
 }: TabDescriptionProps) {
   const [tabIndex, setTabIndex] = useState<number>(0);
+
+  console.log("variants", variants[0]?.id_product?.id_cate?.name);
+
   return (
     <div className="mt-6">
       {/* TAB CONTROL */}
@@ -47,12 +51,41 @@ export default function TabDescription({
               - Kích cỡ: {sizes?.map((item: Size) => item?.name).join(", ")}
             </li>
             <li>- Mô tả: {variants[0]?.id_product?.description}</li>
-            {/* <li>
-              - Form vừa vặn giúp người mặc dễ dàng vận động và tạo cảm giác
-              thoải mái khi mặc.
+            <li>
+              <strong>- Hướng dẫn bảo quản:</strong>
+              <li>Giặt tay hoặc giặt máy ở chế độ nhẹ với nước lạnh.</li>
+              <li>Tránh sử dụng chất tẩy mạnh, không ngâm quá lâu.</li>
+              <li>Tránh sử dụng chất tẩy mạnh, không ngâm quá lâu.</li>
             </li>
-            <li>- Khóa kéo chắc chắn</li>
-            <li>- Cổ tay áo bo chun vừa vặn</li> */}
+            <li>
+              <strong>- Hướng dẫn giặt ủi:</strong>
+              <li>
+                Ủi ở nhiệt độ thấp để tránh làm hỏng chất liệu và giữ cho sản
+                phẩm luôn phẳng đẹp.
+              </li>
+            </li>
+            <li>
+              <strong> - Lưu ý:</strong>
+              <li>
+                Hình ảnh chỉ mang tính chất minh họa, màu sắc sản phẩm thực tế
+                có thể thay đổi tùy thuộc vào điều kiện ánh sáng và thiết bị
+                hiển thị.
+              </li>
+            </li>
+
+            <li>
+              <div>
+                <strong>- Bảng size tham khảo</strong>
+              </div>
+              <Image
+                style={{ marginTop: "4px" }}
+                src={
+                  variants[0]?.id_product?.id_cate?.name == "Áo"
+                    ? "/src/assets/size_text.png"
+                    : "/src/assets/size_number.webp"
+                }
+              ></Image>
+            </li>
           </ul>
         ) : (
           <div className="font-thin min-h-32">

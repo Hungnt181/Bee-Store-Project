@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { Select, DatePicker, Button, Space, Card, Table, Image } from "antd";
+import {
+  Select,
+  DatePicker,
+  Button,
+  Space,
+  Card,
+  Table,
+  Image,
+  Flex,
+} from "antd";
 import axios from "axios";
 import moment from "moment";
 import {
@@ -14,8 +23,28 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+import { DollarOutlined, PrinterOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 
 const AdminDashboardPage = () => {
+  // Thống kê doanh số + số đơn hôm nay
+  const now = new Date();
+  const dateNow = now.getDate();
+  const yearNow = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const formattedDate = `${yearNow}-${month}-${dateNow}`;
+  const formattedDateTitle = `${dateNow}-${month}-${yearNow}`;
+  const titel = `Thống kê hôm nay: ${formattedDateTitle}`;
+  const { data: statisticsData } = useQuery({
+    queryKey: ["statisticsData"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/statistics/revenue/?type=daily&date=$${formattedDate}`
+      );
+      return data;
+    },
+  });
+
   //  Thống kê doanh số + số đơn
   const { RangePicker } = DatePicker;
   const [date, setDate] = useState<moment.Moment>(moment());
@@ -139,7 +168,53 @@ const AdminDashboardPage = () => {
 
   return (
     <div>
-      <div className="flex">
+      <div>
+        <Card title={titel} className="w-full">
+          <Flex justify="space-around">
+            <div className="flex bg-amber-200  w-[400px] h-[150px] justify-center items-center rounded-lg">
+              <div>
+                <DollarOutlined style={{ fontSize: "52px", color: "red" }} />
+              </div>
+              <div className="ml-4">
+                <div className="text-[20px] font-semibold">
+                  Tổng giá trị các đơn hàng:
+                </div>
+                {statisticsData?.length > 0 ? (
+                  <div className=" text-2xl text-red-700">
+                    {Number(statisticsData[0]?.totalRevenue).toLocaleString(
+                      "vi-VN"
+                    )}{" "}
+                    VNĐ
+                  </div>
+                ) : (
+                  <div className=" text-2xl text-red-700">0 VNĐ</div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex bg-blue-200 w-[400px] h-[150px] justify-center items-center rounded-lg">
+              <div>
+                <PrinterOutlined style={{ fontSize: "52px", color: "green" }} />
+              </div>
+              <div className="ml-4">
+                <div className="text-[20px] font-semibold">
+                  Tổng số đơn hàng:
+                </div>
+                {statisticsData?.length > 0 ? (
+                  <div className=" text-2xl text-red-700">
+                    {Number(statisticsData[0]?.orderCount).toLocaleString(
+                      "vi-VN"
+                    )}
+                  </div>
+                ) : (
+                  <div className=" text-2xl text-red-700">0</div>
+                )}
+              </div>
+            </div>
+          </Flex>
+        </Card>
+      </div>
+      <div className="flex mt-4">
         <Card title="Thống kê doanh thu" className="w-full">
           <Space direction="vertical" size="middle" style={{ width: "100%" }}>
             <Space wrap>

@@ -512,6 +512,10 @@ class OrderController {
             colorName: "$colorInfo.name",
             sizeName: "$sizeInfo.name",
             productName: "$productInfo.name",
+            productID: "$productInfo._id",
+            productPrice: "$productInfo.price",
+            status: "$productInfo.status",
+            slug: "$productInfo.slug",
           },
         },
       ]);

@@ -4,6 +4,10 @@ import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProduct
 import SlideShowBanner from "./_components/SlideShowBanner";
 import { ProductType } from "../../interface/Product";
 import Chatbot from "./ChatBot";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { bestSelling } from "../../interface/Order";
+import ProductCardSelling from "../../components/ProductCard/ProductCardSeliing";
 
 export default function HomePage() {
   const { data, isPending } = useGetAllProducts();
@@ -11,6 +15,25 @@ export default function HomePage() {
   const handleViewProduct = () => {
     navigate("/products");
   };
+
+  // Get data best selling product
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Thêm số 0 nếu tháng < 10
+  const formattedDate = `${year}-${month}`;
+
+  const { data: bestSellingProduct } = useQuery({
+    queryKey: ["SellingProduct"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/statistics/best-selling-products?type2=monthly&month=${formattedDate}`
+      );
+      return data;
+    },
+  });
+
+  console.log("best-selling product", bestSellingProduct);
+
   return (
     <div className="mt-4 mb-[5%]">
       <section>
@@ -101,11 +124,13 @@ export default function HomePage() {
         {!isPending && data ? (
           <>
             <div className=" mt-8 grid grid-cols-4 gap-8">
-              {data.products
-                .filter((item: ProductType) => item.status == true)
+              {bestSellingProduct
+                .filter((item: bestSelling) => item.status == true)
                 .map(
-                  (item, index) =>
-                    index < 4 && <ProductCard key={index} product={item} />
+                  (item: bestSelling, index: number) =>
+                    index < 4 && (
+                      <ProductCardSelling key={index} product={item} />
+                    )
                 )}
             </div>
             <div className="flex justify-center mt-14">

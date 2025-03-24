@@ -24,10 +24,9 @@ const Chatbot = () => {
           },
           auth: {
             type: "token",
-            token:
-              "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM", // <-- Thay bằng token thật của bạn
+            token: import.meta.env.VITE_TOKEN_CHATBOT,
             onRefreshToken: function (): string {
-              return "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM"; // <-- Thay bằng token mới nếu cần refresh
+              return "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM";
             },
           },
         });
