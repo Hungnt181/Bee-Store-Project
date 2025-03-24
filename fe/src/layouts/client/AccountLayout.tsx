@@ -42,6 +42,8 @@ export default function AccountLayout() {
     localStorage.removeItem("nameUser");
     localStorage.removeItem("userRole");
     localStorage.removeItem("idUser");
+    localStorage.removeItem("cartItems");
+    localStorage.removeItem("selectedItemArray");
     navigate("/signin");
   };
 
