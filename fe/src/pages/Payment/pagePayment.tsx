@@ -4,7 +4,7 @@ import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
 import axios from "axios";
 import { message } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CartItemDetail {
   idProduct: string;
@@ -20,6 +20,7 @@ interface ItemOrder {
   id_variant: string;
 }
 interface ItemCheckout {
+  idProduct: string;
   nameProduct: string;
   imgVariant: string;
   price: number;
@@ -58,6 +59,7 @@ const PaymentPage = () => {
     enabled: !!id, // Chỉ chạy khi có ID
   });
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [storedCartItems, setStoredCartItems] = useState<CartItemDetail[]>([]);
   const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -85,8 +87,10 @@ const PaymentPage = () => {
   // lấy cartItems từ localstorage
   useEffect(() => {
     const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
+    const storedPayCartItems = localStorage.getItem("selectedItemArray");
+    if (storedPayCartItems && storedCartItems) {
+      setCartItems(JSON.parse(storedPayCartItems));
+      setStoredCartItems(JSON.parse(storedCartItems));
     }
     //lay list voucher
     (async () => {
@@ -98,6 +102,8 @@ const PaymentPage = () => {
       }
     })();
   }, []);
+  console.log(storedCartItems);
+  
   // console.log(voucherList);
   //lấy sp tu id
   const getPdts = async (idProduct: string) => {
@@ -117,7 +123,7 @@ const PaymentPage = () => {
       const { data } = await axios.get(
         "http://localhost:3000/api/variants/" + idVariant
       );
-      // console.log(data.variants[0]);
+      console.log(data.variants[0]);
       return data.variants[0];
     } catch (error) {
       console.log("ko lấy đc bien the từ id" + error);
@@ -135,6 +141,7 @@ const PaymentPage = () => {
 
       if (productData && variantData) {
         const newItemCheckout: ItemCheckout = {
+          idProduct: cartItem.idProduct,
           nameProduct: productData.name,
           imgVariant: variantData.image[0],
           price: productData.price,
@@ -180,12 +187,28 @@ const PaymentPage = () => {
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
+  // const fetchVoucher (idSelectedVoucher)
 
-  const getPromotionValue = () => {
-    if (selectedVoucher !== null) {
-      setPromotionValue(selectedVoucher);
-      // console.log(`gia tri voucher: ${selectedVoucher}`);
-      setPaymentPrice(totalPrice - selectedVoucher);
+  // lấy voucher tu id
+  const getVoucher = async (idVoucher: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/vouchers/" + idVoucher
+      );
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id" + error);
+    }
+  };
+
+  //onclick event
+  const getPromotionValue = async () => {
+    if (selectedVoucher !== null && idSelectedVoucher) {
+      const voucher = await getVoucher(idSelectedVoucher);
+      let discount = totalPrice/100 * voucher.value;
+      (discount > voucher.maxValue) ? (discount = voucher.maxValue): (discount)
+      setPromotionValue(discount);
+      setPaymentPrice(totalPrice - discount);
     }
   };
 
@@ -329,6 +352,12 @@ const PaymentPage = () => {
       }
     } finally {
       setLoading(false);
+
+      //loại bỏ các sản phẩm đã thanh toán
+      const listItemAfterPay = storedCartItems.filter(item => !cartItems.includes(item));
+      localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+
+      localStorage.removeItem("selectedItemArray");
       //clear cart items
     }
   };
@@ -352,9 +381,16 @@ const PaymentPage = () => {
                 className="w-24 h-24 object-cover rounded-lg"
               />
               <div className="flex-1">
-                <p className="font-semibold">{item.nameProduct}</p>
+                <p className="font-semibold">
+                  <Link to={`/products/${item.idProduct}`}>
+                    <span className="text-black">{item.nameProduct}</span>
+                  </Link>
+                </p>
+                <div className="text-sm text-gray-600 flex items-center gap-2">
+                  Loại màu: <div className="border rounded w-[20px] h-[20px]" style={{ backgroundColor: item.color }}></div>
+                </div>
                 <p className="text-sm text-gray-600">
-                  Mã sản phẩm: {item.color}
+                  Loại cỡ: <span className="text-[16px] font-bold text-black">{item.size}</span>
                 </p>
                 {/* <p className="line-through text-gray-500">
                   {item.price} đ
@@ -492,7 +528,7 @@ const PaymentPage = () => {
                 onChange={handleSelectChange}
                 className="w-full ps-8 pe-4 py-2 border rounded-xl"
               >
-                <option value="" disabled selected>
+                <option value="" disabled selected hidden={true}>
                   Mời bạn chọn voucher
                 </option>
                 <option value={0}>Ko dùng voucher</option>
