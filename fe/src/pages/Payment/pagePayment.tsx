@@ -85,7 +85,8 @@ const PaymentPage = () => {
 
   // lấy cartItems từ localstorage
   useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
+    // const storedCartItems = localStorage.getItem("cartItems");
+    const storedCartItems = localStorage.getItem("selectedItemArray");
     if (storedCartItems) {
       setCartItems(JSON.parse(storedCartItems));
     }

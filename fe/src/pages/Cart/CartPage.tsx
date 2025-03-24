@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal, Table } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import type { TableRowSelection } from 'antd/es/table/interface';
+
 
 interface CartItemDetail {
   idProduct: string;
@@ -12,6 +14,7 @@ interface CartItemDetail {
 }
 interface CartModalItemDetail {
   idProduct: string;
+  idVariant: string;
   nameProduct: string;
   price: number;
   color: string;
@@ -44,16 +47,16 @@ const CartPage: React.FC = () => {
     }
   }, []);
 
-  if (cartItems && cartItems[0]) {
-    console.log(cartItems[0]);
-  }
+  // if (cartItems && cartItems[0]) {
+  //   console.log(cartItems[0]);
+  // }
 
   const getPdts = async (idProduct: string) => {
     try {
       const { data } = await axios.get(
         "http://localhost:3000/api/products/" + idProduct
       );
-      console.log(data.data);
+      // console.log(data.data);
       return data.data;
     } catch (error) {
       console.log("ko lấy đc sp từ id");
@@ -65,7 +68,7 @@ const CartPage: React.FC = () => {
       const { data } = await axios.get(
         "http://localhost:3000/api/variants/" + idVariant
       );
-      console.log(data.variants[0]);
+      // console.log(data.variants[0]);
       return data.variants[0];
     } catch (error) {
       console.log("ko lấy đc bien the từ id");
@@ -79,6 +82,7 @@ const CartPage: React.FC = () => {
       if (productData) {
         const newCartModalItem: CartModalItemDetail = {
           idProduct: cartItem.idProduct,
+          idVariant: cartItem.idVariant,
           nameProduct: productData.name,
           price: productData.price,
           color: cartItem.color,
@@ -188,15 +192,19 @@ const CartPage: React.FC = () => {
       dataIndex: "quantity",
       key: "quantity",
       render: (_text: string, record: CartModalItemDetail, index: number) => (
-        <div className="quantity-control">
+        <div className="quantity-control flex items-center">
           <Button
             onClick={() => handleQuantityChange(index, -1)}
             disabled={record.quantity <= 1}
+            style={{ height: "30px", width: "30px" }}
           >
             -
           </Button>
-          <span className="quantity">{record.quantity}</span>
-          <Button onClick={() => handleQuantityChange(index, 1)}>+</Button>
+          <div className="quantity mx-2 w-[20px] text-center">{record.quantity}</div>
+          <Button
+            onClick={() => handleQuantityChange(index, 1)}
+            style={{ height: "30px", width: "30px" }}
+          >+</Button>
         </div>
       ),
     },
@@ -209,16 +217,50 @@ const CartPage: React.FC = () => {
       title: "#",
       key: "action",
       render: (text, record: CartModalItemDetail, index: number) => (
-        <Button onClick={() => handleRemove(index)}>Remove</Button>
+        <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
   ];
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys)
+  };
+  const rowSelection: TableRowSelection<any> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const [selectedItemArray, setSelectedItemArray] = useState<any>([])
+  useEffect(() => {
+    if (selectedRowKeys.length > 0) {
+      const newSelectedItemArray = selectedRowKeys.map((index) =>
+        cartModalItems[Number(index)]
+      );
+      //cartModalItems.map(index => selectedRowKeys[Number(index)])
+      setSelectedItemArray(newSelectedItemArray)
+    }
+    else {
+      setSelectedItemArray([]);
+    }
+  }, [selectedRowKeys, cartModalItems]);
+
+  useEffect(() => {
+    // console.log("selectedItemArray updated:", selectedItemArray);
+    if (selectedItemArray.length > 0) {
+      localStorage.setItem("selectedItemArray", JSON.stringify(selectedItemArray));
+    } else {
+      localStorage.removeItem("selectedItemArray");
+    }
+  }, [selectedItemArray]);
 
   return (
     <>
       <div className="mt-5 max-w-[1240px] mx-6 xl:mx-auto text-right">
         <div className="text-left">
           <Table
+            rowSelection={rowSelection}
             dataSource={cartModalItems}
             columns={columns}
             rowKey={(record, index) => index.toString()}
