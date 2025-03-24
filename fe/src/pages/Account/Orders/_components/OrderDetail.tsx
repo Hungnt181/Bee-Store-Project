@@ -21,7 +21,7 @@ const OrderDetail = () => {
   const [dataItemOrder, setDataItemOrder] = useState<ItemOrder[]>([]);
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const [canCancel, setCanCancel] = useState(false);
+  // const [canCancel, setCanCancel] = useState(false);
 
   //Thông tin admin
 
@@ -166,18 +166,18 @@ const OrderDetail = () => {
     const threeMinutesLater = new Date(completedTime);
     threeMinutesLater.setMinutes(completedTime.getMinutes() + 3);
 
-    const checkTime = () => {
-      const now = new Date();
-      setCanCancel(now < threeMinutesLater);
-    };
+    // const checkTime = () => {
+    //   const now = new Date();
+    //   setCanCancel(now < threeMinutesLater);
+    // };
 
     // Kiểm tra ngay lập tức
-    checkTime();
+    // checkTime();
 
     // Cập nhật mỗi giây để ẩn nút đúng thời điểm
-    const interval = setInterval(checkTime, 1000);
+    // const interval = setInterval(checkTime, 1000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [orderDetail?.completedAt]);
 
   //
@@ -299,7 +299,7 @@ const OrderDetail = () => {
                 </Button>
               </Popconfirm>
             </div>
-            <div className="mt-2 ml-2">
+            {/* <div className="mt-2 ml-2">
               <Popconfirm
                 title="Delete the task"
                 description="Bạn chắc chắn muốn hoàn đơn này không?"
@@ -315,7 +315,7 @@ const OrderDetail = () => {
                   Hoàn đơn
                 </Button>
               </Popconfirm>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex">

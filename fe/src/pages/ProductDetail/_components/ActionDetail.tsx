@@ -33,6 +33,7 @@ ActionDetail) {
   const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [statusVariant, setStatusVariant] = useState(false);
+  const [quantityVariant, setQuantityVariant] = useState(false);
 
   // const handleClickBuy = () => {
   //   // console.log(quantity);
@@ -45,6 +46,13 @@ ActionDetail) {
 
       const isStopped = variants.every((variant) => variant.status === false);
       setStatusVariant(isStopped);
+      const isStock = variants.every((variant) => variant.quantity === 0);
+      setQuantityVariant(isStock);
+
+      const isOutOfStock = variants.every(
+        (v) => v.status !== true || v.quantity === 0
+      );
+      setQuantityVariant(isOutOfStock);
     }
   }, [variants]);
 
@@ -186,6 +194,13 @@ ActionDetail) {
           </h3>
           <p className={`text-red-700 ${statusVariant ? "block " : "hidden"}`}>
             Sản phầm đã dừng bán
+          </p>
+          <p
+            className={`text-red-700 ${
+              quantityVariant && !statusVariant ? "block " : "hidden"
+            }`}
+          >
+            Hết hàng
           </p>
         </div>
 

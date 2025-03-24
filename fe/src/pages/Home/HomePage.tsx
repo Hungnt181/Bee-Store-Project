@@ -3,6 +3,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
 import SlideShowBanner from "./_components/SlideShowBanner";
 import { ProductType } from "../../interface/Product";
+import Chatbot from "./ChatBot";
 
 export default function HomePage() {
   const { data, isPending } = useGetAllProducts();
@@ -92,7 +93,7 @@ export default function HomePage() {
       <hr className=" max-w-[1240px] mx-6 xl:mx-auto my-8" />
       <section className="mt-12 max-w-[1240px] mx-6 xl:mx-auto">
         <div className="flex justify-center items-center flex-col">
-          <h3 className="text-3xl uppercase font-thin">Sản bán chạy</h3>
+          <h3 className="text-3xl uppercase font-thin">Sản phẩm bán chạy</h3>
           <p className="text-sm font-thin">
             Những sản phẩm bán chạy nhất hiện tại
           </p>
@@ -122,6 +123,9 @@ export default function HomePage() {
           </div>
         )}
       </section>
+      <div>
+        <Chatbot></Chatbot>
+      </div>
     </div>
   );
 }
