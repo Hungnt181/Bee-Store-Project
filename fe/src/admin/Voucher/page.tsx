@@ -8,6 +8,7 @@ interface Voucher {
   title: String;
   codeName: String;
   value: Number;
+  maxValue: Number;
   quantity: Number;
   description: String;
   startTime: Date;
@@ -39,9 +40,14 @@ const columns: TableProps<Voucher>['columns'] = [
     key: 'codeName',
   },
   {
-    title: 'Giá trị',
+    title: 'Giá trị giảm (%)',
     dataIndex: 'value',
     key: 'value',
+  },
+  {
+    title: 'Giá trị giảm tối đa (vnđ)',
+    dataIndex: 'maxValue',
+    key: 'maxValue',
   },
   {
     title: 'Số lượng',

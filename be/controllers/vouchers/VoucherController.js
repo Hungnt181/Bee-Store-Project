@@ -21,11 +21,11 @@ class VoucherController {
 
   async apiDetail(req, res) {
     try {
-      //B1: lấy id bản ghi cần xem chi tiết
+
       const id = req.params.id;
-      //B2: truyền id lên truy vấn trong mongo
+
       const voucher = await Voucher.findById(id);
-      //B3: trả dữ liệu
+
       res.status(200).json({
         message: "Thành công",
         data: voucher,
@@ -68,18 +68,23 @@ class VoucherController {
 
   async apiCreate(req, res) {
     try {
-      // Kiểm tra unique
-      const { codeName } = req.body;
+      // Kiểm tra unique, kiểm tra số
+      const { codeName, value, maxValue } = req.body;
       const existingCodeName = await Voucher.findOne({ codeName });
       if (existingCodeName) {
         return res.status(400).json({ message: "CodeName này đã tồn tại" });
       }
+      if (typeof value !== "number") {
+        return res.status(400).json({ message: "Value phải là kiểu số" });
+      }
+      if (typeof maxValue !== "number") {
+        return res.status(400).json({ message: "MaxValue phải là kiểu số" });
+      }
 
-      //B1: lấy dữ liệu người dùng gửi lên
       const data = req.body;
-      //B2: đẩy dữ liệu lên, lưu vào DB
+
       const newVoucher = await Voucher.create(data);
-      //B3: trả dữ liệu về
+
       res.status(200).json({
         message: "Thêm mới thành công",
         data: newVoucher,
@@ -94,22 +99,26 @@ class VoucherController {
   async apiUpdate(req, res) {
     try {
 
-      //B1: lấy id bản ghi cần sửa
+
       const id = req.params.id;
 
-      //B2: lấy dữ liệu mới
       const data = req.body;
 
-      // Kiểm tra đã tồn tại
-      const { codeName } = req.body;
-      const existingCodeName = await Voucher.findOne({ codeName, _id: { $ne: id } })
+      // Kiểm tra unique, kiểm tra số
+      const { codeName, value, maxValue } = req.body;
+      const existingCodeName = await Voucher.findOne({ codeName });
       if (existingCodeName) {
         return res.status(400).json({ message: "CodeName này đã tồn tại" });
       }
+      if (typeof value !== "number") {
+        return res.status(400).json({ message: "Value phải là kiểu số" });
+      }
+      if (typeof maxValue !== "number") {
+        return res.status(400).json({ message: "MaxValue phải là kiểu số" });
+      }
 
-      //B3: đẩy dữ liệu lưu vào DB
       const voucher = await Voucher.findByIdAndUpdate(id, data);
-      //B4: trả về dữ liệu
+
       res.status(200).json({
         message: "Chỉnh sửa thành công",
         data: voucher,
