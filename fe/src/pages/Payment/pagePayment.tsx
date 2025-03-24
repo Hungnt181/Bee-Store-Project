@@ -182,12 +182,28 @@ const PaymentPage = () => {
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
+  // const fetchVoucher (idSelectedVoucher)
 
-  const getPromotionValue = () => {
-    if (selectedVoucher !== null) {
-      setPromotionValue(selectedVoucher);
-      // console.log(`gia tri voucher: ${selectedVoucher}`);
-      setPaymentPrice(totalPrice - selectedVoucher);
+  // lấy voucher tu id
+  const getVoucher = async (idVoucher: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/vouchers/" + idVoucher
+      );
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id" + error);
+    }
+  };
+
+  //onclick event
+  const getPromotionValue = async () => {
+    if (selectedVoucher !== null && idSelectedVoucher) {
+      const voucher = await getVoucher(idSelectedVoucher);
+      let discount = totalPrice/100 * voucher.value;
+      (discount > voucher.maxValue) ? (discount = voucher.maxValue): (discount)
+      setPromotionValue(discount);
+      setPaymentPrice(totalPrice - discount);
     }
   };
 
@@ -363,7 +379,7 @@ const PaymentPage = () => {
                   Loại màu: <div className="border rounded w-[20px] h-[20px]" style={{ backgroundColor: item.color }}></div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Loại cỡ: {item.size}
+                  Loại cỡ: <span className="text-[16px] font-bold text-black">{item.size}</span>
                 </p>
                 {/* <p className="line-through text-gray-500">
                   {item.price} đ

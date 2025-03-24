@@ -25,7 +25,6 @@ import HomePage from "./pages/Home/HomePage";
 import FilterProducts from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import CartPage from "./pages/Cart/CartPage";
-import OrderPage from "./pages/Order/OrderPage";
 import AccountLayout from "./layouts/client/AccountLayout";
 import MyProfile from "./pages/Account/Profile/MyProfile";
 import MyOrders from "./pages/Account/Orders/MyOrders";
@@ -58,7 +57,6 @@ export const router = createBrowserRouter([
       { path: "/products", element: <FilterProducts /> },
       { path: "/products/:id", element: <ProductDetail /> },
       { path: "/cart", element: <CartPage /> },
-      { path: "/order", element: <OrderPage /> },
       { path: "/payment", element: <PaymentPage />},
       { path: "/signup", element: <Signup /> },
       { path: "/signin", element: <Signin /> },
