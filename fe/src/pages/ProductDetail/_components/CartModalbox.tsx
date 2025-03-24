@@ -44,7 +44,7 @@ const CartModalbox: React.FC<CartModalData> = ({
       );
       // console.log(data.data);
       return data.data;
-    } catch (error) {
+    } catch {
       console.log("ko lấy đc sp từ id");
     }
   };

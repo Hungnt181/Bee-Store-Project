@@ -1,65 +1,140 @@
 [{
   "_id": {
-    "$oid": "67ab802b138002b2f78d4dde"
+    "$oid": "67d8348c4cd471a07c33a7ab"
   },
-  "name": "White",
-  "hexcode": "#ffffff",
+  "name": "Xanh Rêu",
+  "hexcode": "#027A4A",
   "createdAt": {
-    "$date": "2025-02-11T16:51:55.816Z"
+    "$date": "2025-03-17T14:41:16.886Z"
   },
   "updatedAt": {
-    "$date": "2025-02-11T16:51:55.816Z"
-  }
+    "$date": "2025-03-17T14:41:16.886Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "67ab808f138002b2f78d4de2"
+    "$oid": "67d8355b4cd471a07c33a7c4"
   },
-  "name": "Black",
+  "name": "Đen",
   "hexcode": "#000000",
   "createdAt": {
-    "$date": "2025-02-11T16:53:35.417Z"
+    "$date": "2025-03-17T14:44:43.670Z"
   },
   "updatedAt": {
-    "$date": "2025-02-11T16:53:35.417Z"
-  }
+    "$date": "2025-03-18T01:52:42.973Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "67ab80f9138002b2f78d4de5"
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
   },
-  "name": "Red",
-  "hexcode": "#ff0000",
+  "name": "Trắng ",
+  "hexcode": "#FFFFFF",
   "createdAt": {
-    "$date": "2025-02-11T16:55:21.645Z"
+    "$date": "2025-03-18T01:51:38.721Z"
   },
   "updatedAt": {
-    "$date": "2025-02-11T16:55:21.645Z"
-  }
+    "$date": "2025-03-18T01:51:38.721Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "67ab8112138002b2f78d4de8"
+    "$oid": "67d8d23b1f79d94f72ebc850"
   },
-  "name": "Blue",
-  "hexcode": "#0000ff",
+  "name": "Cam",
+  "hexcode": "#FC805B",
   "createdAt": {
-    "$date": "2025-02-11T16:55:46.258Z"
+    "$date": "2025-03-18T01:54:03.140Z"
   },
   "updatedAt": {
-    "$date": "2025-02-11T16:55:46.258Z"
-  }
+    "$date": "2025-03-18T01:54:03.140Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "67ab8128138002b2f78d4deb"
+    "$oid": "67d8d2801f79d94f72ebc85c"
   },
-  "name": "Gray",
-  "hexcode": "#808080",
+  "name": "Xanh Aqua",
+  "hexcode": "#D4E4E8",
   "createdAt": {
-    "$date": "2025-02-11T16:56:08.012Z"
+    "$date": "2025-03-18T01:55:12.191Z"
   },
   "updatedAt": {
-    "$date": "2025-02-11T16:56:08.012Z"
-  }
+    "$date": "2025-03-18T01:55:12.191Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d8d2c11f79d94f72ebc86a"
+  },
+  "name": "Vàng",
+  "hexcode": "#EDE6CA",
+  "createdAt": {
+    "$date": "2025-03-18T01:56:17.518Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T01:56:17.518Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "name": "Be",
+  "hexcode": "#EECCB1",
+  "createdAt": {
+    "$date": "2025-03-18T02:07:05.573Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:07:05.573Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "name": "Đỏ",
+  "hexcode": "#E32638",
+  "createdAt": {
+    "$date": "2025-03-18T02:14:51.588Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:14:51.588Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "name": "Xám",
+  "hexcode": "#BFBFBF",
+  "createdAt": {
+    "$date": "2025-03-18T02:37:55.666Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:37:55.666Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "name": "Xanh Biển",
+  "hexcode": "#1A4F84",
+  "createdAt": {
+    "$date": "2025-03-18T02:54:00.565Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:54:00.565Z"
+  },
+  "__v": 0
 }]

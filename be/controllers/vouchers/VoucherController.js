@@ -9,7 +9,7 @@ class VoucherController {
 
       res.status(200).json({
         //trả dữ liệu dưới dạng json
-        message: "Lấy dữ liệu thành công",
+        message: "Danh sách vouchers",
         data: vouchers,
       });
     } catch (error) {
@@ -93,7 +93,6 @@ class VoucherController {
 
   async apiUpdate(req, res) {
     try {
-
       //B1: lấy id bản ghi cần sửa
       const id = req.params.id;
 
@@ -102,7 +101,10 @@ class VoucherController {
 
       // Kiểm tra đã tồn tại
       const { codeName } = req.body;
-      const existingCodeName = await Voucher.findOne({ codeName, _id: { $ne: id } })
+      const existingCodeName = await Voucher.findOne({
+        codeName,
+        _id: { $ne: id },
+      });
       if (existingCodeName) {
         return res.status(400).json({ message: "CodeName này đã tồn tại" });
       }

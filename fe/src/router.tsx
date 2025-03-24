@@ -8,7 +8,6 @@ import VariantEditPage from "./admin/Variant/Edit/page";
 import AdminSizeList from "./admin/Size/page";
 import AdminSizeAdd from "./admin/Size/Add/page";
 import AdminSizeEdit from "./admin/Size/Edit/page";
-import AdminSizeDetail from "./admin/Size/Detail/page";
 import VoucherPage from "./admin/Voucher/page";
 import VoucherAddPage from "./admin/Voucher/Add/page";
 import AdminDashboarPage from "./admin/dashboard/page";
@@ -47,6 +46,9 @@ import ForgotPassword from "./website/components/ForgotPassword/page";
 import Success from "./website/components/Success/page";
 import PrivateRoute from "./website/components/PrivateRoute/page";
 import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
+import AdminBannerList from "./admin/Banner/page";
+import AdminBannerAdd from "./admin/Banner/Add/page";
+import VoucherPageBee from "./pages/Vouchers/VoucherPage";
 
 export const router = createBrowserRouter([
   {
@@ -56,10 +58,11 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "/products", element: <FilterProducts /> },
+      { path: "/vouchers", element: <VoucherPageBee /> },
       { path: "/products/:id", element: <ProductDetail /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/order", element: <OrderPage /> },
-      { path: "/payment", element: <PaymentPage />},
+      { path: "/payment", element: <PaymentPage /> },
       { path: "/signup", element: <Signup /> },
       { path: "/signin", element: <Signin /> },
       { path: "/reset/:id", element: <ResetPassword /> },
@@ -131,7 +134,7 @@ export const router = createBrowserRouter([
       { path: "/admin/size", element: <AdminSizeList /> },
       { path: "/admin/size/add", element: <AdminSizeAdd /> },
       { path: "/admin/size/edit/:id", element: <AdminSizeEdit /> },
-      { path: "/admin/size/detail/:id", element: <AdminSizeDetail /> },
+
       { path: "/admin/color", element: <AdminColorList /> },
       { path: "/admin/color/add", element: <AdminColorAdd /> },
       { path: "/admin/comment", element: <AdminCommentList /> },
@@ -149,6 +152,8 @@ export const router = createBrowserRouter([
       { path: "/admin/admin_account/:id", element: <AdminAccountEditPage /> },
       { path: "/admin/order", element: <AdminOrderPage /> },
       { path: "/admin/order/:id", element: <AdminOrderDetail /> },
+      { path: "/admin/banner", element: <AdminBannerList /> },
+      { path: "/admin/banner/add", element: <AdminBannerAdd /> },
     ],
   },
 ]);

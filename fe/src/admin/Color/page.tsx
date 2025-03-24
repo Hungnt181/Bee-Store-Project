@@ -11,7 +11,6 @@ import {
   notification,
   Form,
   Input,
-  Flex,
   Row,
   Col,
 } from "antd";
@@ -195,17 +194,19 @@ const AdminColorList = () => {
         type="primary"
         onClick={() => navigate("/admin/color/add")}
         style={{ marginBottom: 10 }}
+        icon={<PlusOutlined />}
       >
-        Thêm màu sắc
+        Thêm mới
       </Button>
 
       {/* Bảng hiển thị danh sách màu */}
       <Table<Color>
-        dataSource={filteredColors} // Dữ liệu nguồn cho bảng
-        columns={columns} // Cấu trúc cột
-        pagination={{ pageSize: 10 }} // Phân trang, mỗi trang hiển thị 10 dòng
-        rowKey="_id" // Định danh duy nhất cho mỗi dòng
-        scroll={{ y: 55 * 7 }} // Kích thước cuộn của bảng
+        dataSource={filteredColors}
+        columns={columns}
+        pagination={{ pageSize: 30 }}
+        // pagination={false}
+        rowKey="_id"
+        scroll={{ y: 55 * 7 }}
       />
     </div>
   );

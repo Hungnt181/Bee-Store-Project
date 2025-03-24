@@ -16,26 +16,31 @@ export default function TabDescription({
 }: TabDescriptionProps) {
   const [tabIndex, setTabIndex] = useState<number>(0);
   return (
-    <div className="mt-6">
+    <div className="mt-6 ">
       {/* TAB CONTROL */}
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-2 gap-1 bg-gray-100 p-1 rounded-lg">
         <div
           onClick={() => setTabIndex(0)}
-          className={`text-[#818181] w-full cursor-pointer text-center border py-2 ${
-            tabIndex === 0 ? "border-black border-b-3" : "border-[#c0c0c0]"
+          className={`w-full text-center py-3 cursor-pointer rounded-md transition-all duration-300 ${
+            tabIndex === 0
+              ? "bg-gray-500 text-white font-semibold shadow-md"
+              : "bg-white text-gray-600 hover:bg-gray-200"
           }`}
         >
           MÔ TẢ SẢN PHẨM
         </div>
         <div
           onClick={() => setTabIndex(1)}
-          className={`text-[#818181] w-full cursor-pointer text-center border py-2  ${
-            tabIndex === 1 ? "border-black border-b-3" : "border-[#c0c0c0]"
+          className={`w-full text-center py-3 cursor-pointer rounded-md transition-all duration-300 ${
+            tabIndex === 1
+              ? "bg-gray-500 text-white font-semibold shadow-md"
+              : "bg-white text-gray-600 hover:bg-gray-200"
           }`}
         >
           CHÍNH SÁCH BẢO HÀNH
         </div>
       </div>
+
       {/* CONTENT */}
       <div className="mt-4">
         {tabIndex === 0 ? (

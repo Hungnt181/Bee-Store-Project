@@ -3,7 +3,7 @@ import {
   MoneyCollectOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { ProductType } from "../../interface/Product";
 import ActionDetail from "./_components/ActionDetail";
@@ -18,6 +18,7 @@ import Color from "../../interface/Color";
 import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
 
 export default function ProductDetail() {
+  const navigate = useNavigate();
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
 
@@ -97,27 +98,42 @@ export default function ProductDetail() {
   const handleImageChange = (newImages: string[] | null) => {
     setSelectedImage(newImages ?? []);
   };
+  const handleViewProduct = (id?: string) => {
+    if (id) {
+      navigate(`/products/${id}`);
+    } else {
+      navigate("/products");
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="mt-5 max-w-[1240px] mx-6 xl:mx-auto">
       {/* BREADCRUMB */}
       <div className="flex gap-2 items-center text-sm">
-        <Link to={"/"} className="flex items-center gap-1">
+        <Link
+          to={"/products"}
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-500 transition-all duration-300 shadow-sm group"
+        >
           <img
-            src="https://dominoshop.vn/tp/T0263/img/icons/back.png"
-            className="w-6"
-            alt=""
+            src="https://api.iconify.design/heroicons-outline/arrow-left.svg"
+            className="w-4 opacity-80 transition-all duration-300 group-hover:invert group-hover:brightness-0"
+            alt="Quay lại"
           />
-          <span>Back</span>
         </Link>
         <span className="text-[#8F8F8F]"> / </span>
-        <Link to={"/"} className="underline hover:text-cyan-500 duration-300">
-          Trang chủ
-        </Link>
-        <span className="text-[#8F8F8F]"> / </span>
-        <span>
-          {variants[0]?.id_product.name} | {variants[0]?.id_product.slug}
-        </span>
+        <div className="flex items-center space-x-2 text-sm font-medium">
+          <Link
+            to={"/"}
+            className="text-gray-700 hover:text-yellow-500 no-underline transition-colors duration-300"
+          >
+            Trang chủ
+          </Link>
+          <span className="text-gray-400">/</span>
+          <span className="text-gray-700 hover:text-black transition-colors duration-300">
+            {variants[0]?.id_product.name}
+          </span>
+        </div>
       </div>
       {/* PRODUCT */}
       <div className="grid grid-cols-2 mt-8 gap-8">
@@ -133,18 +149,24 @@ export default function ProductDetail() {
             newImage={handleImageChange}
           />
           {/* POLICY */}
-          <ul className="mt-4 text-sm font-light flex flex-col gap-2 uppercase">
-            <li className="flex items-center gap-3">
-              <TruckOutlined className="text-2xl" /> Giao hàng nhanh chóng -
-              Thanh toán COD
+          <ul className="mt-4 text-sm font-medium flex flex-col gap-2 uppercase ml-3">
+            <li className="flex items-center gap-2 p-1 transition-all duration-300">
+              <TruckOutlined className="text-xl text-blue-500" />
+              <span className="text-gray-500">
+                Giao hàng nhanh - Thanh toán COD
+              </span>
             </li>
-            <li className="flex items-center gap-3 uppercase">
-              <MoneyCollectOutlined className="text-2xl" /> Chính sách bảo hành
-              uy tín, tin cậy
+            <li className="flex items-center gap-2 p-1 transition-all duration-300">
+              <MoneyCollectOutlined className="text-xl text-green-500" />
+              <span className="text-gray-500">
+                Chính sách bảo hành uy tín, tin cậy
+              </span>
             </li>
-            <li className="flex items-center gap-3 uppercase">
-              <FieldTimeOutlined className="text-2xl" /> Đổi trả hàng trong vòng
-              3 ngày tính từ ngày nhận hàng
+            <li className="flex items-center gap-2 p-1 transition-all duration-300">
+              <FieldTimeOutlined className="text-xl text-red-500" />
+              <span className="text-gray-500">
+                Đổi hàng trong vòng 3 ngày tính từ ngày nhận hàng
+              </span>
             </li>
           </ul>
         </div>
@@ -152,26 +174,88 @@ export default function ProductDetail() {
       {/* PRODUCTS RELATED */}
       <div className="mt-8">
         <h3 className="text-xl font-medium">CÓ THỂ BẠN QUAN TÂM</h3>
-        <div className="grid grid-cols-4 items-center gap-2 mt-4">
+        <div className="grid grid-cols-4 items-center gap-2 mt-4 mb-10">
           {dataPro_Cate
             .filter((item: ProductType) => item.status === true)
-            .map(
-              (item: ProductType, index: number) =>
-                index < 4 && <ProductCard product={item as ProductType} />
+            .map((item: ProductType, index: number) =>
+              index < 4 ? (
+                <div key={item._id} onClick={() => handleViewProduct(item._id)}>
+                  <ProductCard product={item as ProductType} />
+                </div>
+              ) : null
             )}
         </div>
+      </div>
+      {/* Divider with enhanced design */}
+      <div className="max-w-screen-lg mx-auto flex items-center my-20 px-4">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-300"></div>
+        <div className="px-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-gray-400"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </div>
+        <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-300"></div>
       </div>
       {/* NEWS PRODUCTS */}
       <div className="mt-8">
         <h3 className="text-xl font-medium">SẢN PHẨM MỚI</h3>
-        <div className="grid grid-cols-4 items-center gap-2 mt-4">
+        <div className="grid grid-cols-4 items-center gap-2 mt-4 mb-8">
           {dataNewPro?.products
             .filter((item: ProductType) => item.status === true)
-            .map(
-              (item: ProductType, index: number) =>
-                index < 4 && <ProductCard product={item as ProductType} />
+            .map((item: ProductType, index: number) =>
+              index < 4 ? (
+                <div key={item._id} onClick={() => handleViewProduct(item._id)}>
+                  <ProductCard product={item as ProductType} />
+                </div>
+              ) : null
             )}
         </div>
+
+        <div className="flex justify-center mt-14 mb-8">
+          <button
+            onClick={() => handleViewProduct()}
+            className="px-10 py-3 border border-gray-300 hover:bg-black hover:text-white transition-all duration-300 uppercase tracking-wider text-sm font-medium relative overflow-hidden group rounded-full"
+          >
+            <span className="relative z-10 ">Xem thêm</span>
+            <span className="absolute inset-0 bg-black w-0 group-hover:w-full transition-all duration-300 -z-0"></span>
+          </button>
+        </div>
+      </div>
+      {/* Divider with enhanced design */}
+      <div className="max-w-screen-lg mx-auto flex items-center my-20 px-4">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-300"></div>
+        <div className="px-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-gray-400"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </div>
+        <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-300"></div>
       </div>
     </div>
   );

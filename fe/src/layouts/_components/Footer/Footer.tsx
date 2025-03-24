@@ -6,19 +6,26 @@ import {
   TwitterCircleFilled,
   YoutubeFilled,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import logoImage from "../../../assets/logo.png";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  };
   return (
     <footer className="bg-black ">
       {/* CONTAINER */}
       <div className="max-w-[1240px] mx-6 xl:mx-auto py-8">
         {/* LINE 1 IN FOOTER */}
         <div className="flex  justify-between">
-          <Link to={'/'} className="mt-20">
-            <img className="w-2xs invert-35" src={logoImage} alt="" />
-          </Link>
+          <div onClick={() => handleNavigation("/")} className="mt-20">
+            <h3 className="text-yellow-400 text-5xl font-bold">
+              BEE <span className="text-white">STORE</span>
+            </h3>
+          </div>
           <div className="border-l-[1px] border-[#6d6d6d] pl-6">
             <h3 className="text-white font-medium uppercase">
               Hỗ trợ khách hàng
@@ -101,16 +108,27 @@ export default function Footer() {
           </div>
         </div>
       </div>
-       {/* HR */}
-       <div className="w-full mt-2 h-[1px] bg-[#6d6d6d] "/>
-       {/* LINE 2 */}
-       <div className="max-w-[1240px] mx-6 xl:mx-auto font-stretch-100%">
-            <h3 className="text-center text-white text-sm mt-4">Hỗ Trợ Kinh Doanh Thời Trang BEESTORE - MST số 012345678 do UBND quận Nam Từ Liêm cấp ngày 09/02/2090</h3>
-            <p className="text-center text-white text-sm">Địa chỉ: Số 9 Đường Trịnh Văn Bô, Quận Nam Từ Liêm, Thành Phố Hà Nội</p>
-            <p className="text-center text-white text-sm">HotLine: 012345678910JQKA</p>
-            <p className="text-center text-white text-sm">Mail: Beestore@gmail.com</p>
-            <p className="text-center mt-14 pb-4 text-white text-sm">Bee-Store ©2025 Created by WD-25</p>
-       </div>
+      {/* HR */}
+      <div className="w-full mt-2 h-[1px] bg-[#6d6d6d] " />
+      {/* LINE 2 */}
+      <div className="max-w-[1240px] mx-6 xl:mx-auto font-stretch-100%">
+        <h3 className="text-center text-white text-sm mt-4">
+          Hỗ Trợ Kinh Doanh Thời Trang BEESTORE - MST số 012345678 do UBND quận
+          Nam Từ Liêm cấp ngày 09/02/2090
+        </h3>
+        <p className="text-center text-white text-sm">
+          Địa chỉ: Số 9 Đường Trịnh Văn Bô, Quận Nam Từ Liêm, Thành Phố Hà Nội
+        </p>
+        <p className="text-center text-white text-sm">
+          HotLine: 012345678910JQKA
+        </p>
+        <p className="text-center text-white text-sm">
+          Mail: Beestore@gmail.com
+        </p>
+        <p className="text-center mt-14 pb-4 text-white text-sm">
+          Bee-Store ©2025 Created by WD-25
+        </p>
+      </div>
     </footer>
   );
 }

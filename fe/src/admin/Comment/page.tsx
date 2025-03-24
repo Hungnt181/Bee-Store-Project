@@ -226,6 +226,8 @@ const AdminCommentList = () => {
               status: !status,
             })
           }
+          checkedChildren="Hiện"
+          unCheckedChildren="Ẩn"
         />
       ),
     },
@@ -251,7 +253,7 @@ const AdminCommentList = () => {
 
   return (
     <div>
-      <h2>DANH SÁCH BÌNH LUẬN</h2>
+      <h2 className="text-3xl mb-5 font-semibold">DANH SÁCH BÌNH LUẬN</h2>
       <Form style={{ marginBottom: 10 }}>
         <Row gutter={8} align="middle">
           <Col span={12}>
@@ -280,14 +282,10 @@ const AdminCommentList = () => {
         scroll={{ y: 500 }}
       />
 
-      <Modal
-        title="Chi tiết bình luận"
-        open={modalVisible}
-        onCancel={closeModal}
-        footer={null}
-      >
+      {/* <Modal open={modalVisible} onCancel={closeModal} footer={null}>
         {selectedComment && (
           <div>
+            <h2 className="text-2xl mb-5 font-semibold">Chi tiết bình luận</h2>
             <p>
               <strong>Sản phẩm:</strong>{" "}
               {selectedComment.id_product?.name || "Không có tên sản phẩm"}
@@ -297,7 +295,7 @@ const AdminCommentList = () => {
               {selectedComment.id_user?.name || "Người dùng ẩn danh"}
             </p>
             <p>
-              <strong>Ngày bình luận:</strong>{" "}
+              <strong>Ngày tạo:</strong>{" "}
               {dayjs(selectedComment.createdAt).format("DD/MM/YYYY HH:mm")}
             </p>
             <p>
@@ -307,6 +305,85 @@ const AdminCommentList = () => {
               <strong>Trạng thái:</strong>{" "}
               {selectedComment.status ? "Hiển thị" : "Ẩn"}
             </p>
+          </div>
+        )}
+      </Modal> */}
+      <Modal
+        open={modalVisible}
+        onCancel={closeModal}
+        footer={null}
+        width={600}
+        centered
+        className="rounded-lg overflow-hidden"
+      >
+        {selectedComment && (
+          <div className="p-2">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-3">
+              Chi tiết bình luận
+            </h2>
+
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center bg-gray-50 p-3 rounded-lg">
+                <span className="font-medium text-gray-600 w-36">
+                  Sản phẩm:
+                </span>
+                <span className="text-gray-800 font-semibold">
+                  {selectedComment.id_product?.name || "Không có tên sản phẩm"}
+                </span>
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center bg-gray-50 p-3 rounded-lg">
+                <span className="font-medium text-gray-600 w-36">
+                  Người dùng:
+                </span>
+                <span className="text-gray-800">
+                  {selectedComment.id_user?.name || "Người dùng ẩn danh"}
+                </span>
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center bg-gray-50 p-3 rounded-lg">
+                <span className="font-medium text-gray-600 w-36">
+                  Ngày tạo:
+                </span>
+                <span className="text-gray-800">
+                  {dayjs(selectedComment.createdAt).format("DD/MM/YYYY HH:mm")}
+                </span>
+              </div>
+
+              <div className="flex flex-col bg-gray-50 p-3 rounded-lg">
+                <span className="font-medium text-gray-600 mb-2">
+                  Nội dung:
+                </span>
+                <div className="text-gray-800 p-3 bg-white rounded border border-gray-200 min-h-20 whitespace-pre-wrap">
+                  {selectedComment.noidung_bl}
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center bg-gray-50 p-3 rounded-lg">
+                <span className="font-medium text-gray-600 w-36">
+                  Trạng thái:
+                </span>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedComment.status
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {selectedComment.status ? "Hiển thị" : "Ẩn"}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end space-x-3">
+              <Button
+                type="primary"
+                onClick={closeModal}
+                className="border border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Đóng
+              </Button>
+            </div>
           </div>
         )}
       </Modal>

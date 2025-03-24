@@ -1,10 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
 import axios from "axios";
-import { message } from "antd";
+import {
+  message,
+  Input,
+  Radio,
+  Checkbox,
+  Button,
+  Select,
+  Card,
+  Divider,
+  Typography,
+  Space,
+  Row,
+  Col,
+  Image,
+  Form,
+} from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+
+const { Title, Text, Paragraph } = Typography;
+const { Option } = Select;
 
 interface CartItemDetail {
   idProduct: string;
@@ -18,7 +35,9 @@ interface ItemOrder {
   name: string;
   quantity: number;
   id_variant: string;
+  uniqueId?: string; // Thêm một trường để tạo định danh duy nhất
 }
+
 interface ItemCheckout {
   nameProduct: string;
   imgVariant: string;
@@ -28,6 +47,7 @@ interface ItemCheckout {
   quantity: number;
   totalPrice: number;
 }
+
 interface VoucherItem {
   _id: string;
   title: string;
@@ -36,8 +56,20 @@ interface VoucherItem {
   quantity: number;
 }
 
+interface FormValues {
+  customerName: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  note: string;
+  agreement: boolean;
+  paymentMethod: string;
+  voucher: string;
+}
+
 const PaymentPage = () => {
   const nav = useNavigate();
+  const [form] = Form.useForm<FormValues>();
 
   const [selectedPayment, setSelectedPayment] = useState<string>(
     "67bfce96db17315614fced6f"
@@ -57,15 +89,16 @@ const PaymentPage = () => {
     },
     enabled: !!id, // Chỉ chạy khi có ID
   });
+
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  //tiền thanh toán
+  // Tiền thanh toán
   const [paymentPrice, setPaymentPrice] = useState<number>(0);
 
-  // voucher
+  // Voucher
   const [voucherList, setVoucherList] = useState<VoucherItem[]>([]);
   const [promotionValue, setPromotionValue] = useState<number>(0);
   const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
@@ -73,110 +106,115 @@ const PaymentPage = () => {
     null
   );
 
-  //checkbox trước khi tha toan
-  const [isChecked, setIsChecked] = useState(false);
-  //disable neu chua checbox
-  const handleCheckboxChecked = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setIsChecked(event.target.checked);
-  };
+  const [loading, setLoading] = useState(false);
+  const [userInForm, setUserInForm] = useState<string | null>(null);
 
-  // lấy cartItems từ localstorage
+  // Lấy cartItems từ localStorage
   useEffect(() => {
     const storedCartItems = localStorage.getItem("cartItems");
     if (storedCartItems) {
       setCartItems(JSON.parse(storedCartItems));
     }
-    //lay list voucher
+
+    // Lấy list voucher
     (async () => {
       try {
         const { data } = await axios.get("http://localhost:3000/api/vouchers");
         setVoucherList(data.data);
       } catch (error) {
-        console.log("ko lấy đc danh sách voucher" + error);
+        console.log("Không lấy được danh sách voucher: " + error);
       }
     })();
   }, []);
-  // console.log(voucherList);
-  //lấy sp tu id
+
+  // Lấy sản phẩm từ id
   const getPdts = async (idProduct: string) => {
     try {
       const { data } = await axios.get(
         "http://localhost:3000/api/products/" + idProduct
       );
-      // console.log(data.data);
       return data.data;
     } catch (error) {
-      console.log("ko lấy đc sp từ id" + error);
+      console.log("Không lấy được sản phẩm từ id: " + error);
     }
   };
-  // lấy variant tu id
+
+  // Lấy variant từ id
   const getVariant = async (idVariant: string) => {
     try {
       const { data } = await axios.get(
         "http://localhost:3000/api/variants/" + idVariant
       );
-      // console.log(data.variants[0]);
       return data.variants[0];
     } catch (error) {
-      console.log("ko lấy đc bien the từ id" + error);
+      console.log("Không lấy được biến thể từ id: " + error);
     }
   };
 
-  // tao item cho listCheckout
-  const fetchProducts = async () => {
-    const updatedListCheckout: ItemCheckout[] = [];
-    const updatedListItemOrder: ItemOrder[] = [];
-    for (const cartItem of cartItems) {
-      const productData = await getPdts(cartItem.idProduct);
-      const variantData = await getVariant(cartItem.idVariant);
-      // console.log("var" + variantData.image[0]);
+  // Tạo item cho listCheckout
+  const fetchProducts = useCallback(async () => {
+    try {
+      const productPromises = cartItems.map((item) => getPdts(item.idProduct));
+      const variantPromises = cartItems.map((item) =>
+        getVariant(item.idVariant)
+      );
 
-      if (productData && variantData) {
-        const newItemCheckout: ItemCheckout = {
-          nameProduct: productData.name,
-          imgVariant: variantData.image[0],
-          price: productData.price,
-          color: cartItem.color,
-          size: cartItem.size,
-          quantity: cartItem.quantity,
-          totalPrice: productData.price * cartItem.quantity,
-        };
-        updatedListCheckout.push(newItemCheckout);
+      const products = await Promise.all(productPromises);
+      const variants = await Promise.all(variantPromises);
 
-        const newItemOrder: ItemOrder = {
-          name: productData.name,
-          quantity: cartItem.quantity,
-          id_variant: cartItem.idVariant,
-        };
-        updatedListItemOrder.push(newItemOrder);
-      }
+      const updatedListCheckout: ItemCheckout[] = [];
+      const updatedListItemOrder: ItemOrder[] = [];
+
+      cartItems.forEach((cartItem, index) => {
+        const productData = products[index];
+        const variantData = variants[index];
+
+        if (productData && variantData) {
+          updatedListCheckout.push({
+            nameProduct: productData.name,
+            imgVariant: variantData.image?.[0] || "",
+            price: productData.price,
+            color: cartItem.color,
+            size: cartItem.size,
+            quantity: cartItem.quantity,
+            totalPrice: productData.price * cartItem.quantity,
+          });
+
+          // Thêm trường uniqueId để đảm bảo tính duy nhất của mỗi item
+          updatedListItemOrder.push({
+            name: `${productData.name}_${cartItem.color}_${cartItem.size}`,
+            quantity: cartItem.quantity,
+            id_variant: cartItem.idVariant,
+            uniqueId: `${cartItem.idVariant}_${Date.now()}_${Math.floor(
+              Math.random() * 1000
+            )}`,
+          });
+        }
+      });
+
+      setListCheckout(updatedListCheckout);
+      setItemOrder(updatedListItemOrder);
+      calculateTotalPrice(updatedListCheckout);
+    } catch (error) {
+      console.error("Error fetching products:", error);
     }
-    setItemOrder(updatedListItemOrder);
-    setListCheckout(updatedListCheckout);
-    calculateTotalPrice(updatedListCheckout);
-    // console.log(listCheckout);
-  };
+  }, [cartItems]);
+
   useEffect(() => {
     fetchProducts();
-  }, [cartItems]);
-  // console.log(listCheckout);
+  }, [fetchProducts]);
 
-  // tinh tong gia tien
+  // Tính tổng giá tiền
   const calculateTotalPrice = (items: ItemCheckout[]) => {
     const total = items.reduce((sum, item) => sum + item.totalPrice, 0);
     setTotalPrice(total);
     setPaymentPrice(total);
   };
 
-  //lấy gia tri voucher từ select
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = Number(e.target.value);
-    const selectedId = String(
-      e.target.options[e.target.selectedIndex].getAttribute("data-id")
-    );
+  // Lấy giá trị voucher từ select
+  const handleSelectChange = (value: string, option: any) => {
+    const selectedValue = Number(value);
+    const selectedId = option?.["data-id"] || null;
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
@@ -184,36 +222,53 @@ const PaymentPage = () => {
   const getPromotionValue = () => {
     if (selectedVoucher !== null) {
       setPromotionValue(selectedVoucher);
-      // console.log(`gia tri voucher: ${selectedVoucher}`);
       setPaymentPrice(totalPrice - selectedVoucher);
     }
   };
 
-  // form state
-  const [customerName, setCustomerName] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [userInForm, setUserInForm] = useState<string | null>(null);
-
   // Nếu có tài khoản thì tự render vào
   useEffect(() => {
     if (userDataApi) {
-      setCustomerName(userDataApi.name);
-      setPhoneNumber(userDataApi.tel);
-      setEmail(userDataApi.email);
-      setAddress(userDataApi.address);
+      form.setFieldsValue({
+        customerName: userDataApi.name,
+        phoneNumber: userDataApi.tel,
+        email: userDataApi.email,
+        address: userDataApi.address,
+      });
       setUserInForm(userDataApi._id);
     }
-  }, [userDataApi]);
+  }, [userDataApi, form]);
 
-  //handleSubmitOrder
-  const handleSubmitOrder = async () => {
-    setLoading(true);
-    let receiverId = "";
-    let itemOrderIds: string[] = [];
+  // Hàm mới để log toàn bộ form values
+  const handleFormSubmit = async () => {
     try {
+      await form.validateFields();
+      const values = form.getFieldsValue();
+      console.log("Form values:", values);
+
+      // Có thể thực hiện xử lý sau khi log form
+      handleSubmitOrder();
+    } catch (error) {
+      console.error("Validation failed:", error);
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
+        );
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    }
+  };
+
+  // Handle Submit Order
+  const handleSubmitOrder = async () => {
+    try {
+      const values = form.getFieldsValue();
+
+      setLoading(true);
+      let receiverId = "";
+      let itemOrderIds: string[] = [];
+
       // Api tạo thông tin người nhận
       try {
         const receiverInfo = await fetch(
@@ -222,59 +277,63 @@ const PaymentPage = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              name: customerName,
-              phone: phoneNumber,
-              address: address,
+              name: values.customerName,
+              phone: values.phoneNumber,
+              address: values.address,
             }),
           }
         );
         const receiverData = await receiverInfo.json();
         if (!receiverInfo.ok) {
-          // Đẩy message ra UI
           message.error(
             receiverData.message || "Tạo thông tin người nhận thất bại"
           );
-          return; // dừng xử lý tiếp
+          return;
         }
         receiverId = receiverData.data._id;
-        // console.log("receiverId:", receiverId);
       } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
         if (error instanceof Error) {
           message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
         } else {
           message.error("Đã xảy ra lỗi, vui lòng thử lại.");
         }
+        return;
       }
 
-      // Api tạo item order
+      // Api tạo item order - Đã sửa để giải quyết lỗi duplicate key
       try {
-        const itemOrders = await fetch(`http://localhost:3000/api/itemOrder`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            itemOrder.map((item: ItemOrder) => ({
-              name: item.name,
-              quantity: item.quantity,
-              id_variant: item.id_variant,
-            }))
-          ),
+        // Xử lý từng item riêng biệt để tránh lỗi duplicate key
+        const itemOrderPromises = itemOrder.map(async (item: ItemOrder) => {
+          const response = await fetch(`http://localhost:3000/api/itemOrder`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify([
+              {
+                name: item.name,
+                quantity: item.quantity,
+                id_variant: item.id_variant,
+                uniqueId: item.uniqueId, // Thêm uniqueId nếu backend hỗ trợ
+              },
+            ]),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Tạo item order thất bại");
+          }
+
+          const data = await response.json();
+          return data.data[0]._id;
         });
-        const itemOrderData = await itemOrders.json();
-        if (!itemOrders.ok) {
-          // Đẩy message ra UI
-          message.error(itemOrderData.message || "Tạo item order thất bại");
-          return; // dừng xử lý tiếp
-        }
-        itemOrderIds = itemOrderData.data.map((item: any) => item._id);
-        // console.log("itemOrderId:", itemOrderIds);
+
+        itemOrderIds = await Promise.all(itemOrderPromises);
       } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
         if (error instanceof Error) {
           message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
         } else {
           message.error("Đã xảy ra lỗi, vui lòng thử lại.");
         }
+        return;
       }
 
       // Api tạo order
@@ -287,7 +346,7 @@ const PaymentPage = () => {
             shippingFee: 0,
             isPaid:
               selectedPayment === "67bfce96db17315614fced6f" ? false : true,
-            voucher: idSelectedVoucher == "" ? null : idSelectedVoucher,
+            voucher: idSelectedVoucher === "" ? null : idSelectedVoucher,
             user: userInForm,
             payment: selectedPayment,
             receiverInfo: receiverId,
@@ -297,248 +356,303 @@ const PaymentPage = () => {
         });
 
         const orderData = await newOrder.json();
-        if (!orderData.ok) {
+        if (!newOrder.ok) {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
 
-        // message.success("Đặt hàng thành công!");
         setCartItems([]);
         localStorage.removeItem("cartItems");
-        // clear list checkout
         setListCheckout([]);
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
         nav("/notify2");
       } catch (error) {
-        // Bắt lỗi fetch, parse hoặc throw error thủ công
         if (error instanceof Error) {
           message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
         } else {
           message.error("Đã xảy ra lỗi, vui lòng thử lại.");
         }
       }
-
-      ///////// kết thúc
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
-        message.error(err.message || "Có lỗi xảy ra");
+        message.error(err.message || "Vui lòng điền đầy đủ thông tin bắt buộc");
       } else {
-        message.error("Có lỗi xảy ra");
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
       }
     } finally {
       setLoading(false);
-      //clear cart items
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-7xl">
+      <Card className="w-full max-w-7xl">
         {/* Thông tin sản phẩm */}
-        <h2 className="text-2xl font-semibold mb-4 border-b border-gray-300 pb-2">
+        <Title
+          level={2}
+          className="mb-4 pb-2 border-b border-gray-300"
+          style={{ fontSize: "28px" }}
+        >
           Thông tin sản phẩm
-        </h2>
-        <div className="border border-gray-300 p-4 mb-6 rounded-lg bg-gray-50">
+        </Title>
+
+        <Card className="mb-6 bg-gray-50">
           {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
               key={index}
-              className="flex gap-4 mb-4 border-b border-gray-300 pb-4 last:border-b-0"
+              className={`flex gap-4 mb-4 pb-4 ${
+                index !== listCheckout.length - 1
+                  ? "border-b border-gray-300"
+                  : ""
+              }`}
             >
-              <img
+              <Image
                 src={item.imgVariant}
                 alt={item.nameProduct}
-                className="w-24 h-24 object-cover rounded-lg"
+                width={96}
+                height={96}
+                className="object-cover rounded-lg"
+                preview={false}
               />
               <div className="flex-1">
-                <p className="font-semibold">{item.nameProduct}</p>
-                <p className="text-sm text-gray-600">
-                  Mã sản phẩm: {item.color}
-                </p>
-                {/* <p className="line-through text-gray-500">
-                  {item.price} đ
-                </p> */}
+                <Paragraph strong>{item.nameProduct}</Paragraph>
+                <Text type="secondary">
+                  Mã sản phẩm: {item.color}, Size: {item.size}
+                </Text>
                 <div className="flex justify-between items-center mt-1">
-                  <p className="text-lg font-semibold text-black-500">
+                  <Paragraph strong className="text-lg">
                     {item.price} đ
-                  </p>
+                  </Paragraph>
                   <div className="flex items-center gap-2">
-                    <span className="w-12  p-1 rounded-md text-center">
-                      x {item.quantity}
-                    </span>
+                    <Text>x {item.quantity}</Text>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-        </div>
+        </Card>
 
-        {/* Thông tin người nhận */}
-        <div className="grid gap-3 mb-6">
-          <h2 className="text-2xl font-semibold mb-4 border-b border-gray-300 pb-2">
+        {/* Form thông tin người nhận */}
+        <Form form={form} layout="vertical" requiredMark={false}>
+          <Title
+            level={2}
+            className="mb-4 pb-2 border-b border-gray-300"
+            style={{ fontSize: "28px" }}
+          >
             Người nhận
-          </h2>
-          <div className="relative w-full">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Title>
+
+          <Form.Item
+            name="customerName"
+            rules={[
+              { required: true, message: "Vui lòng nhập tên khách hàng!" },
+            ]}
+          >
+            <Input
+              prefix={<User className="text-gray-500 w-5 h-5" />}
               placeholder="Tên khách hàng"
-              className="border border-gray-300 p-3 pl-10 rounded w-full 
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item
+            name="phoneNumber"
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại!" },
+              {
+                pattern: /^(0|\+84)[3|5|7|8|9][0-9]{8}$/,
+                message: "Số điện thoại không hợp lệ!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<Phone className="text-gray-500 w-5 h-5" />}
               placeholder="Số điện thoại"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="email"
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                type: "email",
+                message: "Email không hợp lệ!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<Mail className="text-gray-500 w-5 h-5" />}
               placeholder="Địa chỉ email (không bắt buộc)"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            rules={[
+              { required: true, message: "Vui lòng nhập địa chỉ nhận hàng!" },
+            ]}
+          >
+            <Input
+              prefix={<MapPin className="text-gray-500 w-5 h-5" />}
               placeholder="Nhập địa chỉ cụ thể"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Pencil className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item name="note">
+            <Input
+              prefix={<Pencil className="text-gray-500 w-5 h-5" />}
               placeholder="Nhập ghi chú (không bắt buộc)"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-        </div>
-        {/* Phuong thức thanh toán */}
-        <div>
-          <h2 className="text-2xl font-semibold">Phương thức thanh toán</h2>
-          <h2 className="mb-4 border-b border-gray-300 text-gray-400 pb-2">
-            Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
-          </h2>
+          </Form.Item>
 
-          <label className="flex items-center gap-2 mb-6">
-            <input
-              type="radio"
-              name="payment"
-              className="w-4 h-4"
-              value="cod"
-              checked={selectedPayment === "67bfce96db17315614fced6f"}
-              onChange={() => setSelectedPayment("67bfce96db17315614fced6f")}
-            />
-            Thanh toán khi nhận hàng
-          </label>
-
-          <label className="flex items-center gap-2 mb-6">
-            <input
-              type="radio"
-              name="payment"
-              className="w-4 h-4"
-              value="bank"
-              checked={selectedPayment === "67bfcec4db17315614fced70"}
-              onChange={() => setSelectedPayment("67bfcec4db17315614fced70")}
-            />
-            Thanh toán qua ví điện tử VNPAY
-          </label>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Thanh toán */}
-          <div className="flex-1 border border-gray-300 p-6 bg-gray-100 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Thanh toán</h3>
-            <p className="flex justify-between text-gray-500">
-              Tổng giá trị sản phẩm <span>{totalPrice} đ</span>
-            </p>
-            <p className="flex justify-between text-gray-500">
-              Giảm giá từ voucher <span>{promotionValue} đ</span>
-            </p>
-            <p className="flex justify-between text-lg font-semibold text-red-500  pt-2 ">
-              Tổng thanh toán{" "}
-              <span className="text-xl font-bold">{paymentPrice} đ</span>
-            </p>
-            <p className="text-right text-red-500">
-              Bạn đã tiết kiệm được <span>{promotionValue} đ</span>
-            </p>
-          </div>
-          {/* Giảm giá */}
-          <div className="w-full md:w-1/3 border border-gray-300 p-6 bg-gray-100 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Mã giảm giá</h3>
-            <div className="relative w-full mb-3">
-              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <select
-                onChange={handleSelectChange}
-                className="w-full ps-8 pe-4 py-2 border rounded-xl"
-              >
-                <option value="" disabled selected>
-                  Mời bạn chọn voucher
-                </option>
-                <option value={0}>Ko dùng voucher</option>
-                {voucherList.map((voucher: VoucherItem) => (
-                  <option
-                    key={voucher._id}
-                    value={voucher.value}
-                    data-id={voucher._id}
-                  >
-                    {voucher.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={getPromotionValue}
-              className="bg-black text-white px-4 py-2 w-full rounded 
-                   hover:bg-yellow-500 transition duration-300"
+          {/* Phương thức thanh toán */}
+          <div className="mb-6">
+            <Title level={2} style={{ fontSize: "28px" }}>
+              Phương thức thanh toán
+            </Title>
+            <Paragraph
+              type="secondary"
+              className="mb-4 pb-2 border-b border-gray-300"
             >
-              Áp dụng
-            </button>
-          </div>
-        </div>
+              Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
+            </Paragraph>
 
-        <label className="flex items-center gap-2 mt-6">
-          <input
-            type="checkbox"
-            className="w-4 h-4"
-            checked={isChecked}
-            onChange={handleCheckboxChecked}
-          />{" "}
-          Đồng ý với các điều khoản và quy định của website
-        </label>
-        <button
-          className={`bg-black text-white px-6 py-3 w-full mt-4 rounded-lg text-lg font-semibold transition duration-300
-        ${isChecked ? "hover:bg-yellow-500" : "cursor-not-allowed opacity-50"}`}
-          disabled={!isChecked}
-          onClick={handleSubmitOrder}
-        >
-          ĐẶT HÀNG
-        </button>
-        <h5 className="text-center pt-2 flex items-center justify-center gap-2 text-gray-700">
+            <Form.Item name="paymentMethod">
+              <Radio.Group
+                value={selectedPayment}
+                onChange={(e) => setSelectedPayment(e.target.value)}
+                className="flex flex-col gap-6"
+              >
+                <Radio value="67bfce96db17315614fced6f">
+                  Thanh toán khi nhận hàng
+                </Radio>
+                <Radio value="67bfcec4db17315614fced70">
+                  Thanh toán qua ví điện tử VNPAY
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+          </div>
+
+          <Row gutter={24}>
+            {/* Thanh toán */}
+            <Col xs={24} md={16}>
+              <Card className="bg-gray-100 h-full">
+                <Title level={3} className="mb-2" style={{ fontSize: "20px" }}>
+                  Thanh toán
+                </Title>
+                <Space direction="vertical" className="w-full">
+                  <div className="flex justify-between">
+                    <Text type="secondary">Tổng giá trị sản phẩm</Text>
+                    <Text type="secondary">{totalPrice} đ</Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text type="secondary">Giảm giá từ voucher</Text>
+                    <Text type="secondary">{promotionValue} đ</Text>
+                  </div>
+                  <Divider />
+                  <div className="flex justify-between">
+                    <Text strong type="danger" style={{ fontSize: "17px" }}>
+                      Tổng thanh toán
+                    </Text>
+                    <Text strong type="danger" style={{ fontSize: "17px" }}>
+                      {paymentPrice} đ
+                    </Text>
+                  </div>
+                  <div className="text-right">
+                    <Text type="danger">
+                      Bạn đã tiết kiệm được:{" "}
+                      <Text type="danger" strong>
+                        {promotionValue} đ
+                      </Text>
+                    </Text>
+                  </div>
+                </Space>
+              </Card>
+            </Col>
+
+            {/* Giảm giá */}
+            <Col xs={24} md={8}>
+              <Card className="bg-gray-100 h-full">
+                <Title level={3} className="mb-2" style={{ fontSize: "20px" }}>
+                  Mã giảm giá
+                </Title>
+                <Form.Item name="voucher">
+                  <Select
+                    placeholder="Mời bạn chọn voucher"
+                    onChange={handleSelectChange}
+                    className="w-full"
+                    suffixIcon={<Tag className="text-gray-500 w-5 h-5" />}
+                    size="large"
+                  >
+                    <Option value="0">Không dùng voucher</Option>
+                    {voucherList.map((voucher: VoucherItem) => (
+                      <Option
+                        key={voucher._id}
+                        value={voucher.value.toString()}
+                        data-id={voucher._id}
+                      >
+                        {voucher.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Button
+                  type="primary"
+                  onClick={getPromotionValue}
+                  className="w-full bg-black hover:bg-yellow-500"
+                  size="large"
+                >
+                  Áp dụng
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="agreement"
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error("Vui lòng đồng ý với điều khoản và quy định")
+                      ),
+              },
+            ]}
+            className="mt-6"
+          >
+            <Checkbox>
+              Đồng ý với các điều khoản và quy định của website
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              className="w-full bg-black hover:bg-yellow-500"
+              onClick={handleFormSubmit}
+              loading={loading}
+              size="large"
+              htmlType="submit"
+            >
+              ĐẶT HÀNG
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <div className="text-center pt-2 flex items-center justify-center gap-2 text-gray-700">
           <Lock className="w-5 h-5 text-green-600" />
-          Đảm bảo thanh toán an toàn và bảo mật
-        </h5>
-      </div>
+          <Text type="secondary">Đảm bảo thanh toán an toàn và bảo mật</Text>
+        </div>
+      </Card>
     </div>
   );
 };

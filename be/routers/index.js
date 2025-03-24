@@ -11,6 +11,7 @@ import orderApiRouter from "./orders/orderApi.js";
 import itemOrderRouter from "./itemOrder/itemOrder.js";
 import { commentRouter } from "./comments/comment.js";
 import { receiverRouter } from "./receiverInfor/receiverInfor.js";
+import { bannerRouter } from "./banners/bannerRouters.js";
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use(`/api`, orderApiRouter);
 router.use(`/api`, itemOrderRouter);
 router.use(`/api`, commentRouter);
 router.use(`/api`, receiverRouter);
+router.use(`/api`, bannerRouter);
 
 export default router;
