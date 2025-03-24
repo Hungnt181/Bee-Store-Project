@@ -4,18 +4,24 @@ import axios from "axios";
 import {
   Button,
   Flex,
+  Input,
   Pagination,
   Select,
   Skeleton,
   Table,
   TableProps,
   Tag,
+  Form,
   Tooltip,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 
+interface searchKey {
+  searchKey: string;
+}
 const AdminOrderPage = () => {
   const [dataTable, setDataTable] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -209,10 +215,59 @@ const AdminOrderPage = () => {
     setCurentPages(page);
   };
 
+  // filter
+  const handleFinish = (values: searchKey) => {
+    const searchKey = values.searchKey.trim();
+    const dataFilter = dataTable.filter((item: Order) =>
+      item._id.toString().toLowerCase().includes(searchKey)
+    );
+    setDataTable(dataFilter);
+    setCurentPages(1);
+    setTotalPages(1);
+  };
+
+  const [formSearch] = Form.useForm();
+
+  const handleRefresh = async () => {
+    formSearch.resetFields();
+    const newData = await fetchOrder("");
+    setDataTable(newData.orders);
+    setCurentPages(newData.page);
+    setTotalPages(newData.totalPages);
+  };
+
   return (
     <div>
       <h1 className="mb-1.5 text-2xl font-medium">DANH MỤC ĐƠN HÀNG</h1>
-      <Flex gap={0} style={{ marginBottom: "30px" }} justify="flex-end">
+      <Flex gap={0} style={{ marginBottom: "30px" }} justify="space-between">
+        {/* filter theo id order  */}
+        <Form
+          form={formSearch}
+          name="searchForm"
+          layout="inline"
+          onFinish={handleFinish}
+        >
+          <Tooltip title="Nhập id đơn hàng" placement="right">
+            <Form.Item label={null} name="searchKey" style={{ width: "400px" }}>
+              <Input
+                placeholder="Tìm kiếm sản phẩm..."
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+          </Tooltip>
+          <Form.Item label={null}>
+            <Button type="primary" htmlType="submit">
+              Tìm kiếm
+            </Button>
+          </Form.Item>
+          <Tooltip title="Làm mới" placement="rightBottom">
+            <ReloadOutlined
+              style={{ cursor: "pointer" }}
+              onClick={handleRefresh}
+            />
+          </Tooltip>
+        </Form>
+        {/* Filter theo status  */}
         <Select
           style={{ width: 150 }}
           defaultValue={"Tất cả trạng thái"}

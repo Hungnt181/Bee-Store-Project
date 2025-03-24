@@ -311,6 +311,11 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
 import SlideShowBanner from "./_components/SlideShowBanner";
 import { ProductType } from "../../interface/Product";
+import Chatbot from "./ChatBot";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { bestSelling } from "../../interface/Order";
+import ProductCardSelling from "../../components/ProductCard/ProductCardSeliing";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -334,6 +339,24 @@ export default function HomePage() {
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // Get data best selling product
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Thêm số 0 nếu tháng < 10
+  const formattedDate = `${year}-${month}`;
+
+  const { data: bestSellingProduct } = useQuery({
+    queryKey: ["SellingProduct"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/statistics/best-selling-products?type2=monthly&month=${formattedDate}`
+      );
+      return data;
+    },
+  });
+
+  console.log("best-selling product", bestSellingProduct);
 
   return (
     <div
@@ -491,21 +514,13 @@ export default function HomePage() {
 
         {!isPending && data ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-              {data.products
-                .filter((item: ProductType) => item.status === true)
+            <div className=" mt-8 grid grid-cols-4 gap-8">
+              {bestSellingProduct
+                .filter((item: bestSelling) => item.status == true)
                 .map(
-                  (item, index) =>
+                  (item: bestSelling, index: number) =>
                     index < 4 && (
-                      <div
-                        key={item._id}
-                        className="group transform transition-all duration-300 hover:-translate-y-1"
-                        onClick={() => handleViewProduct(item._id)}
-                      >
-                        <div className="border border-gray-100 hover:border-black/20 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
-                          <ProductCard product={item} />
-                        </div>
-                      </div>
+                      <ProductCardSelling key={index} product={item} />
                     )
                 )}
             </div>
@@ -566,6 +581,9 @@ export default function HomePage() {
           </div>
         )}
       </section>
+      <div>
+        <Chatbot></Chatbot>
+      </div>
     </div>
   );
 }

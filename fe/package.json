@@ -24,6 +24,7 @@
     "json-server-auth": "^2.1.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",
+    "moment": "^2.30.1",
     "mongoose": "^8.9.5",
     "mongose": "^0.0.2-security",
     "qrcode.react": "^4.2.0",

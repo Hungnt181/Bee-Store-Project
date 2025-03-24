@@ -3,7 +3,7 @@ import {
   MoneyCollectOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { ProductType } from "../../interface/Product";
 import ActionDetail from "./_components/ActionDetail";
@@ -16,18 +16,38 @@ import { useGetVariantByProduct } from "../../hooks/queries/variants/useGetVaria
 import Size from "../../interface/Size";
 import Color from "../../interface/Color";
 import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProducts";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { message } from "antd";
 
 export default function ProductDetail() {
-  const navigate = useNavigate();
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
-
+  const navigate = useNavigate();
   const { data: dataNewPro } = useGetAllProducts();
-
   const { id } = useParams();
+
+  // Xử lý xét status của product
+  const { data: dataPro, isSuccess } = useQuery({
+    queryKey: ["PRODUCT", id],
+    queryFn: async () =>
+      await axios.get(`http://localhost:3000/api/products/${id}`),
+  });
+
+  const product = dataPro?.data?.data;
+
+  useEffect(() => {
+    if (isSuccess && product?.status === false) {
+      message.error("Sản phẩm hiện tại không tồn tại");
+      navigate("/");
+    }
+  }, [isSuccess, product]);
+
   // Call api lấy toàn bộ thông tin biến thể của sản phẩm theo id_product
   const [variants, setVariants] = useState<Variant[]>([]);
   const { data: dataVariant } = useGetVariantByProduct(id as string);
+
+  // console.log("dataVariant", dataVariant);
 
   // Lấy toàn bộ màu sắc của sản phẩm
   const getAvailableColors = (variants: Variant[]) => {

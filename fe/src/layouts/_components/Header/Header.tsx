@@ -18,12 +18,39 @@ export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
   const [nameUser, setNameUser] = useState("");
   const location = useLocation();
+
+  const [numberInCart, setNumberInCart] = useState<number>(0);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // lấy cartItems từ localstorage
+  const updateCartCount = () => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      const cartCount = Object.keys(JSON.parse(storedCartItems)).length;
+      setNumberInCart(cartCount);
+      console.log("Cập nhật số lượng:", cartCount);
+    } else {
+      setNumberInCart(0);
+      console.log("Giỏ hàng trống");
+    }
+  }
+  //rerender so luong
+  useEffect(() => {
+    updateCartCount();
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key == "cartItems") {
+        updateCartCount();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    // return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const idUser = localStorage.getItem("idUser");
@@ -115,7 +142,7 @@ export default function Header() {
           {/* WISHLIST AND CART BOX */}
           <div className="flex items-center">
             <Link to={"/cart"} className="ml-8">
-              <Badge showZero offset={[10, -2]} color={"#8e8e8e"} count={0}>
+              <Badge showZero offset={[10, -2]} color={"#8e8e8e"} count={numberInCart}>
                 <ShoppingCartOutlined className="text-2xl" />
               </Badge>
             </Link>

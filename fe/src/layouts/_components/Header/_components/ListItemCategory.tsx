@@ -46,11 +46,21 @@
 //     </ul>
 //   );
 // }
+import { useQuery } from "@tanstack/react-query";
 import { Popover } from "antd";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../../../../interface/Category";
 
 export default function ListitemCategory({ isSticky }: { isSticky: boolean }) {
   const navigate = useNavigate();
+  const { data: dataCate } = useQuery({
+    queryKey: ["category"],
+    queryFn: async () => {
+      const { data } = await axios.get(`http://localhost:3000/api/categories`);
+      return data.data;
+    },
+  });
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -70,23 +80,19 @@ export default function ListitemCategory({ isSticky }: { isSticky: boolean }) {
         Tất cả sản phẩm
       </div>
 
-      {[
-        { label: "Quần thể thao" },
-        { label: "Giày" },
-        { label: "Sandal - Dép - Tông" },
-      ].map((item, index) => (
-        <Popover key={index} arrow={false} content={"test"} placement="bottom">
-          <li
+      {Array.isArray(dataCate) &&
+        dataCate.map((item: Category) => (
+          <div
+            onClick={() => handleNavigation("/products")}
             className={`py-3 px-5 rounded-md transition-all transform duration-300 cursor-pointer ${
               isSticky
                 ? "text-white hover:text-black bg-transparent hover:bg-white hover:scale-105"
                 : "hover:bg-gray-700 hover:text-white hover:scale-105"
             }`}
           >
-            {item.label}
-          </li>
-        </Popover>
-      ))}
+            {item.name}
+          </div>
+        ))}
 
       <div
         onClick={() => handleNavigation("/vouchers")}

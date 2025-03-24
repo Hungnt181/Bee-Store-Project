@@ -540,6 +540,7 @@ ActionDetail) {
   const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [statusVariant, setStatusVariant] = useState(false);
+  const [quantityVariant, setQuantityVariant] = useState(false);
   const [isSizeChartVisible, setIsSizeChartVisible] = useState(false);
   // const handleClickBuy = () => {
   //   // console.log(quantity);
@@ -552,6 +553,13 @@ ActionDetail) {
 
       const isStopped = variants.every((variant) => variant.status === false);
       setStatusVariant(isStopped);
+      const isStock = variants.every((variant) => variant.quantity === 0);
+      setQuantityVariant(isStock);
+
+      const isOutOfStock = variants.every(
+        (v) => v.status !== true || v.quantity === 0
+      );
+      setQuantityVariant(isOutOfStock);
     }
   }, [variants]);
 
@@ -692,11 +700,16 @@ ActionDetail) {
           <h3 className="uppercase text-2xl font-semibold text-gray-900">
             {variants[0]?.id_product?.name}
           </h3>
-          {statusVariant && (
-            <p className="text-red-600 font-medium bg-red-100 px-2 py-1 rounded-md">
-              Sản phẩm đã dừng bán
-            </p>
-          )}
+          <p className={`text-red-700 ${statusVariant ? "block " : "hidden"}`}>
+            Sản phầm đã dừng bán
+          </p>
+          <p
+            className={`text-red-700 ${
+              quantityVariant && !statusVariant ? "block " : "hidden"
+            }`}
+          >
+            Hết hàng
+          </p>
         </div>
 
         {/* Mã sản phẩm */}
@@ -868,7 +881,7 @@ ActionDetail) {
 
             <InputNumber
               min={1}
-              max={selectedVariant?.quantity || 1}
+              max={selectedVariant?.quantity}
               value={quantity}
               controls={false}
               precision={0}
@@ -882,6 +895,7 @@ ActionDetail) {
                 textAlign: "center",
                 lineHeight: "normal",
               }}
+              onChange={(value) => setQuantity(value || 1)}
             />
 
             <Button

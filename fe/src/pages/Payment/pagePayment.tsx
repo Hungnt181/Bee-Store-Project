@@ -18,7 +18,7 @@ import {
   Form,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -39,6 +39,7 @@ interface ItemOrder {
 }
 
 interface ItemCheckout {
+  idProduct: string;
   nameProduct: string;
   imgVariant: string;
   price: number;
@@ -91,6 +92,7 @@ const PaymentPage = () => {
   });
 
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [storedCartItems, setStoredCartItems] = useState<CartItemDetail[]>([]);
   const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
   const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -112,8 +114,10 @@ const PaymentPage = () => {
   // Lấy cartItems từ localStorage
   useEffect(() => {
     const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
+    const storedPayCartItems = localStorage.getItem("selectedItemArray");
+    if (storedPayCartItems && storedCartItems) {
+      setCartItems(JSON.parse(storedPayCartItems));
+      setStoredCartItems(JSON.parse(storedCartItems));
     }
 
     // Lấy list voucher
@@ -171,6 +175,7 @@ const PaymentPage = () => {
 
         if (productData && variantData) {
           updatedListCheckout.push({
+            idProduct: cartItem.idProduct,
             nameProduct: productData.name,
             imgVariant: variantData.image?.[0] || "",
             price: productData.price,
@@ -218,11 +223,28 @@ const PaymentPage = () => {
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
+  // const fetchVoucher (idSelectedVoucher)
 
-  const getPromotionValue = () => {
-    if (selectedVoucher !== null) {
-      setPromotionValue(selectedVoucher);
-      setPaymentPrice(totalPrice - selectedVoucher);
+  // lấy voucher tu id
+  const getVoucher = async (idVoucher: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/vouchers/" + idVoucher
+      );
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id" + error);
+    }
+  };
+
+  //onclick event
+  const getPromotionValue = async () => {
+    if (selectedVoucher !== null && idSelectedVoucher) {
+      const voucher = await getVoucher(idSelectedVoucher);
+      let discount = (totalPrice / 100) * voucher.value;
+      discount > voucher.maxValue ? (discount = voucher.maxValue) : discount;
+      setPromotionValue(discount);
+      setPaymentPrice(totalPrice - discount);
     }
   };
 
@@ -366,6 +388,13 @@ const PaymentPage = () => {
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
+        //loại bỏ các sản phẩm đã thanh toán
+        const listItemAfterPay = storedCartItems.filter(
+          (item) => !cartItems.includes(item)
+        );
+        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+        localStorage.removeItem("selectedItemArray");
+        //clear cart items
         nav("/notify2");
       } catch (error) {
         if (error instanceof Error) {
@@ -417,7 +446,12 @@ const PaymentPage = () => {
                 preview={false}
               />
               <div className="flex-1">
-                <Paragraph strong>{item.nameProduct}</Paragraph>
+                <Paragraph strong>
+                  {" "}
+                  <Link to={`/products/${item.idProduct}`}>
+                    <span className="text-black">{item.nameProduct}</span>
+                  </Link>{" "}
+                </Paragraph>
                 <Text type="secondary">
                   Mã sản phẩm: {item.color}, Size: {item.size}
                 </Text>

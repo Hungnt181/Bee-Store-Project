@@ -17,6 +17,10 @@ const VoucherSchema = new Schema(
       type: Number,
       required: true,
     },
+    maxValue: {
+      type: Number,
+      required: true,
+    },
     quantity: {
       type: Number,
     },

@@ -23,6 +23,9 @@ const App: React.FC = () => {
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
               height: "87vh",
+              overflow: "auto",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#1890ff #f0f0f0",
             }}
           >
             <Outlet></Outlet>
