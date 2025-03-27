@@ -40,7 +40,7 @@ const SizeChart = ({ isVisible, onClose }: SizeChartProps) => {
       footer={null}
       width={900}
       style={{ top: 40 }}
-      bodyStyle={{ padding: "10px" }}
+      styles={{ body: { padding: 10 } }}
       closeIcon={
         <span className="text-xl hover:text-gray-700 transition-colors">×</span>
       }

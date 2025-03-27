@@ -32,7 +32,7 @@ export default function MyAddress() {
               <h3 className="font-bold">{item.userName}</h3>
               <div className="flex items-center gap-2">
                 <EditOutlined className="text-xl" />
-                {!item.default && <DeleteOutlined className="text-xl"/>}
+                {!item.default && <DeleteOutlined className="text-xl" />}
               </div>
             </div>
             <div className="mt-4">

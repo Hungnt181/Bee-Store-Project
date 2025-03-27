@@ -242,7 +242,8 @@ const PaymentPage = () => {
     if (selectedVoucher !== null && idSelectedVoucher) {
       const voucher = await getVoucher(idSelectedVoucher);
       let discount = (totalPrice / 100) * voucher.value;
-      discount > voucher.maxValue ? (discount = voucher.maxValue) : discount;
+      discount = discount > voucher.maxValue ? voucher.maxValue : discount;
+
       setPromotionValue(discount);
       setPaymentPrice(totalPrice - discount);
     }

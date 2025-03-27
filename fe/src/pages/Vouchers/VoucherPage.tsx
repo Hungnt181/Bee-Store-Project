@@ -99,7 +99,7 @@ const VoucherCard = ({ voucher }: { voucher: (typeof vouchers)[0] }) => {
         transition: "all 0.3s",
         boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
       }}
-      bodyStyle={{ padding: 0 }}
+      styles={{ body: { padding: 0 } }}
     >
       {/* Image */}
       <img
