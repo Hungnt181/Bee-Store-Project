@@ -102,6 +102,9 @@ const AdminProductList = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
+      render: (_: unknown, item: Product) => {
+        return <>{Number(item?.price).toLocaleString("vi-VN")} VNĐ</>;
+      },
     },
 
     {

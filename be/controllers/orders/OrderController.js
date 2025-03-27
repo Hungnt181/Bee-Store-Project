@@ -352,7 +352,7 @@ class OrderController {
 
   async getRevenueStatisticsasync(req, res) {
     try {
-      const { type, date, month, from, to } = req.query;
+      const { type, date, month, year, from, to } = req.query;
       let match = {};
 
       let start, end;
@@ -364,6 +364,10 @@ class OrderController {
         start = new Date(`${month}-01`);
         end = new Date(start);
         end.setMonth(end.getMonth() + 1);
+      } else if (type === "yearly") {
+        start = new Date(`${year}-01-01`);
+        end = new Date(`${year}-12-31`);
+        end.setDate(end.getDate() + 1);
       } else if (type === "range") {
         start = new Date(from);
         end = new Date(to);
@@ -372,10 +376,12 @@ class OrderController {
 
       match.createdAt = { $gte: start, $lt: end };
 
-      // Group by day or month depending on type
+      // Nhóm theo type
       let groupFormat = "%Y-%m-%d";
       if (type === "monthly") {
         groupFormat = "%Y-%m-%d";
+      } else if (type === "yearly") {
+        groupFormat = "%Y-%m";
       } else if (type === "range") {
         groupFormat = "%Y-%m-%d";
       }
