@@ -239,7 +239,7 @@ const AdminDashboardPage = () => {
               />
 
               {(() => {
-                if (type2 === "range") {
+                if (type === "range") {
                   return (
                     <RangePicker
                       onChange={(dates) =>
