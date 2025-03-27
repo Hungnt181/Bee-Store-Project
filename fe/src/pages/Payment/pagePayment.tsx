@@ -20,6 +20,8 @@ import {
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { BaseOptionType, DefaultOptionType } from "antd/es/select";
+import { RadioChangeEvent } from "antd/lib";
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -75,7 +77,7 @@ const PaymentPage = () => {
 
   const [selectedPayment, setSelectedPayment] = useState<string>(
     "67bfce96db17315614fced6f"
-  ); // Mặc định chọn "cod"
+  );
 
   // Lấy thông tin tài khoản nếu có
   const id = localStorage.getItem("idUser");
@@ -222,7 +224,7 @@ const PaymentPage = () => {
   };
 
   // Lấy giá trị voucher từ select
-  const handleSelectChange = (value: string, option: any) => {
+  const handleSelectChange = (value: string, option: BaseOptionType | DefaultOptionType) => {
     const selectedValue = Number(value);
     const selectedId = option?.["data-id"] || null;
     setSelectedVoucher(selectedValue);
@@ -267,15 +269,14 @@ const PaymentPage = () => {
     }
   }, [userDataApi, form]);
 
-  // Hàm mới để log toàn bộ form values
-  const handleFormSubmit = async () => {
+  // Thanh toán VNPay
+  const handleOnlinePayment = async () => {
     try {
-      await form.validateFields();
-      const values = form.getFieldsValue();
-      console.log("Form values:", values);
-
-      // Có thể thực hiện xử lý sau khi log form
-      handleSubmitOrder();
+      const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
+        amount: paymentPrice,
+        orderId: itemOrder[0].id_variant + "_" + Date.now(),
+      });
+      window.location.href = response.data.paymentUrl;
     } catch (error) {
       // console.error("Validation failed:", error);
       if (error instanceof Error) {
@@ -288,11 +289,10 @@ const PaymentPage = () => {
     }
   };
 
-  // Handle Submit Order
-  const handleSubmitOrder = async () => {
+  // Thanh toán tiền mặt
+  const handleShipCodPayment = async () => {
     try {
       const values = form.getFieldsValue();
-
       setLoading(true);
       let receiverId = "";
       let itemOrderIds: string[] = [];
@@ -340,7 +340,7 @@ const PaymentPage = () => {
                 name: item.name,
                 quantity: item.quantity,
                 id_variant: item.id_variant,
-                uniqueId: item.uniqueId, // Thêm uniqueId nếu backend hỗ trợ
+                // uniqueId: item.uniqueId, // Thêm uniqueId nếu backend hỗ trợ
               },
             ]),
           });
@@ -430,6 +430,34 @@ const PaymentPage = () => {
     }
   };
 
+  // submit form
+  const handleFormSubmit = async () => {
+    try {
+      await form.validateFields();
+      const values = form.getFieldsValue();
+      console.log("Form values:", values);
+      if (selectedPayment === "vnpay_payment") {
+        handleOnlinePayment()
+      } else {
+        handleShipCodPayment();
+      }
+    } catch (error) {
+      console.error("Validation failed:", error);
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
+        );
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    }
+  };
+
+  const handleChangePaymentMethod = useCallback((e: RadioChangeEvent) => {
+    console.log(e.target.value)
+    setSelectedPayment(e.target.value);
+  }, [])
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <Card className="w-full max-w-7xl">
@@ -488,7 +516,7 @@ const PaymentPage = () => {
         </Card>
 
         {/* Form thông tin người nhận */}
-        <Form form={form} layout="vertical" requiredMark={false}>
+        <Form form={form} layout="vertical" requiredMark={false} onFinish={handleFormSubmit}>
           <Title
             level={2}
             className="mb-4 pb-2 border-b border-gray-300"
@@ -578,14 +606,13 @@ const PaymentPage = () => {
 
             <Form.Item name="paymentMethod">
               <Radio.Group
-                value={selectedPayment}
-                onChange={(e) => setSelectedPayment(e.target.value)}
+                onChange={(e) => handleChangePaymentMethod(e)}
                 className="flex flex-col gap-6"
               >
                 <Radio value="67bfce96db17315614fced6f">
                   Thanh toán khi nhận hàng
                 </Radio>
-                <Radio value="67bfcec4db17315614fced70">
+                <Radio value="vnpay_payment">
                   Thanh toán qua ví điện tử VNPAY
                 </Radio>
               </Radio.Group>
@@ -691,7 +718,7 @@ const PaymentPage = () => {
             <Button
               type="primary"
               className="w-full bg-black hover:bg-yellow-500"
-              onClick={handleFormSubmit}
+              // onClick={handleFormSubmit}
               loading={loading}
               size="large"
               htmlType="submit"

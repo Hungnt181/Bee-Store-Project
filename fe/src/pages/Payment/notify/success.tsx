@@ -1,7 +1,19 @@
 import { Button, Card } from "antd";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const PaymentSuccess = () => {
+  const [searchParams] = useSearchParams();
+  const vnp_ResponseCode = searchParams.get("vnp_ResponseCode");
+
+  useEffect(() => {
+    if (vnp_ResponseCode === "00") {
+      alert("Thanh toán thành công!");
+    } else {
+      alert("Thanh toán thất bại!");
+    }
+  }, [vnp_ResponseCode]);
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-b from-blue-100 to-blue-300 p-4">
       <motion.div
@@ -18,7 +30,7 @@ const PaymentSuccess = () => {
               className="w-20 h-20 mb-4"
             />
             <h2 className="text-3xl font-bold text-green-500 mt-4">
-              Thanh toán thành công!
+              {vnp_ResponseCode === "00" ? "Thành công" : "Thất bại"}
             </h2>
             <p className="text-gray-600 mt-4 text-lg">
               Cảm ơn quý khách đã tin tưởng và mua sắm tại&nbsp;
