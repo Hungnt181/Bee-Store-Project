@@ -81,6 +81,29 @@ export const remove = async (req, res) => {
       .json({ message: "Lỗi server: " + error.message });
   }
 };
+export const getCommentsByProduct = async (req, res) => {
+  try {
+    const { id_product } = req.params;
+    const comments = await Comment.find({ id_product, status: true }).populate(
+      "id_user"
+    );
+
+    if (!comments.length) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: "Không có bình luận nào cho sản phẩm này.",
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      message: "Danh sách bình luận của sản phẩm.",
+      data: comments,
+    });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Lỗi server: " + error.message,
+    });
+  }
+};
 
 // Toggle trạng thái hiển thị bình luận
 export const toggleCommentStatus = async (req, res) => {

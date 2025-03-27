@@ -19,6 +19,7 @@ import { useGetAllProducts } from "../../hooks/queries/products/useGetAllProduct
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { message } from "antd";
+import ProductComments from "./_components/ProductComments";
 
 export default function ProductDetail() {
   const [colors, setColors] = useState<Color[]>([]);
@@ -88,6 +89,7 @@ export default function ProductDetail() {
       setSizes(getAvailableSizes(variants));
       const fetchDataAsync = async () => {
         const data = await fetchData(variants[0]?.id_product?.id_cate?._id);
+
         if (data) {
           setDataPro_cate(data.products); // Cập nhật state với dữ liệu đã lấy được
         }
@@ -160,6 +162,8 @@ export default function ProductDetail() {
         <div>
           <SlideShowImages images={selectedImage} />
           <TabDescription variants={variants} colors={colors} sizes={sizes} />
+          {/* <ProductComments productId={product._id} /> */}
+          {product && <ProductComments productId={product._id} />}
         </div>
         <div>
           <ActionDetail
@@ -199,8 +203,14 @@ export default function ProductDetail() {
             .filter((item: ProductType) => item.status === true)
             .map((item: ProductType, index: number) =>
               index < 4 ? (
-                <div key={item._id} onClick={() => handleViewProduct(item._id)}>
-                  <ProductCard product={item as ProductType} />
+                <div
+                  key={item._id}
+                  className="group transform transition-all duration-300 hover:-translate-y-1"
+                  onClick={() => handleViewProduct(item._id)}
+                >
+                  <div className=" rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <ProductCard product={item as ProductType} />
+                  </div>
                 </div>
               ) : null
             )}
@@ -237,8 +247,14 @@ export default function ProductDetail() {
             .filter((item: ProductType) => item.status === true)
             .map((item: ProductType, index: number) =>
               index < 4 ? (
-                <div key={item._id} onClick={() => handleViewProduct(item._id)}>
-                  <ProductCard product={item as ProductType} />
+                <div
+                  key={item._id}
+                  className="group transform transition-all duration-300 hover:-translate-y-1"
+                  onClick={() => handleViewProduct(item._id)}
+                >
+                  <div className=" rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <ProductCard product={item as ProductType} />
+                  </div>
                 </div>
               ) : null
             )}
