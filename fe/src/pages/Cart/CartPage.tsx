@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Table } from "antd";
+import { Button, message, Modal, Table } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import type { TableRowSelection } from 'antd/es/table/interface';
@@ -151,9 +151,20 @@ const CartPage: React.FC = () => {
   };
 
   const onCheckout = () => {
-    console.log("checkout clicked");
+    if ((selectedItemArray) && (selectedItemArray.length > 0)) {
+      console.log("checkout clicked");
 
-    navigate("/order");
+      navigate("/payment");
+    }
+    else {
+      if (cartItems && cartItems.length > 0){
+        message.error("Cần chọn sản phẩm để thanh toán", 3);
+      }
+      else{
+        message.error("Không có sản phẩm để thanh toán", 3);
+      }
+      return;
+    }
   };
 
   const columns = [
@@ -271,11 +282,9 @@ const CartPage: React.FC = () => {
           </div>
         </div>
 
-        <Link to="/payment">
-          <Button key="checkout" onClick={onCheckout} className="mt-3">
-            Thanh toán
-          </Button>
-        </Link>
+        <Button key="checkout" onClick={onCheckout} className="mt-3">
+          Thanh toán
+        </Button>
       </div>
     </>
   );

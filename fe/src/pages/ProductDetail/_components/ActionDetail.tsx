@@ -685,7 +685,8 @@ ActionDetail) {
     } else {
       // setCartItems([])
     }
-    setIsModalOpen(true);
+    message.success("Thêm sản phẩm thành công", 3);
+    // setIsModalOpen(true);
   };
   // const handleCheckout = () => {
   //   console.log("checkout clicked");

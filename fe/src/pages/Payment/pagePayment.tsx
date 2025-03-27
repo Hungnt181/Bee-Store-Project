@@ -16,6 +16,7 @@ import {
   Col,
   Image,
   Form,
+  notification,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -118,6 +119,10 @@ const PaymentPage = () => {
     if (storedPayCartItems && storedCartItems) {
       setCartItems(JSON.parse(storedPayCartItems));
       setStoredCartItems(JSON.parse(storedCartItems));
+    }
+    else {
+      message.error("Không có sản phẩm để thanh toán", 3);
+      nav('/')
     }
 
     // Lấy list voucher
@@ -272,7 +277,7 @@ const PaymentPage = () => {
       // Có thể thực hiện xử lý sau khi log form
       handleSubmitOrder();
     } catch (error) {
-      console.error("Validation failed:", error);
+      // console.error("Validation failed:", error);
       if (error instanceof Error) {
         message.error(
           error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
@@ -382,20 +387,29 @@ const PaymentPage = () => {
         if (!newOrder.ok) {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
-
+        //loại bỏ các sản phẩm đã thanh toán
+        const listItemAfterPay = storedCartItems.filter(
+          //lọc storedCartItems theo các item có idVariant giống nhau
+          (itemFromStored: CartItemDetail) =>
+            !cartItems.some(itemFromCart =>
+              itemFromCart.idVariant == itemFromStored.idVariant
+            )
+        );
+        //storedCartItems - Tất cả sản phẩm trong cart
+        //cartItems - Tất cả sản phẩm để thanh toán
+        console.log(cartItems);
+        console.log(listItemAfterPay);
+        //cập nhật lại cart sau khi thanh toán
+        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+        localStorage.removeItem("selectedItemArray");
+        //clear cart items
         setCartItems([]);
-        localStorage.removeItem("cartItems");
+        // localStorage.removeItem("cartItems");
         setListCheckout([]);
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
-        //loại bỏ các sản phẩm đã thanh toán
-        const listItemAfterPay = storedCartItems.filter(
-          (item) => !cartItems.includes(item)
-        );
-        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
-        localStorage.removeItem("selectedItemArray");
-        //clear cart items
+
         nav("/notify2");
       } catch (error) {
         if (error instanceof Error) {
@@ -432,11 +446,10 @@ const PaymentPage = () => {
           {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
               key={index}
-              className={`flex gap-4 mb-4 pb-4 ${
-                index !== listCheckout.length - 1
-                  ? "border-b border-gray-300"
-                  : ""
-              }`}
+              className={`flex gap-4 mb-4 pb-4 ${index !== listCheckout.length - 1
+                ? "border-b border-gray-300"
+                : ""
+                }`}
             >
               <Image
                 src={item.imgVariant}
@@ -447,19 +460,24 @@ const PaymentPage = () => {
                 preview={false}
               />
               <div className="flex-1">
-                <Paragraph strong>
+                <Text strong>
                   {" "}
                   <Link to={`/products/${item.idProduct}`}>
                     <span className="text-black">{item.nameProduct}</span>
                   </Link>{" "}
-                </Paragraph>
-                <Text type="secondary">
-                  Mã sản phẩm: {item.color}, Size: {item.size}
                 </Text>
-                <div className="flex justify-between items-center mt-1">
-                  <Paragraph strong className="text-lg">
-                    {item.price} đ
-                  </Paragraph>
+                <Text type="secondary" className="flex items-end">
+                  Màu:
+                  <div className="h-[20px] w-[20px] ml-2" style={{background: item.color}}/>
+                </Text>
+                <Text type="secondary" className="">
+                 Size: 
+                 <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
+                </Text>
+                <div className="flex justify-between items-center">
+                  <Text strong className="text-lg">
+                    <span className="text-[18px]">{item.price}</span> vnđ
+                  </Text>
                   <div className="flex items-center gap-2">
                     <Text>x {item.quantity}</Text>
                   </div>
@@ -658,14 +676,14 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                        new Error("Vui lòng đồng ý với điều khoản và quy định")
-                      ),
+                      new Error("Vui lòng đồng ý với điều khoản và quy định")
+                    ),
               },
             ]}
             className="mt-6"
           >
             <Checkbox>
-              Đồng ý với các điều khoản và quy định của website
+              Đồng ý với các điều khoản và quy định của cửa hàng
             </Checkbox>
           </Form.Item>
 
