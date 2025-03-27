@@ -16,6 +16,7 @@ import {
   Col,
   Image,
   Form,
+  notification,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -118,6 +119,10 @@ const PaymentPage = () => {
     if (storedPayCartItems && storedCartItems) {
       setCartItems(JSON.parse(storedPayCartItems));
       setStoredCartItems(JSON.parse(storedCartItems));
+    }
+    else{
+      message.error("Không có sản phẩm để thanh toán", 3);
+      nav('/')
     }
 
     // Lấy list voucher
@@ -664,7 +669,7 @@ const PaymentPage = () => {
             className="mt-6"
           >
             <Checkbox>
-              Đồng ý với các điều khoản và quy định của website
+              Đồng ý với các điều khoản và quy định của cửa hàng
             </Checkbox>
           </Form.Item>
 
