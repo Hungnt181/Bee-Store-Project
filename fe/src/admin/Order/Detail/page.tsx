@@ -142,7 +142,10 @@ const AdminOrderDetail = () => {
       render: (_: unknown, record: ItemOrder) => {
         return (
           <>
-            <span>{record?.id_variant?.id_product?.price}</span>
+            {Number(record?.id_variant?.id_product?.price).toLocaleString(
+              "vi-VN"
+            )}{" "}
+            VNĐ
           </>
         );
       },

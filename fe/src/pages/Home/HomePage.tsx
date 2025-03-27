@@ -15,6 +15,22 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
+  // Get data best selling product
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Thêm số 0 nếu tháng < 10
+  const formattedDate = `${year}-${month}`;
+
+  const { data: bestSellingProduct, isLoading } = useQuery({
+    queryKey: ["SellingProduct"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/statistics/best-selling-products?type2=monthly&month=${formattedDate}`
+      );
+      return data;
+    },
+  });
+
   useEffect(() => {
     // Animation effect when component mounts
     setIsVisible(true);
@@ -31,24 +47,6 @@ export default function HomePage() {
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  // Get data best selling product
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // Thêm số 0 nếu tháng < 10
-  const formattedDate = `${year}-${month}`;
-
-  const { data: bestSellingProduct } = useQuery({
-    queryKey: ["SellingProduct"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/statistics/best-selling-products?type2=monthly&month=${formattedDate}`
-      );
-      return data;
-    },
-  });
-
-  console.log("best-selling product", bestSellingProduct);
 
   return (
     <div
@@ -204,60 +202,74 @@ export default function HomePage() {
           </p>
         </div>
 
-        {!isPending && data ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-              {bestSellingProduct
-                .filter((item: bestSelling) => item.status === true)
-                .slice(0, 4)
-                .map((item: bestSelling, index: number) => (
-                  <div
-                    key={index}
-                    className="group transform transition-all duration-300 hover:-translate-y-1"
-                    onClick={() =>
-                      window.scrollTo({ top: 0, behavior: "smooth" })
-                    }
-                  >
-                    <div className="rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
-                      <ProductCardSelling product={item} />
-                    </div>
-                  </div>
-                ))}
-            </div>
-
-            <div className="flex justify-center mt-14">
-              <button
-                onClick={() => handleViewProduct()}
-                className="px-10 py-3 border border-gray-300 hover:bg-black hover:text-white transition-all duration-300 uppercase tracking-wider text-sm font-medium relative overflow-hidden group rounded-full"
-              >
-                <span className="relative z-10 ">Xem thêm</span>
-                <span className="absolute inset-0 bg-black w-0 group-hover:w-full transition-all duration-300 -z-0"></span>
-              </button>
-            </div>
-            {/* Divider with enhanced design */}
-            <div className="max-w-screen-lg mx-auto flex items-center my-20 px-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-300"></div>
-              <div className="px-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-gray-400"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="16"></line>
-                  <line x1="8" y1="12" x2="16" y2="12"></line>
-                </svg>
+        {!isLoading &&
+        bestSellingProduct &&
+        Array.isArray(bestSellingProduct) &&
+        data ? (
+          (console.log("numbers: " + bestSellingProduct?.length),
+          (
+            <>
+              <div className=" mt-8 grid grid-cols-4 gap-8">
+                {bestSellingProduct.length > 0
+                  ? bestSellingProduct
+                      .filter((item: bestSelling) => item.status == true)
+                      .map(
+                        (item: bestSelling, index: number) =>
+                          index < 4 && (
+                            <ProductCardSelling key={index} product={item} />
+                          )
+                      )
+                  : data.products
+                      .filter((item: ProductType) => item.status === true)
+                      .map(
+                        (item, index) =>
+                          index < 4 && (
+                            <div
+                              key={item._id}
+                              className="group transform transition-all duration-300 hover:-translate-y-1"
+                              onClick={() => handleViewProduct(item._id)}
+                            >
+                              <div className="border border-gray-100 hover:border-black/20 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                                <ProductCard product={item} />
+                              </div>
+                            </div>
+                          )
+                      )}
               </div>
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-300"></div>
-            </div>
-          </>
+              <div className="flex justify-center mt-14">
+                <button
+                  onClick={() => handleViewProduct()}
+                  className="px-10 py-3 border border-gray-300 hover:bg-black hover:text-white transition-all duration-300 uppercase tracking-wider text-sm font-medium relative overflow-hidden group rounded-full"
+                >
+                  <span className="relative z-10 ">Xem thêm</span>
+                  <span className="absolute inset-0 bg-black w-0 group-hover:w-full transition-all duration-300 -z-0"></span>
+                </button>
+              </div>
+              {/* Divider with enhanced design */}
+              <div className="max-w-screen-lg mx-auto flex items-center my-20 px-4">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-300"></div>
+                <div className="px-6">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-gray-400"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                </div>
+                <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-300"></div>
+              </div>
+            </>
+          ))
         ) : (
           <div className="flex justify-center items-center py-24 text-gray-500 italic">
             <div className="flex flex-col items-center">

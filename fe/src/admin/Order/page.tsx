@@ -108,6 +108,9 @@ const AdminOrderPage = () => {
       dataIndex: "total",
       key: "total",
       width: 150,
+      render: (_: unknown, item: Order) => {
+        return <>{Number(item?.total).toLocaleString("vi-VN")} VNĐ</>;
+      },
     },
 
     {
