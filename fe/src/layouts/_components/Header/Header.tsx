@@ -40,7 +40,7 @@ export default function Header() {
       setNumberInCart(0);
       console.log("Giỏ hàng trống");
     }
-  }
+  };
   //rerender so luong
   useEffect(() => {
     updateCartCount();
@@ -142,7 +142,12 @@ export default function Header() {
           {/* WISHLIST AND CART BOX */}
           <div className="flex items-center">
             <Link to={"/cart"} className="ml-8">
-              <Badge showZero offset={[10, -2]} color={"#8e8e8e"} count={numberInCart}>
+              <Badge
+                showZero
+                offset={[10, -2]}
+                color={"#8e8e8e"}
+                count={numberInCart}
+              >
                 <ShoppingCartOutlined className="text-2xl" />
               </Badge>
             </Link>

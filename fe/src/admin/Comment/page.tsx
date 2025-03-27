@@ -282,32 +282,6 @@ const AdminCommentList = () => {
         scroll={{ y: 500 }}
       />
 
-      {/* <Modal open={modalVisible} onCancel={closeModal} footer={null}>
-        {selectedComment && (
-          <div>
-            <h2 className="text-2xl mb-5 font-semibold">Chi tiết bình luận</h2>
-            <p>
-              <strong>Sản phẩm:</strong>{" "}
-              {selectedComment.id_product?.name || "Không có tên sản phẩm"}
-            </p>
-            <p>
-              <strong>Người dùng:</strong>{" "}
-              {selectedComment.id_user?.name || "Người dùng ẩn danh"}
-            </p>
-            <p>
-              <strong>Ngày tạo:</strong>{" "}
-              {dayjs(selectedComment.createdAt).format("DD/MM/YYYY HH:mm")}
-            </p>
-            <p>
-              <strong>Nội dung:</strong> {selectedComment.noidung_bl}
-            </p>
-            <p>
-              <strong>Trạng thái:</strong>{" "}
-              {selectedComment.status ? "Hiển thị" : "Ẩn"}
-            </p>
-          </div>
-        )}
-      </Modal> */}
       <Modal
         open={modalVisible}
         onCancel={closeModal}

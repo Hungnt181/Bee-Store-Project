@@ -25,10 +25,25 @@ class OrderController {
         const variantQuantity = await Variant.findById(
           itemOrder.id_variant
         ).populate({
-          path: "id_color id_size",
+          path: "id_color id_size id_product",
         });
-        console.log("variantQuantity", variantQuantity);
+        // console.log("variantQuantity", variantQuantity);
+        // console.log("pro_status", variantQuantity.id_product.status);
         //Kiểm tra trạng thái
+        if (variantQuantity.id_product.status === false) {
+          return res.status(400).json({
+            message:
+              "Xin lỗi quý khách sản phẩm: " +
+              " - " +
+              variantQuantity.id_product.name +
+              " - " +
+              " hiện đang dừng bán, vui lòng xóa sản phẩm " +
+              " - " +
+              itemOrder.name +
+              " - " +
+              " ra khỏi giỏ hàng để tiếp tục thanh toán sản phẩm khác",
+          });
+        }
         if (variantQuantity.status === false) {
           // console.log("Biến thể đã bị ẩn");
           return res.status(400).json({
@@ -40,7 +55,9 @@ class OrderController {
               variantQuantity.id_color.name +
               " - " +
               "Kích cỡ: " +
-              variantQuantity.id_size.name,
+              variantQuantity.id_size.name +
+              " - " +
+              "Vui lòng xóa sản phẩm trên giỏ hàng để tiếp tục mua sắm",
           });
         }
         //Kiểm tra tồn kho
@@ -352,7 +369,7 @@ class OrderController {
 
   async getRevenueStatisticsasync(req, res) {
     try {
-      const { type, date, month, from, to } = req.query;
+      const { type, date, month, year, from, to } = req.query;
       let match = {};
 
       let start, end;
@@ -364,6 +381,10 @@ class OrderController {
         start = new Date(`${month}-01`);
         end = new Date(start);
         end.setMonth(end.getMonth() + 1);
+      } else if (type === "yearly") {
+        start = new Date(`${year}-01-01`);
+        end = new Date(`${year}-12-31`);
+        end.setDate(end.getDate() + 1);
       } else if (type === "range") {
         start = new Date(from);
         end = new Date(to);
@@ -372,10 +393,12 @@ class OrderController {
 
       match.createdAt = { $gte: start, $lt: end };
 
-      // Group by day or month depending on type
+      // Nhóm theo type
       let groupFormat = "%Y-%m-%d";
       if (type === "monthly") {
         groupFormat = "%Y-%m-%d";
+      } else if (type === "yearly") {
+        groupFormat = "%Y-%m";
       } else if (type === "range") {
         groupFormat = "%Y-%m-%d";
       }

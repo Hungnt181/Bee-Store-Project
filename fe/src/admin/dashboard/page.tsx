@@ -23,7 +23,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
-import { DollarOutlined, PrinterOutlined } from "@ant-design/icons";
+import { DropboxSquareFilled, MoneyCollectFilled } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 
 const AdminDashboardPage = () => {
@@ -48,6 +48,7 @@ const AdminDashboardPage = () => {
   //  Thống kê doanh số + số đơn
   const { RangePicker } = DatePicker;
   const [date, setDate] = useState<moment.Moment>(moment());
+  const [year, setYear] = useState<moment.Moment>(moment());
   const [range, setRange] = useState<moment.Moment[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
   const [chartType, setChartType] = useState("bar"); // line chart type
@@ -55,7 +56,7 @@ const AdminDashboardPage = () => {
 
   // Thống kê sản phẩm bán chạy
   const [date2, setDate2] = useState<moment.Moment>(moment());
-  const [year, setYear] = useState<moment.Moment>(moment());
+  const [year2, setYear2] = useState<moment.Moment>(moment());
   const [range2, setRange2] = useState<moment.Moment[]>([]);
   const [type2, setType2] = useState("monthly");
   const [products, setProducts] = useState([]);
@@ -74,7 +75,7 @@ const AdminDashboardPage = () => {
         params.date = date.format("YYYY-MM-DD");
       } else if (type2 === "monthly" && date2) {
         params.month = date2.format("YYYY-MM");
-      } else if (type2 === "yearly" && year) {
+      } else if (type2 === "yearly" && year2) {
         params.year = date2.format("YYYY");
       } else if (type2 === "range2" && range2.length === 2) {
         params.from = range2[0].format("YYYY-MM-DD");
@@ -128,6 +129,7 @@ const AdminDashboardPage = () => {
       type: string;
       date?: string;
       month?: string;
+      year?: string;
       from?: string;
       to?: string;
     } = { type };
@@ -136,6 +138,8 @@ const AdminDashboardPage = () => {
       params.date = date.format("YYYY-MM-DD");
     } else if (type === "monthly" && date) {
       params.month = date.format("YYYY-MM");
+    } else if (type === "yearly" && year) {
+      params.year = date.format("YYYY");
     } else if (type === "range" && range.length === 2) {
       params.from = range[0].format("YYYY-MM-DD");
       params.to = range[1].format("YYYY-MM-DD");
@@ -171,43 +175,47 @@ const AdminDashboardPage = () => {
       <div>
         <Card title={titel} className="w-full">
           <Flex justify="space-around">
-            <div className="flex bg-amber-200  w-[400px] h-[150px] justify-center items-center rounded-lg">
+            <div className="flex bg-blue-300  w-[400px] h-[150px] justify-center items-center rounded-lg">
               <div>
-                <DollarOutlined style={{ fontSize: "52px", color: "red" }} />
+                <MoneyCollectFilled
+                  style={{ fontSize: "52px", color: "white" }}
+                />
               </div>
               <div className="ml-4">
                 <div className="text-[20px] font-semibold">
                   Tổng giá trị các đơn hàng:
                 </div>
                 {statisticsData?.length > 0 ? (
-                  <div className=" text-2xl text-red-700">
+                  <div className=" text-[36px] text-white font-bold ">
                     {Number(statisticsData[0]?.totalRevenue).toLocaleString(
                       "vi-VN"
                     )}{" "}
                     VNĐ
                   </div>
                 ) : (
-                  <div className=" text-2xl text-red-700">0 VNĐ</div>
+                  <div className=" text-[36px] text-white font-bold">0 VNĐ</div>
                 )}
               </div>
             </div>
 
             <div className="flex bg-blue-200 w-[400px] h-[150px] justify-center items-center rounded-lg">
               <div>
-                <PrinterOutlined style={{ fontSize: "52px", color: "green" }} />
+                <DropboxSquareFilled
+                  style={{ fontSize: "52px", color: "white" }}
+                />
               </div>
               <div className="ml-4">
                 <div className="text-[20px] font-semibold">
                   Tổng số đơn hàng:
                 </div>
                 {statisticsData?.length > 0 ? (
-                  <div className=" text-2xl text-red-700">
+                  <div className=" text-[36px] text-white font-bold">
                     {Number(statisticsData[0]?.orderCount).toLocaleString(
                       "vi-VN"
                     )}
                   </div>
                 ) : (
-                  <div className=" text-2xl text-red-700">0</div>
+                  <div className=" text-[36px] text-white font-bold">0</div>
                 )}
               </div>
             </div>
@@ -225,22 +233,33 @@ const AdminDashboardPage = () => {
                 options={[
                   { label: "Theo ngày", value: "daily" },
                   { label: "Theo tháng", value: "monthly" },
+                  { label: "Theo năm", value: "yearly" },
                   { label: "Theo khoảng thời gian", value: "range" },
                 ]}
               />
 
-              {type === "range" ? (
-                <RangePicker
-                  onChange={(dates) =>
-                    setRange(dates as unknown as moment.Moment[])
-                  }
-                />
-              ) : (
-                <DatePicker
-                  picker={type === "monthly" ? "month" : "date"}
-                  onChange={(date) => setDate(date)}
-                />
-              )}
+              {(() => {
+                if (type === "range") {
+                  return (
+                    <RangePicker
+                      onChange={(dates) =>
+                        setRange(dates as unknown as moment.Moment[])
+                      }
+                    />
+                  );
+                } else {
+                  let pickerType: "date" | "month" | "year" = "date"; // Mặc định là "date"
+                  if (type === "monthly") pickerType = "month";
+                  if (type === "yearly") pickerType = "year";
+
+                  return (
+                    <DatePicker
+                      picker={pickerType}
+                      onChange={(date) => setDate(date)}
+                    />
+                  );
+                }
+              })()}
 
               <Select
                 value={chartType}
@@ -336,24 +355,28 @@ const AdminDashboardPage = () => {
                 ]}
               />
 
-              {type2 === "range2" ? (
-                <RangePicker
-                  onChange={(dates) =>
-                    setRange2(dates as unknown as moment.Moment[])
-                  }
-                />
-              ) : (
-                <DatePicker
-                  picker={
-                    type2 === "monthly"
-                      ? "month"
-                      : type2 === "yearly"
-                      ? "year"
-                      : "date"
-                  }
-                  onChange={(date2) => setDate2(date2)}
-                />
-              )}
+              {(() => {
+                if (type2 === "range2") {
+                  return (
+                    <RangePicker
+                      onChange={(dates) =>
+                        setRange2(dates as unknown as moment.Moment[])
+                      }
+                    />
+                  );
+                } else {
+                  let pickerType: "date" | "month" | "year" = "date"; // Mặc định là "date"
+                  if (type2 === "monthly") pickerType = "month";
+                  if (type2 === "yearly") pickerType = "year";
+
+                  return (
+                    <DatePicker
+                      picker={pickerType}
+                      onChange={(date) => setDate2(date)}
+                    />
+                  );
+                }
+              })()}
 
               <Button type="primary" onClick={fetchData}>
                 Thống kê
