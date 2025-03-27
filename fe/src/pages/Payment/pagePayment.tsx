@@ -120,7 +120,7 @@ const PaymentPage = () => {
       setCartItems(JSON.parse(storedPayCartItems));
       setStoredCartItems(JSON.parse(storedCartItems));
     }
-    else{
+    else {
       message.error("Không có sản phẩm để thanh toán", 3);
       nav('/')
     }
@@ -276,7 +276,7 @@ const PaymentPage = () => {
       // Có thể thực hiện xử lý sau khi log form
       handleSubmitOrder();
     } catch (error) {
-      console.error("Validation failed:", error);
+      // console.error("Validation failed:", error);
       if (error instanceof Error) {
         message.error(
           error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
@@ -386,20 +386,29 @@ const PaymentPage = () => {
         if (!newOrder.ok) {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
-
+        //loại bỏ các sản phẩm đã thanh toán
+        const listItemAfterPay = storedCartItems.filter(
+          //lọc storedCartItems theo các item có idVariant giống nhau
+          (itemFromStored: CartItemDetail) =>
+            !cartItems.some(itemFromCart =>
+              itemFromCart.idVariant == itemFromStored.idVariant
+            )
+        );
+        //storedCartItems - Tất cả sản phẩm trong cart
+        //cartItems - Tất cả sản phẩm để thanh toán
+        console.log(cartItems);
+        console.log(listItemAfterPay);
+        //cập nhật lại cart sau khi thanh toán
+        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+        localStorage.removeItem("selectedItemArray");
+        //clear cart items
         setCartItems([]);
-        localStorage.removeItem("cartItems");
+        // localStorage.removeItem("cartItems");
         setListCheckout([]);
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
-        //loại bỏ các sản phẩm đã thanh toán
-        const listItemAfterPay = storedCartItems.filter(
-          (item) => !cartItems.includes(item)
-        );
-        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
-        localStorage.removeItem("selectedItemArray");
-        //clear cart items
+
         nav("/notify2");
       } catch (error) {
         if (error instanceof Error) {
@@ -436,11 +445,10 @@ const PaymentPage = () => {
           {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
               key={index}
-              className={`flex gap-4 mb-4 pb-4 ${
-                index !== listCheckout.length - 1
-                  ? "border-b border-gray-300"
-                  : ""
-              }`}
+              className={`flex gap-4 mb-4 pb-4 ${index !== listCheckout.length - 1
+                ? "border-b border-gray-300"
+                : ""
+                }`}
             >
               <Image
                 src={item.imgVariant}
@@ -662,8 +670,8 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                        new Error("Vui lòng đồng ý với điều khoản và quy định")
-                      ),
+                      new Error("Vui lòng đồng ý với điều khoản và quy định")
+                    ),
               },
             ]}
             className="mt-6"
