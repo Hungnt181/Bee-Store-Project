@@ -45,39 +45,79 @@ export default function TabDescription({
       {/* CONTENT */}
       <div className="mt-4">
         {tabIndex === 0 ? (
-          <ul className="text-base  font-thin">
+          <ul className="text-base font-thin space-y-2 list-none">
             <li>
-              - Màu sắc: {colors?.map((item: Color) => item?.name).join(", ")}
+              <span className="font-medium">Màu sắc:</span>{" "}
+              {colors?.map((item: Color) => item?.name).join(", ")}
             </li>
             <li>
-              - Kích cỡ: {sizes?.map((item: Size) => item?.name).join(", ")}
-            </li>
-            <li>- Mô tả: {variants[0]?.id_product?.description}</li>
-            <li>
-              <strong>- Hướng dẫn bảo quản:</strong>
-              <li>Giặt tay hoặc giặt máy ở chế độ nhẹ với nước lạnh.</li>
-              <li>Tránh sử dụng chất tẩy mạnh, không ngâm quá lâu.</li>
-              <li>Tránh sử dụng chất tẩy mạnh, không ngâm quá lâu.</li>
+              <span className="font-medium">Kích cỡ:</span>{" "}
+              {sizes?.map((item: Size) => item?.name).join(", ")}
             </li>
             <li>
-              <strong>- Hướng dẫn giặt ủi:</strong>
-              <li>
-                Ủi ở nhiệt độ thấp để tránh làm hỏng chất liệu và giữ cho sản
-                phẩm luôn phẳng đẹp.
-              </li>
+              <span className="font-medium">Mô tả:</span>{" "}
+              {variants[0]?.id_product?.description}
             </li>
+
             <li>
-              <strong> - Lưu ý:</strong>
-              <li>
-                Hình ảnh chỉ mang tính chất minh họa, màu sắc sản phẩm thực tế
-                có thể thay đổi tùy thuộc vào điều kiện ánh sáng và thiết bị
-                hiển thị.
-              </li>
+              <span className="font-medium">Hướng dẫn bảo quản:</span>
+              <ul className="list-disc list-inside pl-4 space-y-1">
+                <li>Giặt tay hoặc giặt máy ở chế độ nhẹ với nước lạnh.</li>
+                <li>Tránh sử dụng chất tẩy mạnh, không ngâm quá lâu.</li>
+              </ul>
+            </li>
+
+            <li>
+              <span className="font-medium">Hướng dẫn giặt ủi:</span>
+              <ul className="list-disc list-inside pl-4 space-y-1">
+                <li>
+                  Ủi ở nhiệt độ thấp để tránh làm hỏng chất liệu và giữ cho sản
+                  phẩm luôn phẳng đẹp.
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <span className="font-medium">Lưu ý:</span>
+              <ul className="list-disc list-inside pl-4 space-y-1">
+                <li>
+                  Hình ảnh chỉ mang tính chất minh họa, màu sắc sản phẩm thực tế
+                  có thể thay đổi tùy thuộc vào điều kiện ánh sáng và thiết bị
+                  hiển thị.
+                </li>
+              </ul>
             </li>
           </ul>
         ) : (
           <div className="font-thin min-h-32">
-            <p>- Đổi trả hàng trong vòng 3 ngày tính từ ngày nhận hàng</p>
+            <h3>
+              🛠️ Chính Sách Bảo Hành –{" "}
+              <strong className="font-medium">BeeStore</strong>
+            </h3>
+
+            <p>
+              - Bảo hành trong <strong className="font-medium">3 ngày</strong>{" "}
+              kể từ khi nhận hàng.
+              <br />- Áp dụng cho lỗi{" "}
+              <strong className="font-medium">sản xuất</strong>: rách nhẹ, bung
+              chỉ, hỏng khóa kéo, cúc...
+              <br />- <strong className="font-medium">
+                Không bảo hành
+              </strong>{" "}
+              lỗi do người dùng (rách, cháy, dính màu…).
+              <br />
+              - Đổi mới nếu lỗi nặng và còn hàng.
+              <br />- Gửi yêu cầu qua{" "}
+              <strong className="font-medium">Fanpage</strong> hoặc Email:
+              <a href="mailto:support@beestore.vn">
+                <strong className="font-medium"> support@beestore.vn</strong>{" "}
+              </a>
+              <br />
+              - Cung cấp ảnh lỗi + mã đơn hàng để được hỗ trợ nhanh nhất.
+              <br />- <strong className="font-medium">BeeStore</strong> hỗ trợ
+              phí vận chuyển tùy trường hợp.
+              <br />
+            </p>
           </div>
         )}
       </div>

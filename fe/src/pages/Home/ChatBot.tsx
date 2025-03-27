@@ -22,6 +22,7 @@ const Chatbot = () => {
           componentProps: {
             title: "Trợ lý ảo Bee-Store",
           },
+          logger: console, // 👈 thử truyền tạm logger là console
           auth: {
             type: "token",
             token: import.meta.env.VITE_TOKEN_CHATBOT,

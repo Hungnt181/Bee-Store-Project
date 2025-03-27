@@ -124,7 +124,7 @@ export default function HomePage() {
                         className="group transform transition-all duration-300 hover:-translate-y-1"
                         onClick={() => handleViewProduct(item._id)}
                       >
-                        <div className="border border-gray-100 hover:border-black/20 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                        <div className=" rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
                           <ProductCard product={item} />
                         </div>
                       </div>
