@@ -1,80 +1,320 @@
 [{
   "_id": {
-    "$oid": "67832e6cfa9cb63c22b31da5"
+    "$oid": "67d8d34a1f79d94f72ebc88d"
   },
-  "name": "Quần 1",
-  "price": 50,
-  "about": "This is a sample product for testing purposes.",
-  "description": "This product is used to test the API endpoints.",
-  "status": false,
+  "name": "Áo Polo Nam Golf APSG11S2",
+  "price": 650000,
+  "about": "Tên sản phẩm: Áo Polo Nam Aristino Golf APSG11S2\nMã rút gọn: APSG11S2\nKiểu dáng: Golf Fit\nThiết kế:\nÁo polo Golf phom dáng Golf Fit hoàn thiện trên từng chỉ số, có độ suông vừa đem tới sự thoải mái tuyệt đối, đồng thời vẫn giữ được sự chỉn chu cần thiết cho những quý ông ưa vận động.\nThiết kế khỏe khoắn cùng họa tiết in tinh tế, ấn tượng trên vai trái áo tạo điểm nhấn nổi bật cho golfer.\nChất liệu: \n77% Nylon cho bề mặt vải độ mịn mượt, mỏng nhẹ\n23% Spandex tạo độ co giãn thoải mái khi mặc",
+  "description": "Tên sản phẩm: Áo Polo Nam Aristino Golf APSG11S2\nMã rút gọn: APSG11S2\nKiểu dáng: Golf Fit\nThiết kế:\nÁo polo Golf phom dáng Golf Fit hoàn thiện trên từng chỉ số, có độ suông vừa đem tới sự thoải mái tuyệt đối, đồng thời vẫn giữ được sự chỉn chu cần thiết cho những quý ông ưa vận động.\nThiết kế khỏe khoắn cùng họa tiết in tinh tế, ấn tượng trên vai trái áo tạo điểm nhấn nổi bật cho golfer.\nChất liệu: \n77% Nylon cho bề mặt vải độ mịn mượt, mỏng nhẹ\n23% Spandex tạo độ co giãn thoải mái khi mặc",
+  "status": true,
   "id_cate": {
-    "$oid": "67832d89dd1193100e7d073e"
+    "$oid": "67d8331b4cd471a07c33a76d"
   },
-  "slug": "quan-1",
+  "slug": "ao-polo-nam-golf-apsg11s2",
   "createdAt": {
-    "$date": "2025-01-12T02:52:28.495Z"
+    "$date": "2025-03-18T01:58:34.068Z"
   },
   "updatedAt": {
-    "$date": "2025-01-25T14:17:51.492Z"
+    "$date": "2025-03-18T01:58:34.068Z"
   }
 },
 {
   "_id": {
-    "$oid": "6783362bfa9cb63c22b31db1"
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
   },
-  "name": "Quần 2",
-  "price": 100,
-  "about": "This is a sample product for testing purposes.",
-  "description": "This product is used to test the API endpoints.",
+  "name": "Áo Polo Nam Cotton Regular Fit APS169S3",
+  "price": 700000,
+  "about": "Tên sản phẩm: Áo Polo Nam Aristino Cotton Regular Fit APS169S3\nMã rút gọn: APS169S3\nKiểu dáng: Regular Fit\nThiết kế:\nÁo thun phom Regular fit suông nhẹ nhưng vẫn vừa vặn, tôn dáng tối đa khi mặc\nThiết kế khỏe khoắn, màu sắc cơ bản dễ kết hợp với nhiều trang phục khác mang tới diện mạo trẻ trung, lịch lãm cho người mặc. \nChất liệu: \n95% Cotton thấm hút tốt, thoáng khí, thân thiện với làn da\n5% Spandex tạo độ co giãn nhẹ khi hoạt động ",
+  "description": "Tên sản phẩm: Áo Polo Nam Aristino Cotton Regular Fit APS169S3\nMã rút gọn: APS169S3\nKiểu dáng: Regular Fit\nThiết kế:\nÁo thun phom Regular fit suông nhẹ nhưng vẫn vừa vặn, tôn dáng tối đa khi mặc\nThiết kế khỏe khoắn, màu sắc cơ bản dễ kết hợp với nhiều trang phục khác mang tới diện mạo trẻ trung, lịch lãm cho người mặc. \nChất liệu: \n95% Cotton thấm hút tốt, thoáng khí, thân thiện với làn da\n5% Spandex tạo độ co giãn nhẹ khi hoạt động ",
   "status": true,
   "id_cate": {
-    "$oid": "67832d89dd1193100e7d073e"
+    "$oid": "67d8331b4cd471a07c33a76d"
   },
-  "slug": "quan-2",
+  "slug": "ao-polo-nam-cotton-regular-fit-aps169s3",
   "createdAt": {
-    "$date": "2025-01-12T03:25:31.088Z"
+    "$date": "2025-03-18T02:04:33.922Z"
   },
   "updatedAt": {
-    "$date": "2025-01-24T08:57:29.155Z"
+    "$date": "2025-03-18T02:04:33.922Z"
   }
 },
 {
   "_id": {
-    "$oid": "67833637fa9cb63c22b31db4"
+    "$oid": "67d8d74e1f79d94f72ebcb60"
   },
-  "name": "Áo 1",
-  "price": 100,
-  "about": "This is a sample product for testing purposes.",
-  "description": "This product is used to test the API endpoints.",
+  "name": "Polo Nam Golf ALPG02W2",
+  "price": 1000000,
+  "about": "Kiểu dáng: Tech Golf\n\nThiết kế:\n- Áo polo dài tay phom dáng Tech Golf được tinh chỉnh các thông số đem lại sự thoải mái tối đa theo từng cử động của golfer. Áo được nâng cấp tính năng Anti UV, giúp bảo vệ làn da với chỉ số kháng tia UV lên tới 98% và bền bỉ trong suốt thời gian sử dụng. Công nghệ sợi vải Moisture Wicking giúp áo thấm hút tốt, đồng thời khô nhanh hơn.\n- Thiết kế khỏe khoắn, màu sắc nam tính, cùng họa tiết đại bàng độc đáo, sáng tạo trên ngực trái áo đem đến diện mạo trẻ trung và lịch lãm cho người mặc.\n\nChất liệu:\n- 77% Nylon cho bề mặt vải độ mịn mượt, mỏng nhẹ\n- 23% Spandex tạo độ co giãn tốt, thoải mái tối đa khi mặc.",
+  "description": "Kiểu dáng: Tech Golf\n\nThiết kế:\n- Áo polo dài tay phom dáng Tech Golf được tinh chỉnh các thông số đem lại sự thoải mái tối đa theo từng cử động của golfer. Áo được nâng cấp tính năng Anti UV, giúp bảo vệ làn da với chỉ số kháng tia UV lên tới 98% và bền bỉ trong suốt thời gian sử dụng. Công nghệ sợi vải Moisture Wicking giúp áo thấm hút tốt, đồng thời khô nhanh hơn.\n- Thiết kế khỏe khoắn, màu sắc nam tính, cùng họa tiết đại bàng độc đáo, sáng tạo trên ngực trái áo đem đến diện mạo trẻ trung và lịch lãm cho người mặc.\n\nChất liệu:\n- 77% Nylon cho bề mặt vải độ mịn mượt, mỏng nhẹ\n- 23% Spandex tạo độ co giãn tốt, thoải mái tối đa khi mặc.",
   "status": true,
   "id_cate": {
-    "$oid": "67832dbddd1193100e7d073f"
+    "$oid": "67d8331b4cd471a07c33a76d"
   },
-  "slug": "ao-1",
+  "slug": "polo-nam-golf-alpg02w2",
   "createdAt": {
-    "$date": "2025-01-12T03:25:43.094Z"
+    "$date": "2025-03-18T02:15:42.592Z"
   },
   "updatedAt": {
-    "$date": "2025-01-23T08:25:26.411Z"
+    "$date": "2025-03-18T02:15:42.592Z"
   }
 },
 {
   "_id": {
-    "$oid": "6783363bfa9cb63c22b31db7"
+    "$oid": "67d8d9ba1f79d94f72ebce48"
   },
-  "name": "Áo 2",
-  "price": 100,
-  "about": "This is a sample product for testing purposes.",
-  "description": "This product is used to test the API endpoints.",
+  "name": "Áo Polo Nam Golf ALPG35W2",
+  "price": 940000,
+  "about": "Form dáng: Tech Golf\nThiết kế:\nÁo polo dài tay phom dáng Tech Golf được tinh chỉnh kỹ lưỡng để đem lại sự thoải mái tối đa cho mỗi cử động của golfer.\nThiết kế khỏe khoắn với màu sắc nam tính và phong cách tối giản, mang đến diện mạo sang trọng và lịch lãm cho người mặc.\nChất liệu:\n77% Nylon: Bề mặt vải mịn mượt, mỏng nhẹ, thoải mái và hạn chế nhăn nhàu tối đa khi hoạt động.\n23% Spandex: Tạo độ co giãn nhẹ, mang lại sự linh hoạt và thoải mái cho người mặc.",
+  "description": "Form dáng: Tech Golf\nThiết kế:\nÁo polo dài tay phom dáng Tech Golf được tinh chỉnh kỹ lưỡng để đem lại sự thoải mái tối đa cho mỗi cử động của golfer.\nThiết kế khỏe khoắn với màu sắc nam tính và phong cách tối giản, mang đến diện mạo sang trọng và lịch lãm cho người mặc.\nChất liệu:\n77% Nylon: Bề mặt vải mịn mượt, mỏng nhẹ, thoải mái và hạn chế nhăn nhàu tối đa khi hoạt động.\n23% Spandex: Tạo độ co giãn nhẹ, mang lại sự linh hoạt và thoải mái cho người mặc.",
   "status": true,
   "id_cate": {
-    "$oid": "67832dbddd1193100e7d073f"
+    "$oid": "67d8331b4cd471a07c33a76d"
   },
-  "slug": "ao-2",
+  "slug": "ao-polo-nam-golf-alpg35w2",
   "createdAt": {
-    "$date": "2025-01-12T03:25:47.303Z"
+    "$date": "2025-03-18T02:26:02.015Z"
   },
   "updatedAt": {
-    "$date": "2025-01-12T03:25:47.303Z"
+    "$date": "2025-03-18T02:26:02.015Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "name": "Áo Polo thể thao Nam Golf APSG68S3",
+  "price": 850000,
+  "about": "FORM DÁNG: Golf Fit\nTHIẾT KẾ:\n- Áo polo Golf phom dáng Golf Fit hoàn thiện trên từng chỉ số, có độ suông vừa đem tới sự thoải mái tuyệt đối, đồng thời vẫn giữ được sự chỉn chu cần thiết cho những quý ông ưa vận động.\n- Thiết kế khỏe khoắn cùng màu sắc và họa tiết kẻ ấn tượng tạo điểm nhấn nổi bật cho golfer.\n\nCHẤT LIỆU:\n- 84% Polyamide mềm mịn, thấm hút mồ hôi và thoát ẩm tốt\n- 16% Elastane tạo độ co giãn và đàn hồi tốt.",
+  "description": "FORM DÁNG: Golf Fit\nTHIẾT KẾ:\n- Áo polo Golf phom dáng Golf Fit hoàn thiện trên từng chỉ số, có độ suông vừa đem tới sự thoải mái tuyệt đối, đồng thời vẫn giữ được sự chỉn chu cần thiết cho những quý ông ưa vận động.\n- Thiết kế khỏe khoắn cùng màu sắc và họa tiết kẻ ấn tượng tạo điểm nhấn nổi bật cho golfer.\n\nCHẤT LIỆU:\n- 84% Polyamide mềm mịn, thấm hút mồ hôi và thoát ẩm tốt\n- 16% Elastane tạo độ co giãn và đàn hồi tốt.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d8331b4cd471a07c33a76d"
+  },
+  "slug": "ao-polo-the-thao-nam-golf-apsg68s3",
+  "createdAt": {
+    "$date": "2025-03-18T02:30:05.192Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:30:05.192Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "name": "Áo Polo Nam Cotton APS085AZ",
+  "price": 550000,
+  "about": "Kiểu dáng: Regular Fit\nThiết kế:\nÁo Polo phom dáng Regular Fit suông nhẹ nhưng vẫn vừa vặn, tôn dáng tối đa khi mặc.\nThiết kế basic cùng màu sắc trẻ trung đem đến vẻ ngoài thời thượng, lịch lãm và sang trọng cho các quý ông.\nChất liệu: \n48% Cotton đem đến sự mềm mại, xốp nhẹ và thoáng khí.\n47% Polyester giúp áo mỏng nhẹ, bề mặt vải trơn bóng, màu sắc sắc nét và bền màu qua quá trình sử dụng.\n5% Spandex giữ độ co giãn tốt, tạo sự thoải mái.",
+  "description": "Kiểu dáng: Regular Fit\nThiết kế:\nÁo Polo phom dáng Regular Fit suông nhẹ nhưng vẫn vừa vặn, tôn dáng tối đa khi mặc.\nThiết kế basic cùng màu sắc trẻ trung đem đến vẻ ngoài thời thượng, lịch lãm và sang trọng cho các quý ông.\nChất liệu: \n48% Cotton đem đến sự mềm mại, xốp nhẹ và thoáng khí.\n47% Polyester giúp áo mỏng nhẹ, bề mặt vải trơn bóng, màu sắc sắc nét và bền màu qua quá trình sử dụng.\n5% Spandex giữ độ co giãn tốt, tạo sự thoải mái.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d8331b4cd471a07c33a76d"
+  },
+  "slug": "ao-polo-nam-cotton-aps085az",
+  "createdAt": {
+    "$date": "2025-03-18T02:55:03.106Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:55:03.106Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d91f470f1b4d7c6337ddd2"
+  },
+  "name": "Quần Âu Nam Business Slim Fit 1TR0020S1",
+  "price": 700000,
+  "about": "Mã thiết kế: 1TR0020S1\nPhom dáng: Slim fit/ Dáng ôm\nThiết kế:\nQuần âu màu xám sợi lông cừu pha mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu: \n50% Wool (lông cừu ) \n47% polyester \n3% Spandex",
+  "description": "Mã thiết kế: 1TR0020S1\nPhom dáng: Slim fit/ Dáng ôm\nThiết kế:\nQuần âu màu xám sợi lông cừu pha mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu: \n50% Wool (lông cừu ) \n47% polyester \n3% Spandex",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-au-nam-business-slim-fit-1tr0020s1",
+  "createdAt": {
+    "$date": "2025-03-18T07:22:47.405Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:22:47.405Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d921470f1b4d7c6337e11f"
+  },
+  "name": "Quần Âu Xanh Kẻ Nam Regular Fit ATR0270S2",
+  "price": 750000,
+  "about": "Form Dáng: Regular Fit/ Dáng suông\nThiết kế:\nQuần âu màu xanh đậm mang đến sự bền bỉ, mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu:\n92% Polyester: Bền màu, chống nhăn, giữ phom tốt, nhanh khô và ít thấm nước.\n8% Spandex: Co giãn tốt, tăng độ đàn hồi, giúp trang phục ôm vừa vặn và thoải mái khi vận động.\nPhối với:\nDễ dàng kết hợp với áo sơ mi, áo thun hoặc blazer để tạo nên các phong cách từ công sở đến dạo phố.\nPhù hợp cho các dịp đi làm, dự tiệc hoặc các hoạt động ngoài trời.\nMàu sắc: Xanh tím than 45 kẻ\nKích thước: 29/30/31/32/33/34/35/36\nSản xuất: Việt Nam",
+  "description": "Form Dáng: Regular Fit/ Dáng suông\nThiết kế:\nQuần âu màu xanh đậm mang đến sự bền bỉ, mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu:\n92% Polyester: Bền màu, chống nhăn, giữ phom tốt, nhanh khô và ít thấm nước.\n8% Spandex: Co giãn tốt, tăng độ đàn hồi, giúp trang phục ôm vừa vặn và thoải mái khi vận động.\nPhối với:\nDễ dàng kết hợp với áo sơ mi, áo thun hoặc blazer để tạo nên các phong cách từ công sở đến dạo phố.\nPhù hợp cho các dịp đi làm, dự tiệc hoặc các hoạt động ngoài trời.\nMàu sắc: Xanh tím than 45 kẻ\nKích thước: 29/30/31/32/33/34/35/36\nSản xuất: Việt Nam",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-au-xanh-ke-nam-regular-fit-atr0270s2",
+  "createdAt": {
+    "$date": "2025-03-18T07:31:19.653Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:31:19.653Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da765dbbac56802f3d48b3"
+  },
+  "name": "Quần Âu Nam Regular Fit ATR0390S2",
+  "price": 950000,
+  "about": "Form Dáng: Regular Fit/ Dáng suông\nThiết kế:\nQuần âu màu xám mang đến sự bền bỉ, mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu:\n78% Polyamide: Nhẹ, bền, thoáng khí, nhanh khô và có khả năng chống thấm nước tốt.\n14% Spandex: Co giãn cao, tăng độ đàn hồi, giúp trang phục ôm sát và linh hoạt khi vận động.\n8% Rayon: Mềm mại, thấm hút tốt, tạo cảm giác thoải mái và độ rũ tự nhiên cho vải.\nPhối với:\nDễ dàng kết hợp với áo sơ mi, áo thun hoặc blazer để tạo nên các phong cách từ công sở đến dạo phố.\nPhù hợp cho các dịp đi làm, dự tiệc hoặc các hoạt động ngoài trời.",
+  "description": "Form Dáng: Regular Fit/ Dáng suông\nThiết kế:\nQuần âu màu xám mang đến sự bền bỉ, mềm mại và linh hoạt, cảm giác dễ chịu khi mặc. \nThiết kế thanh lịch, phù hợp cho môi trường công sở, sự kiện quan trọng hoặc những dịp trang trọng.\nChất liệu:\n78% Polyamide: Nhẹ, bền, thoáng khí, nhanh khô và có khả năng chống thấm nước tốt.\n14% Spandex: Co giãn cao, tăng độ đàn hồi, giúp trang phục ôm sát và linh hoạt khi vận động.\n8% Rayon: Mềm mại, thấm hút tốt, tạo cảm giác thoải mái và độ rũ tự nhiên cho vải.\nPhối với:\nDễ dàng kết hợp với áo sơ mi, áo thun hoặc blazer để tạo nên các phong cách từ công sở đến dạo phố.\nPhù hợp cho các dịp đi làm, dự tiệc hoặc các hoạt động ngoài trời.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-au-nam-regular-fit-atr0390s2",
+  "createdAt": {
+    "$date": "2025-03-19T07:46:37.650Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:46:37.650Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "name": "Quần Kaki Nam Business Regular Fit 1KK0010Z",
+  "price": 750000,
+  "about": "Mã rút gọn: 1KK0010Z\nKiểu dáng: Dáng vừa/Regular Fit\nThiết kế:\nQuần khaki mang đến sự thoải mái, bền bỉ và linh hoạt. \nCotton giúp vải thoáng khí, thấm hút mồ hôi tốt và mềm mại khi mặc. \nNylon tăng độ bền, chống nhăn, nhanh khô và ít thấm nước, giúp quần luôn giữ được vẻ ngoài chỉn chu. \nSpandex mang đến độ co giãn tối ưu, giúp quần ôm vừa vặn và linh hoạt theo từng chuyển động. \nThiết kế thanh lịch, phù hợp cho cả môi trường công sở lẫn những dịp dạo phố năng động.\nChất liệu:\n55% Cotton: Thoáng khí, thấm hút mồ hôi tốt, mềm mại và mang lại cảm giác thoải mái khi mặc.\n34% Nylon: Bền chắc, nhẹ, nhanh khô, chống thấm nước và ít nhăn.\n11% Spandex: Co giãn tốt, tăng độ đàn hồi, giúp trang phục linh hoạt và ôm vừa vặn.",
+  "description": "Mã rút gọn: 1KK0010Z\nKiểu dáng: Dáng vừa/Regular Fit\nThiết kế:\nQuần khaki mang đến sự thoải mái, bền bỉ và linh hoạt. \nCotton giúp vải thoáng khí, thấm hút mồ hôi tốt và mềm mại khi mặc. \nNylon tăng độ bền, chống nhăn, nhanh khô và ít thấm nước, giúp quần luôn giữ được vẻ ngoài chỉn chu. \nSpandex mang đến độ co giãn tối ưu, giúp quần ôm vừa vặn và linh hoạt theo từng chuyển động. \nThiết kế thanh lịch, phù hợp cho cả môi trường công sở lẫn những dịp dạo phố năng động.\nChất liệu:\n55% Cotton: Thoáng khí, thấm hút mồ hôi tốt, mềm mại và mang lại cảm giác thoải mái khi mặc.\n34% Nylon: Bền chắc, nhẹ, nhanh khô, chống thấm nước và ít nhăn.\n11% Spandex: Co giãn tốt, tăng độ đàn hồi, giúp trang phục linh hoạt và ôm vừa vặn.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-kaki-nam-business-regular-fit-1kk0010z",
+  "createdAt": {
+    "$date": "2025-03-19T07:53:07.376Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:53:07.376Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da79bdbbac56802f3d4caa"
+  },
+  "name": "Quần Kaki Nam Regular Fit AKK0040Z",
+  "price": 800000,
+  "about": "Kiểu dáng: Dáng vừa/ Regular Fit\nThiết kế: \nQuần kaki phom dáng Regular fit, suông rộng thoải mái, không ôm sát cơ thể nhưng vẫn tôn dáng người mặc, tôn lên dáng vẻ nam tính, thời trang.\nQuần được thiết kế cơ bản với 3 phiên bản màu sắc nam tính đem đến diện mạo tự tin và trẻ trung cho người mặc. \nChất liệu: 100% Cotton\n100% Cotton giúp áo mềm mịn, thoáng khí, thấm mồ hôi vượt trội và thân thiện với làn da",
+  "description": "Kiểu dáng: Dáng vừa/ Regular Fit\nThiết kế: \nQuần kaki phom dáng Regular fit, suông rộng thoải mái, không ôm sát cơ thể nhưng vẫn tôn dáng người mặc, tôn lên dáng vẻ nam tính, thời trang.\nQuần được thiết kế cơ bản với 3 phiên bản màu sắc nam tính đem đến diện mạo tự tin và trẻ trung cho người mặc. \nChất liệu: 100% Cotton\n100% Cotton giúp áo mềm mịn, thoáng khí, thấm mồ hôi vượt trội và thân thiện với làn da",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-kaki-nam-regular-fit-akk0040z",
+  "createdAt": {
+    "$date": "2025-03-19T08:01:01.565Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:01:01.565Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7ac2bbac56802f3d4eb4"
+  },
+  "name": "Quần Kaki Casual Nam Cotton AKKM010Z",
+  "price": 1000000,
+  "about": "Kiểu dáng:\nPhom dáng suông rộng vừa phải, mang lại sự thoải mái khi mặc mà vẫn đảm bảo vẻ ngoài thanh lịch.\nChất liệu:\n100% Cotton giúp quần thoáng mát, thấm hút mồ hôi tốt, phù hợp cho các hoạt động hằng ngày và các dịp dạo phố, đi chơi.\nPhối với:\nDễ dàng kết hợp với áo thun, polo, hoặc sơ mi casual để tạo phong cách trẻ trung, năng động, phù hợp cho các dịp dạo phố, đi làm, hoặc các hoạt động ngoài trời.",
+  "description": "Kiểu dáng:\nPhom dáng suông rộng vừa phải, mang lại sự thoải mái khi mặc mà vẫn đảm bảo vẻ ngoài thanh lịch.\nChất liệu:\n100% Cotton giúp quần thoáng mát, thấm hút mồ hôi tốt, phù hợp cho các hoạt động hằng ngày và các dịp dạo phố, đi chơi.\nPhối với:\nDễ dàng kết hợp với áo thun, polo, hoặc sơ mi casual để tạo phong cách trẻ trung, năng động, phù hợp cho các dịp dạo phố, đi làm, hoặc các hoạt động ngoài trời.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-kaki-casual-nam-cotton-akkm010z",
+  "createdAt": {
+    "$date": "2025-03-19T08:05:22.288Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:05:22.288Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7c1bbbac56802f3d50de"
+  },
+  "name": "Quần rời dệt kim Nam Regular Fit APA003W2",
+  "price": 400000,
+  "about": "Kiểu dáng: Regular fit\n\nThiết kế:\n- Quần dài thu đông phom dáng Regular fit có độ ôm vừa phải, đem lại cảm giác thoải mái và tự tin trong mọi hoàn cảnh.\n- Thiết kế cạp âu chun nửa vòng basic, giữ phom dáng tối đa phù hợp với nhiều dáng người.\n\nChất liệu:\n- 55% Polyester cho bề mặt vải bóng mịn, sắc nét, ít nhăn nhàu.\n- 40% Rayon giúp quần áo có độ mềm mại, thoáng khí và bay rũ tự nhiên.\n- 5% Spandex tạo độ co giãn, thoải mái khi cử động\"",
+  "description": "Kiểu dáng: Regular fit\n\nThiết kế:\n- Quần dài thu đông phom dáng Regular fit có độ ôm vừa phải, đem lại cảm giác thoải mái và tự tin trong mọi hoàn cảnh.\n- Thiết kế cạp âu chun nửa vòng basic, giữ phom dáng tối đa phù hợp với nhiều dáng người.\n\nChất liệu:\n- 55% Polyester cho bề mặt vải bóng mịn, sắc nét, ít nhăn nhàu.\n- 40% Rayon giúp quần áo có độ mềm mại, thoáng khí và bay rũ tự nhiên.\n- 5% Spandex tạo độ co giãn, thoải mái khi cử động\"",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-roi-det-kim-nam-regular-fit-apa003w2",
+  "createdAt": {
+    "$date": "2025-03-19T08:11:07.861Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:11:07.861Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7d4dbbac56802f3d526f"
+  },
+  "name": "Quần rời dệt kim Nam Cotton Regular Fit APA009W2",
+  "price": 330000,
+  "about": "Kiểu dáng: Regular Fit\n\nThiết kế:\n- Quần dài thu đông phom dáng Regular Fit có độ ôm vừa phải, đem lại cảm giác thoải mái và tự tin trong mọi hoàn cảnh.\n- Thiết kế ống bo basic túi chéo năng động, cùng logo chữ ký Aristino thêu cách cạp tinh tế mang đến diện mạo trẻ trung cho quý ông.\n\nChất liệu:\n- 57% Cotton giúp quần mềm mại, xốp nhẹ và thoáng khí.\n- 38% Polyester cho bề mặt vải bóng mịn, sắc nét, ít nhăn nhàu.\n- 5% Spandex tạo độ co giãn nhẹ.",
+  "description": "Kiểu dáng: Regular Fit\n\nThiết kế:\n- Quần dài thu đông phom dáng Regular Fit có độ ôm vừa phải, đem lại cảm giác thoải mái và tự tin trong mọi hoàn cảnh.\n- Thiết kế ống bo basic túi chéo năng động, cùng logo chữ ký Aristino thêu cách cạp tinh tế mang đến diện mạo trẻ trung cho quý ông.\n\nChất liệu:\n- 57% Cotton giúp quần mềm mại, xốp nhẹ và thoáng khí.\n- 38% Polyester cho bề mặt vải bóng mịn, sắc nét, ít nhăn nhàu.\n- 5% Spandex tạo độ co giãn nhẹ.",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-roi-det-kim-nam-cotton-regular-fit-apa009w2",
+  "createdAt": {
+    "$date": "2025-03-19T08:16:13.013Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:16:13.013Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7e4fbbac56802f3d5444"
+  },
+  "name": "Quần jean Nam  Slim fit AJNR02",
+  "price": 625000,
+  "about": "Mã rút gọn: AJNR02\nForm Dáng: Slim fit\nThiết kế:\nQuần jeans phom dáng Slim fit ôm vừa vặn nhưng vẫn đảm bảo thoải mái tối đa khi mặc.\nQuần vải demin, màu sắc trung tính, linh hoạt khi kết hợp với các loại trang phục khác nhau, theo nhiều phong cách khác nhau\nChất liệu: \n99% Cotton mềm mịn, thoáng khí, thấm mồ hôi vượt trội và thân thiện với làn da.\n1% Spandex giúp quần co giãn thoải mái",
+  "description": "Mã rút gọn: AJNR02\nForm Dáng: Slim fit\nThiết kế:\nQuần jeans phom dáng Slim fit ôm vừa vặn nhưng vẫn đảm bảo thoải mái tối đa khi mặc.\nQuần vải demin, màu sắc trung tính, linh hoạt khi kết hợp với các loại trang phục khác nhau, theo nhiều phong cách khác nhau\nChất liệu: \n99% Cotton mềm mịn, thoáng khí, thấm mồ hôi vượt trội và thân thiện với làn da.\n1% Spandex giúp quần co giãn thoải mái",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-jean-nam-slim-fit-ajnr02",
+  "createdAt": {
+    "$date": "2025-03-19T08:20:31.290Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:20:31.290Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7f93bbac56802f3d56ef"
+  },
+  "name": "Quần kaki Nam Cotton Slim fit AKK02107",
+  "price": 400000,
+  "about": "Mã rút gọn: AKK02107\nForm Dáng: Slim Fit\nThiết kế:\nQuần kaki phom dáng Slim fit ôm vừa, tôn dáng. \nThiết kế cổ điển, lịch lãm với nếp ly vĩnh viễn giúp quần đứng dáng, dễ là ủi. \nQuần có túi xẻ 2 bên và túi xẻ cài khuy. Cạp 3cm, moi quần tiện lợi. \nChất liệu: \nChất liệu CVC cao cấp là sự kết hợp ưu điểm của cotton tự nhiên mềm mại, thoáng mát, xốp nhẹ và độ bền chắc, màu sắc sắc nét của sợi nhân tạo. ",
+  "description": "Mã rút gọn: AKK02107\nForm Dáng: Slim Fit\nThiết kế:\nQuần kaki phom dáng Slim fit ôm vừa, tôn dáng. \nThiết kế cổ điển, lịch lãm với nếp ly vĩnh viễn giúp quần đứng dáng, dễ là ủi. \nQuần có túi xẻ 2 bên và túi xẻ cài khuy. Cạp 3cm, moi quần tiện lợi. \nChất liệu: \nChất liệu CVC cao cấp là sự kết hợp ưu điểm của cotton tự nhiên mềm mại, thoáng mát, xốp nhẹ và độ bền chắc, màu sắc sắc nét của sợi nhân tạo. ",
+  "status": true,
+  "id_cate": {
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
+  },
+  "slug": "quan-kaki-nam-cotton-slim-fit-akk02107",
+  "createdAt": {
+    "$date": "2025-03-19T08:25:55.649Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:25:55.649Z"
   }
 }]

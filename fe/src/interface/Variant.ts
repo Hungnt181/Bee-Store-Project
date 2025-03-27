@@ -1,6 +1,9 @@
-import { ProductType } from "./Product";
+import { ObjectId } from "mongoose";
+import Color from "./Color";
+import { ProductType, ProductType2 } from "./Product";
+import Size from "./Size";
 
-interface Variant {
+export interface Variant {
     _id: ObjectId;
   image: string[];
   quantity: number;
@@ -11,6 +14,20 @@ interface Variant {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Variant2 {
+  _id: ObjectId;
+image: string[];
+quantity: number;
+status: boolean;
+id_color: Color;
+id_size: Size;
+id_product: ProductType2;
+createdAt: string;
+updatedAt: string;
+}
+
+
 
 export interface PaginatedVariants {
   variants: Variant[];

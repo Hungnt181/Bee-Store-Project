@@ -1,14 +1,26 @@
 [{
   "_id": {
-    "$oid": "67832d89dd1193100e7d073e"
+    "$oid": "67d8331b4cd471a07c33a76d"
   },
-  "name": "Quần",
-  "status": true
+  "name": "Áo",
+  "status": true,
+  "createdAt": {
+    "$date": "2025-03-17T14:35:07.233Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-17T14:35:07.233Z"
+  }
 },
 {
   "_id": {
-    "$oid": "67832dbddd1193100e7d073f"
+    "$oid": "67d91eb80f1b4d7c6337dd9e"
   },
-  "name": "Áo",
-  "status": true
+  "name": "Quần ",
+  "status": true,
+  "createdAt": {
+    "$date": "2025-03-18T07:20:24.988Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:20:24.988Z"
+  }
 }]

@@ -1,0 +1,77 @@
+/* signin-custom.css */
+
+/* Tùy chỉnh các input và input-wrapper của Ant Design */
+/* .ant-input,
+.ant-input-affix-wrapper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+} */
+
+/* Khi focus vào input */
+/* .ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-bottom: 1px solid #000 !important;
+  box-shadow: none !important;
+  outline: none !important;
+} */
+
+/* Thay đổi màu placeholder thành đen khi focus */
+/* .ant-input:focus::placeholder {
+  color: #000 !important;
+  transition: color 0.3s ease;
+}
+
+.ant-input-affix-wrapper:focus input::placeholder,
+.ant-input-affix-wrapper-focused input::placeholder {
+  color: #000 !important;
+  transition: color 0.3s ease;
+} */
+
+/* Xử lý input trong thành phần Input.Password */
+/* .ant-input-password {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.ant-input-affix-wrapper .ant-input {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+} */
+
+/* Style cho icon hiển thị/ẩn mật khẩu */
+/* .ant-input-password-icon {
+  margin-right: 0 !important;
+  color: #d9d9d9;
+}
+
+.ant-input-password-icon:hover {
+  color: #000;
+} */
+
+/* Loại bỏ các style mặc định của Ant Design khi focus */
+/* .ant-form-item-has-error .ant-input:focus,
+.ant-form-item-has-error .ant-input-affix-wrapper:focus,
+.ant-form-item-has-error .ant-input-focused,
+.ant-form-item-has-error .ant-input-affix-wrapper-focused {
+  box-shadow: none !important;
+  border-color: #ff4d4f !important;
+  border-width: 0 0 1px 0 !important;
+} */
+
+/* Style cho input khi có lỗi */
+/* .ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-input-affix-wrapper {
+  border-color: #ff4d4f !important;
+  border-width: 0 0 1px 0 !important;
+}
+
+.font-all {
+  font-size: 1.7vh;
+} */

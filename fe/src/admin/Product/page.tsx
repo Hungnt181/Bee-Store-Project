@@ -14,10 +14,11 @@ import {
   Tag,
   Tooltip,
 } from "antd";
-import {Product} from "../../interface/Product";
+import { Product } from "../../interface/Product";
 import { Link, useNavigate } from "react-router-dom";
 import {
   MoreOutlined,
+  PlusOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
@@ -40,7 +41,7 @@ const AdminProductList = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const pageSize = 10;
   const url = `http://localhost:3000/api/products?_page=${curentPages}&_limit=${pageSize}&_embed=id_cate&key=${searchKeyState}`;
-  const key = "products";
+  const key = "dataPage";
 
   //cate query
   const urlCate = `http://localhost:3000/api/categories`;
@@ -62,7 +63,7 @@ const AdminProductList = () => {
       setDataTable(dataPage.products);
     }
   }, [dataPage]);
-  const urlDelete = "http://localhost:3000/api/products/status/";
+  const urlDelete = `http://localhost:3000/api/products/status/`;
   const { mutate } = useDelete(urlDelete, key);
 
   const handleSearchVariant = (id: string) => {
@@ -101,6 +102,9 @@ const AdminProductList = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
+      render: (_: unknown, item: Product) => {
+        return <>{Number(item?.price).toLocaleString("vi-VN")} VNĐ</>;
+      },
     },
 
     {
@@ -293,8 +297,7 @@ const AdminProductList = () => {
   };
   return (
     <div>
-      <h1 style={{ margin: "0 0 5px 0" }}>DANH MỤC SẢN PHẨM</h1>
-
+      <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH SẢN PHẨM</h1>
       <Flex gap={0} style={{ marginBottom: "30px" }} justify="space-between">
         <Form
           form={formSearch}
@@ -304,7 +307,10 @@ const AdminProductList = () => {
         >
           <Tooltip title="Nhập tên danh mục" placement="right">
             <Form.Item label={null} name="searchKey" style={{ width: "400px" }}>
-              <Input placeholder="Tìm kiếm z..." prefix={<SearchOutlined />} />
+              <Input
+                placeholder="Tìm kiếm sản phẩm..."
+                prefix={<SearchOutlined />}
+              />
             </Form.Item>
           </Tooltip>
           <Form.Item label={null}>
@@ -319,29 +325,30 @@ const AdminProductList = () => {
             />
           </Tooltip>
         </Form>
-
-        <Select
-          style={{ width: 150 }}
-          defaultValue={"Tất cả danh mục"}
-          onChange={handleChangeSelect}
-        >
-          <Select.Option value="">Tất cả danh mục</Select.Option>
-          {data_Cate?.map((item: Category) => (
-            <Select.Option key={item._id?.toString()} value={item._id}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Space>
+          <Select
+            style={{ width: 150 }}
+            defaultValue={"Tất cả danh mục"}
+            onChange={handleChangeSelect}
+          >
+            <Select.Option value="">Tất cả danh mục</Select.Option>
+            {data_Cate?.map((item: Category) => (
+              <Select.Option key={item._id?.toString()} value={item._id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <Button
+            type="primary"
+            // style={{ marginBottom: "15px" }}
+            onClick={showModal}
+            icon={<PlusOutlined />}
+          >
+            Thêm mới
+          </Button>
+        </Space>
       </Flex>
       <Skeleton loading={isLoading}>
-        <Button
-          type="primary"
-          style={{ marginBottom: "4px" }}
-          onClick={showModal}
-        >
-          Thêm mới sản phẩm
-        </Button>
-
         <Table
           dataSource={
             dataTable.length !== null ? dataTable : dataPage?.products
@@ -356,6 +363,7 @@ const AdminProductList = () => {
           pageSize={pageSize}
           onChange={handlePageChange}
           style={{ marginTop: 20, textAlign: "center" }}
+          align="end"
         ></Pagination>
 
         <Modal

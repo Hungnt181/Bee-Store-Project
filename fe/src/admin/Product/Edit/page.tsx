@@ -153,7 +153,7 @@ const ProductEditPage = () => {
         </Form.Item>
 
         <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-          <Button htmlType="submit">Edit</Button>
+          <Button htmlType="submit">Cập nhật</Button>
         </Form.Item>
       </Form>
     </div>
