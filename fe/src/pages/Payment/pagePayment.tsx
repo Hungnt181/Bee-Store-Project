@@ -459,19 +459,24 @@ const PaymentPage = () => {
                 preview={false}
               />
               <div className="flex-1">
-                <Paragraph strong>
+                <Text strong>
                   {" "}
                   <Link to={`/products/${item.idProduct}`}>
                     <span className="text-black">{item.nameProduct}</span>
                   </Link>{" "}
-                </Paragraph>
-                <Text type="secondary">
-                  Mã sản phẩm: {item.color}, Size: {item.size}
                 </Text>
-                <div className="flex justify-between items-center mt-1">
-                  <Paragraph strong className="text-lg">
-                    {item.price} đ
-                  </Paragraph>
+                <Text type="secondary" className="flex items-end">
+                  Màu:
+                  <div className="h-[20px] w-[20px] ml-2" style={{background: item.color}}/>
+                </Text>
+                <Text type="secondary" className="">
+                 Size: 
+                 <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
+                </Text>
+                <div className="flex justify-between items-center">
+                  <Text strong className="text-lg">
+                    <span className="text-[18px]">{item.price}</span> vnđ
+                  </Text>
                   <div className="flex items-center gap-2">
                     <Text>x {item.quantity}</Text>
                   </div>
