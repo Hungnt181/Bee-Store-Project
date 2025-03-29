@@ -5,6 +5,8 @@ import ItemsOrder from "../../models/itemOrder/itemOrder"; //bang itemOrder
 import { orderValidator } from "../../utils/validator/order";
 import Variant from "../../models/variants/variants";
 import Voucher from "../../models/vouchers/Voucher";
+
+import { io } from "../../app.js";
 class OrderController {
   async createOrder(req, res) {
     try {
@@ -109,6 +111,8 @@ class OrderController {
           $inc: { quantity: -1 },
         });
       }
+
+      io.emit("newOrder", order); // Phát sự kiện đến tất cả client
 
       res.status(201).json({
         ok: true,
