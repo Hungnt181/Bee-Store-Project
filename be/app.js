@@ -16,6 +16,7 @@ const io = new Server(server, {
     origin: "http://localhost:5173", // URL của frontend ReactJS chạy bằng Vite
     methods: ["GET", "POST"],
   },
+  transports: ["websocket", "polling"],
 });
 
 app.use(cors());
@@ -33,7 +34,7 @@ mongoose.connect("mongodb://localhost:27017/DATN");
 
 // Lắng nghe kết nối từ client
 io.on("connection", (socket) => {
-  console.log(" Client kết nối:", socket.id);
+  console.log("Client kết nối:", socket.id);
 
   socket.on("disconnect", () => {
     console.log("Client ngắt kết nối:", socket.id);
@@ -43,7 +44,7 @@ io.on("connection", (socket) => {
 // Khởi động server
 const PORT = 3000;
 server.listen(PORT, () => {
-  console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);
+  console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
 
 export const viteNodeApp = app;

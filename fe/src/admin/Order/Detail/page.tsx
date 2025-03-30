@@ -56,7 +56,7 @@ const AdminOrderDetail = () => {
       });
       if (
         orderDetail?.status === "Đã hủy" ||
-        orderDetail?.status === "Hoàn đơn"
+        orderDetail?.status === "Hoàn thành"
       ) {
         setIsDisabled(true);
       }
@@ -178,7 +178,7 @@ const AdminOrderDetail = () => {
       "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
       "Đã xác nhận": ["Đang giao", "Đã hủy"],
       "Đang giao": ["Hoàn thành"],
-      "Hoàn thành": ["Đã hủy"],
+      // "Hoàn thành": ["Đã hủy"],
       "Đã hủy": [],
     };
 
