@@ -60,6 +60,17 @@ interface VoucherItem {
   quantity: number;
 }
 
+interface PayMethodsFetch {
+  _id: string;
+  name: string;
+  status: string;
+}
+interface PayMethodsItem {
+  id: string;
+  label: string;
+  value: string;
+}
+
 interface FormValues {
   customerName: string;
   phoneNumber: string;
@@ -75,9 +86,7 @@ const PaymentPage = () => {
   const nav = useNavigate();
   const [form] = Form.useForm<FormValues>();
 
-  const [selectedPayment, setSelectedPayment] = useState<string>(
-    "67bfce96db17315614fced6f"
-  );
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   // Lấy thông tin tài khoản nếu có
   const id = localStorage.getItem("idUser");
@@ -111,6 +120,9 @@ const PaymentPage = () => {
     null
   );
 
+  //
+  const [paymentList, setPaymentList] = useState<PayMethodsItem[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [userInForm, setUserInForm] = useState<string | null>(null);
 
@@ -136,6 +148,26 @@ const PaymentPage = () => {
         console.log("Không lấy được danh sách voucher: " + error);
       }
     })();
+
+    // Lấy list payments methods
+    (async () => {
+      try {
+         const data = await axios.get("http://localhost:3000/api/payments")
+         console.log(data.data.data);
+         (data.data)
+         const dataRadios:PayMethodsItem[]  = data.data.data.map((item:PayMethodsFetch, index: number)=>({
+          id: item._id,
+          label: (<span className="" id={`${index+1}`}>{item.name}</span>),
+          value: item.name,  
+        }))
+        if (dataRadios){
+          setPaymentList(dataRadios);
+        }
+      } catch (error) {
+        console.log("Không lấy được phương thức thanh toán: " + error);
+      }
+    })();
+
   }, []);
 
   // Lấy sản phẩm từ id
@@ -453,10 +485,14 @@ const PaymentPage = () => {
     }
   };
 
-  const handleChangePaymentMethod = useCallback((e: RadioChangeEvent) => {
+  // const handleChangePaymentMethod = useCallback((e: RadioChangeEvent) => {
+  //   console.log(e.target.value)
+  //   setSelectedPayment(e.target.value);
+  // }, [])
+  const handleChangePaymentMethod = (e:RadioChangeEvent) => {
     console.log(e.target.value)
     setSelectedPayment(e.target.value);
-  }, [])
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -496,11 +532,11 @@ const PaymentPage = () => {
                 </Text>
                 <Text type="secondary" className="flex items-end">
                   Màu:
-                  <div className="h-[20px] w-[20px] ml-2" style={{background: item.color}}/>
+                  <div className="h-[20px] w-[20px] ml-2" style={{ background: item.color }} />
                 </Text>
                 <Text type="secondary" className="">
-                 Size: 
-                 <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
+                  Size:
+                  <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
                 </Text>
                 <div className="flex justify-between items-center">
                   <Text strong className="text-lg">
@@ -607,14 +643,15 @@ const PaymentPage = () => {
             <Form.Item name="paymentMethod">
               <Radio.Group
                 onChange={(e) => handleChangePaymentMethod(e)}
+                value={selectedPayment}
                 className="flex flex-col gap-6"
+                options={paymentList}
               >
-                <Radio value="67bfce96db17315614fced6f">
-                  Thanh toán khi nhận hàng
-                </Radio>
-                <Radio value="vnpay_payment">
-                  Thanh toán qua ví điện tử VNPAY
-                </Radio>
+                {/* {paymentList.map((payment, index: number) =>(
+                  <Radio value={payment.id} key={index}>
+                    {payment.name}
+                  </Radio>
+                ))} */}
               </Radio.Group>
             </Form.Item>
           </div>
