@@ -103,7 +103,10 @@ class VoucherController {
 
       // Kiểm tra unique, kiểm tra số
       const { codeName, value, maxValue } = req.body;
-      const existingCodeName = await Voucher.findOne({ codeName });
+      const existingCodeName = await Voucher.findOne({
+        codeName,
+        _id: { $ne: id }
+      });
       if (existingCodeName) {
         return res.status(400).json({ message: "CodeName này đã tồn tại" });
       }
