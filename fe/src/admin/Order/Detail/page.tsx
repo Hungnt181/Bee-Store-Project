@@ -41,8 +41,6 @@ const AdminOrderDetail = () => {
     queryKey: [key],
     queryFn: async () => {
       const response = await axios.get(url);
-      console.log("response", response);
-
       return response.data;
     },
   });
@@ -55,21 +53,17 @@ const AdminOrderDetail = () => {
         status: orderDetail.status,
       });
       if (
-        orderDetail?.status === "Đã hủy" ||
-        orderDetail?.status === "Hoàn thành"
+        orderDetail.status === "Đã hủy" ||
+        orderDetail.status === "Hoàn thành" ||
+        orderDetail.status === "Giao hàng thất bại"
       ) {
         setIsDisabled(true);
+      } else {
+        setIsDisabled(false);
       }
     }
   }, [orderDetail, form]);
 
-  // console.log("dataItemOrder", dataItemOrder);
-  useEffect(() => {
-    setIsDisabled(
-      orderDetail?.status === "Đã hủy" || orderDetail?.status === "Hoàn đơn"
-    );
-  }, [orderDetail?.status]);
-  //colums
   const columns: TableProps<ItemOrder>["columns"] = [
     {
       title: "Ảnh",
@@ -177,7 +171,7 @@ const AdminOrderDetail = () => {
     const validTransitions: Record<string, string[]> = {
       "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
       "Đã xác nhận": ["Đang giao", "Đã hủy"],
-      "Đang giao": ["Hoàn thành"],
+      "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
       // "Hoàn thành": ["Đã hủy"],
       "Đã hủy": [],
     };

@@ -48,7 +48,7 @@ const NotificationPage = () => {
 
   return (
     <Skeleton loading={isLoading}>
-      <div className="p-4 bg-white shadow-lg rounded-2xl w-[50%] h-[650px] overflow-y-auto">
+      <div className="p-4 bg-white shadow-lg rounded-2xl w-[100%] h-[650px] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Thông báo</h2>
         </div>
