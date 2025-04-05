@@ -1,4 +1,5 @@
 import { Button, Card } from "antd";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -9,8 +10,21 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     if (vnp_ResponseCode === "00") {
+      (async () => {
+        const createdOrderId = localStorage.getItem("createdOrderId");
+        //cập nhật cột isPaid thành true
+        if (createdOrderId) {
+          await axios.patch(`http://localhost:3000/api/orders/${createdOrderId}`, { isPaid: true });
+          localStorage.removeItem("createdOrderId");
+        }
+        else{
+          localStorage.removeItem("createdOrderId");
+          console.log("Ko co id don hang vua tao");
+        }
+      })();
       alert("Thanh toán thành công!");
     } else {
+      localStorage.removeItem("createdOrderId");
       alert("Thanh toán thất bại!");
     }
   }, [vnp_ResponseCode]);
