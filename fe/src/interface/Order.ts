@@ -40,3 +40,9 @@ export interface bestSelling {
   slug: string;
   status: boolean;
 }
+
+export interface PaymentMethod {
+  _id: string;
+  name: string;
+  status: boolean | string;
+}

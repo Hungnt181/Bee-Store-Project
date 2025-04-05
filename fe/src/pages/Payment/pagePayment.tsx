@@ -17,11 +17,14 @@ import {
   Image,
   Form,
   notification,
+  Skeleton,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseOptionType, DefaultOptionType } from "antd/es/select";
 import { RadioChangeEvent } from "antd/lib";
+import { PaymentMethod } from "../../interface/Order";
+const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -86,7 +89,7 @@ const PaymentPage = () => {
   const nav = useNavigate();
   const [form] = Form.useForm<FormValues>();
 
-  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState<string>("");
   const [selectedPaymentName, setSelectedPaymentName] = useState();
 
   // Lấy thông tin tài khoản nếu có
@@ -136,7 +139,7 @@ const PaymentPage = () => {
       setStoredCartItems(JSON.parse(storedCartItems));
     }
     else {
-      message.error("Không có sản phẩm để thanh toán", 3);
+      notification.error({ message: "Không có sản phẩm để thanh toán" });
       nav('/')
     }
 
@@ -263,7 +266,6 @@ const PaymentPage = () => {
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
-  // const fetchVoucher (idSelectedVoucher)
 
   // lấy voucher tu id
   const getVoucher = async (idVoucher: string) => {
@@ -311,8 +313,10 @@ const PaymentPage = () => {
         orderId: itemOrder[0].id_variant + "_" + Date.now(),
       });
       window.location.href = response.data.paymentUrl;
+      // if (searchParams.get("vnp_ResponseCode") === "00") {
+      //   handleShipCodPayment();
+      // }
     } catch (error) {
-      // console.error("Validation failed:", error);
       if (error instanceof Error) {
         message.error(
           error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
@@ -432,14 +436,12 @@ const PaymentPage = () => {
         );
         //storedCartItems - Tất cả sản phẩm trong cart
         //cartItems - Tất cả sản phẩm để thanh toán
-        console.log(cartItems);
-        console.log(listItemAfterPay);
+
         //cập nhật lại cart sau khi thanh toán
         localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
         localStorage.removeItem("selectedItemArray");
         //clear cart items
         setCartItems([]);
-        // localStorage.removeItem("cartItems");
         setListCheckout([]);
         setPaymentPrice(0);
         setSelectedVoucher(null);
@@ -502,7 +504,6 @@ const PaymentPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <Card className="w-full max-w-7xl">
-        {/* Thông tin sản phẩm */}
         <Title
           level={2}
           className="mb-4 pb-2 border-b border-gray-300"
@@ -510,7 +511,6 @@ const PaymentPage = () => {
         >
           Thông tin sản phẩm
         </Title>
-
         <Card className="mb-6 bg-gray-50">
           {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
@@ -555,12 +555,11 @@ const PaymentPage = () => {
             </div>
           ))}
         </Card>
-
         {/* Form thông tin người nhận */}
-        <Form form={form} layout="vertical" requiredMark={false} onFinish={handleFormSubmit}>
+        <Form form={form} layout="vertical" requiredMark={true} onFinish={handleFormSubmit}>
           <Title
             level={2}
-            className="mb-4 pb-2 border-b border-gray-300"
+            className="mb-4 pb-2 border-b border-gray-300 mt-5"
             style={{ fontSize: "28px" }}
           >
             Người nhận
@@ -645,18 +644,18 @@ const PaymentPage = () => {
               Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
             </Paragraph>
 
-            <Form.Item name="paymentMethod">
+            <Form.Item name="paymentMethod" rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn phương thức thanh toán!"
+              }
+            ]}>
               <Radio.Group
                 onChange={(e) => handleChangePaymentMethod(e)}
                 value={selectedPayment}
                 className="flex flex-col gap-6"
                 options={paymentList}
               >
-                {/* {paymentList.map((payment, index: number) =>(
-                  <Radio value={payment.id} key={index}>
-                    {payment.name}
-                  </Radio>
-                ))} */}
               </Radio.Group>
             </Form.Item>
           </div>
@@ -745,7 +744,7 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                      new Error("Vui lòng đồng ý với điều khoản và quy định")
+                      new Error("Vui lòng đồng ý với điều khoản và quy định!")
                     ),
               },
             ]}

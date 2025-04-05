@@ -13,15 +13,21 @@ export default function ListitemCategory({ isSticky }: { isSticky: boolean }) {
     },
   });
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0); // Scroll to the top of the page
+  const handleNavigation = (path: string, idCate?: string | undefined | null) => {
+    if (idCate === undefined) {
+      navigate(`${path}?cate=all`);
+    } else if (idCate === null) {
+      navigate(`${path}`);
+    } else {
+      navigate(`${path}?cate=${idCate}`);
+    }
+    window.scrollTo(0, 0);
   };
 
   return (
     <ul className="uppercase flex gap-8 flex-1 justify-center text-base font-medium items-center">
       <li
-        onClick={() => handleNavigation("/products")}
+        onClick={() => handleNavigation("/products", undefined)}
         className={`py-3 px-5 rounded-md transition-all transform duration-300 cursor-pointer ${
           isSticky
             ? "text-white hover:text-black bg-transparent hover:bg-white hover:scale-105"
@@ -35,7 +41,7 @@ export default function ListitemCategory({ isSticky }: { isSticky: boolean }) {
         dataCate.map((item: Category) => (
           <li
             key={item._id}
-            onClick={() => handleNavigation("/products")}
+            onClick={() => handleNavigation("/products", item._id)}
             className={`py-3 px-5 rounded-md transition-all transform duration-300 cursor-pointer ${
               isSticky
                 ? "text-white hover:text-black bg-transparent hover:bg-white hover:scale-105"
@@ -47,7 +53,7 @@ export default function ListitemCategory({ isSticky }: { isSticky: boolean }) {
         ))}
 
       <li
-        onClick={() => handleNavigation("/vouchers")}
+        onClick={() => handleNavigation("/vouchers", null)}
         className={`py-3 px-5 rounded-md transition-all transform duration-300 cursor-pointer ${
           isSticky
             ? "text-white hover:text-black bg-transparent hover:bg-white hover:scale-105"
