@@ -206,7 +206,7 @@ export default function HomePage() {
         bestSellingProduct &&
         Array.isArray(bestSellingProduct) &&
         data ? (
-          (console.log("numbers: " + bestSellingProduct?.length),
+          (
           (
             <>
               <div className=" mt-8 grid grid-cols-4 gap-8">

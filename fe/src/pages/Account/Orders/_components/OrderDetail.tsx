@@ -9,21 +9,34 @@ import {
   Table,
   TableProps,
   Tag,
+  Card,
+  Divider,
+  Steps,
+  Typography,
+  Space,
+  Row,
+  Col,
 } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { Order } from "../../../../interface/Order";
 import { ItemOrder } from "../../../../interface/ItemOrder";
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CarOutlined,
+  StopOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const OrderDetail = () => {
   const [dataOrder, setDataOrder] = useState<Order>();
   const [dataItemOrder, setDataItemOrder] = useState<ItemOrder[]>([]);
   const { id } = useParams();
   const queryClient = useQueryClient();
-  // const [canCancel, setCanCancel] = useState(false);
-
-  //Thông tin admin
 
   const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder`;
   const key = "dataPageOrder";
@@ -44,19 +57,20 @@ const OrderDetail = () => {
     }
   }, [orderDetail]);
 
-  //colums
   const columns: TableProps<ItemOrder>["columns"] = [
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      width: 50,
+      width: 80,
       render: (_: unknown, record: ItemOrder) => {
         return (
           <Image
             src={record?.id_variant?.image[0]}
-            width={50}
-            height={50}
+            width={60}
+            height={60}
+            style={{ objectFit: "cover", borderRadius: "8px" }}
+            preview={{ mask: <div>Xem</div> }}
           ></Image>
         );
       },
@@ -65,34 +79,29 @@ const OrderDetail = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      width: 50,
+      render: (text: string) => <Text strong>{text}</Text>,
     },
     {
       title: "Màu sắc",
       dataIndex: "id_color",
       key: "id_color",
-      width: 50,
       render: (_: unknown, record: ItemOrder) => {
         return (
-          <>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p style={{ minWidth: "40px" }}>
-                {record?.id_variant?.id_color?.name}
-              </p>
-              <div
-                style={{
-                  marginLeft: "5px",
-                  backgroundColor: record?.id_variant?.id_color?.hexcode,
-                  width: "20px",
-                  height: "20px",
-                  border:
-                    record?.id_variant?.id_color?.hexcode == "#ffffff"
-                      ? "1px solid gray"
-                      : "none",
-                }}
-              ></div>
-            </div>
-          </>
+          <Space>
+            <Text>{record?.id_variant?.id_color?.name}</Text>
+            <div
+              style={{
+                backgroundColor: record?.id_variant?.id_color?.hexcode,
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                border:
+                  record?.id_variant?.id_color?.hexcode === "#ffffff"
+                    ? "1px solid gray"
+                    : "none",
+              }}
+            ></div>
+          </Space>
         );
       },
     },
@@ -100,25 +109,22 @@ const OrderDetail = () => {
       title: "Kích cỡ",
       dataIndex: "id_size",
       key: "id_size",
-      width: 50,
       render: (_: unknown, record: ItemOrder) => {
-        return (
-          <>
-            <span>{record?.id_variant?.id_size?.name}</span>
-          </>
-        );
+        return <Tag>{record?.id_variant?.id_size?.name}</Tag>;
       },
     },
     {
       title: "Giá",
       dataIndex: "id_product",
       key: "id_product",
-      width: 50,
       render: (_: unknown, record: ItemOrder) => {
         return (
-          <>
-            <span>{record?.id_variant?.id_product?.price}</span>
-          </>
+          <Text type="danger" strong>
+            {new Intl.NumberFormat("vi-VN").format(
+              record?.id_variant?.id_product?.price
+            )}{" "}
+            ₫
+          </Text>
         );
       },
     },
@@ -126,20 +132,19 @@ const OrderDetail = () => {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
-      width: 50,
+      render: (quantity: number) => <Tag color="processing">{quantity}</Tag>,
     },
     {
       title: "Thao tác",
       dataIndex: "action",
       key: "action",
-      width: 50,
       render: (_: unknown, item: ItemOrder) => {
         return (
-          <div>
-            <Link to={`/products/${item.id_variant.id_product._id}`}>
-              <Button type="primary">Mua lại</Button>
-            </Link>
-          </div>
+          <Link to={`/products/${item.id_variant.id_product._id}`}>
+            <Button type="primary" icon={<ShoppingCartOutlined />}>
+              Mua lại
+            </Button>
+          </Link>
         );
       },
     },
@@ -165,22 +170,8 @@ const OrderDetail = () => {
     const completedTime = new Date(orderDetail.completedAt);
     const threeMinutesLater = new Date(completedTime);
     threeMinutesLater.setMinutes(completedTime.getMinutes() + 3);
-
-    // const checkTime = () => {
-    //   const now = new Date();
-    //   setCanCancel(now < threeMinutesLater);
-    // };
-
-    // Kiểm tra ngay lập tức
-    // checkTime();
-
-    // Cập nhật mỗi giây để ẩn nút đúng thời điểm
-    // const interval = setInterval(checkTime, 1000);
-
-    // return () => clearInterval(interval);
   }, [orderDetail?.completedAt]);
 
-  //
   const handleCancel = useMutation({
     mutationFn: async () => {
       await axios.patch(`http://localhost:3000/api/orders/client/${id}`);
@@ -191,7 +182,6 @@ const OrderDetail = () => {
     },
     onError: (error) => {
       console.error("Lỗi từ API:", error);
-      // Kiểm tra nếu có response từ backend
       if (axios.isAxiosError(error) && error.response) {
         message.error(error.response.data.message || "Có lỗi xảy ra!");
       } else {
@@ -199,140 +189,218 @@ const OrderDetail = () => {
       }
     },
   });
+
+  // Get current status step
+  const getOrderStatusStep = () => {
+    switch (dataOrder?.status) {
+      case "Chưa xác nhận":
+        return 0;
+      case "Đã xác nhận":
+        return 1;
+      case "Đang giao":
+        return 2;
+      case "Hoàn thành":
+        return 3;
+      case "Đã hủy":
+        return -1;
+      default:
+        return 0;
+    }
+  };
+
   return (
-    <div>
-      <h1 className="mb-2 text-[24px]">CHI TIẾT ĐƠN HÀNG</h1>
-      <Skeleton loading={isLoading}>
-        <div className="w-full">
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Mã đơn hàng:</p>
-            <p>{dataOrder?._id.toString()}</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Ngày tạo:</p>
-            <p>{dayjs(dataOrder?.createdAt).format("DD/MM/YYYY HH:mm:ss")}</p>
-          </div>
-          <div className="flex m-1 text-[16px] items-center">
-            <p className="min-w-[200px]">Xác nhận của khách </p>
-            <p>
-              {dataOrder?.isConfirm ? (
-                <Tag color="green">Đã nhận</Tag>
-              ) : (
-                <Tag color="red">Chưa nhận</Tag>
-              )}
-            </p>
-
-            <div className="mt-2 ml-2">
-              <Button
-                type="primary"
-                onClick={() => handleIsConfirm.mutate()}
-                hidden={
-                  dataOrder?.isConfirm ||
-                  dataOrder?.status.trim() !== "Hoàn thành"
-                }
-              >
-                Xác nhận đơn hàng
-              </Button>
-            </div>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Phí vận chuyển: </p>
-            <p>{dataOrder?.shippingFee} VNĐ</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Mã giảm giá: </p>
-            <p>{dataOrder?.voucher?.value} </p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Tổng hóa hóa đơn: </p>
-            <p>{dataOrder?.total} VNĐ</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Thanh toán:</p>
-            <p>
-              {dataOrder?.isPaid ? (
-                <Tag color="green">Đã thanh toán</Tag>
-              ) : (
-                <Tag color="red">Chưa thanh toán</Tag>
-              )}
-            </p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]"> Phương thức TT:</p>
-            <p> {dataOrder?.payment?.name}</p>
-          </div>
-          <div className="flex m-1 text-[16px] items-center">
-            <p className="min-w-[200px]">Trạng thái đơn hàng:</p>
-            <p
-              className={`${
-                dataOrder?.status === "Hoàn thành"
-                  ? "text-green-500"
-                  : dataOrder?.status === "Chưa xác nhận"
-                  ? "text-yellow-500"
-                  : dataOrder?.status === "Đang giao"
-                  ? "text-purple-500"
-                  : dataOrder?.status === "Đã hủy"
-                  ? "text-red-500"
-                  : "text-blue-400"
-              } font-medium`}
-            >
-              {dataOrder?.status}
-            </p>
-            <div className="mt-2 ml-2">
-              <Popconfirm
-                title="Delete the task"
-                description="Bạn chắc chắn muốn hủy đơn hàng này không?"
-                onConfirm={() => handleCancel.mutate()}
-                okText="Hủy"
-                cancelText="Không hủy"
-              >
+    <div className="bg-gray-50 p-6 min-h-screen">
+      <Skeleton loading={isLoading} active>
+        <Card className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <Title level={3} style={{ margin: 0 }}>
+              CHI TIẾT ĐƠN HÀNG #{dataOrder?._id.toString().slice(-6)}
+            </Title>
+            <Space>
+              {dataOrder?.status !== "Đã hủy" &&
+                dataOrder?.status !== "Hoàn thành" &&
+                dataOrder?.status !== "Đang giao" && (
+                  <Popconfirm
+                    title="Hủy đơn hàng"
+                    description="Bạn chắc chắn muốn hủy đơn hàng này không?"
+                    onConfirm={() => handleCancel.mutate()}
+                    okText="Hủy"
+                    cancelText="Không"
+                    okButtonProps={{ danger: true }}
+                  >
+                    <Button danger type="primary" icon={<StopOutlined />}>
+                      Hủy đơn hàng
+                    </Button>
+                  </Popconfirm>
+                )}
+              {dataOrder?.status === "Hoàn thành" && !dataOrder?.isConfirm && (
                 <Button
                   type="primary"
-                  danger
-                  hidden={
-                    dataOrder?.status === "Đang giao" ||
-                    dataOrder?.status === "Đã hủy" ||
-                    dataOrder?.status === "Hoàn thành"
-                  }
+                  icon={<CheckCircleOutlined />}
+                  onClick={() => handleIsConfirm.mutate()}
                 >
-                  Hủy đơn hàng
+                  Xác nhận đã nhận hàng
                 </Button>
-              </Popconfirm>
-            </div>
-            {/* <div className="mt-2 ml-2">
-              <Popconfirm
-                title="Delete the task"
-                description="Bạn chắc chắn muốn hoàn đơn này không?"
-                onConfirm={() => handleCancel.mutate()}
-                okText="Có"
-                cancelText="Không "
-              >
-                <Button
-                  type="primary"
-                  danger
-                  hidden={!canCancel || dataOrder?.status === "Đã hủy"}
-                >
-                  Hoàn đơn
-                </Button>
-              </Popconfirm>
-            </div> */}
+              )}
+            </Space>
           </div>
 
-          <div className="flex">
-            <p className="min-w-[200px] text-[18px]">
-              Thông tin sản phẩm đã mua{" "}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <Table
-              dataSource={dataItemOrder}
-              columns={columns}
-              pagination={false}
-              scroll={{ y: 55 * 3 }}
+          {dataOrder?.status !== "Đã hủy" ? (
+            <Steps
+              current={getOrderStatusStep()}
+              className="mb-6"
+              items={[
+                {
+                  title: "Chờ xác nhận",
+                  icon: <ClockCircleOutlined />,
+                },
+                {
+                  title: "Đã xác nhận",
+                  icon: <CheckCircleOutlined />,
+                },
+                {
+                  title: "Đang giao",
+                  icon: <CarOutlined />,
+                },
+                {
+                  title: "Hoàn thành",
+                  icon: <CheckCircleOutlined />,
+                },
+              ]}
             />
-          </div>
-        </div>
+          ) : (
+            <Card className="bg-red-50 mb-6">
+              <div className="flex items-center text-red-500">
+                <StopOutlined
+                  style={{ fontSize: "24px", marginRight: "8px" }}
+                />
+                <Text strong style={{ color: "red" }}>
+                  Đơn hàng đã bị hủy
+                </Text>
+              </div>
+            </Card>
+          )}
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
+              <Card type="inner" title="Thông tin đơn hàng" className="h-full">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Text>Mã đơn hàng:</Text>
+                    <Text copyable strong>
+                      {dataOrder?._id.toString()}
+                    </Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Ngày đặt:</Text>
+                    <Text>
+                      {dayjs(dataOrder?.createdAt).format(
+                        "DD/MM/YYYY HH:mm:ss"
+                      )}
+                    </Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Trạng thái:</Text>
+                    <Tag
+                      color={
+                        dataOrder?.status === "Hoàn thành"
+                          ? "success"
+                          : dataOrder?.status === "Chưa xác nhận"
+                          ? "warning"
+                          : dataOrder?.status === "Đang giao"
+                          ? "processing"
+                          : dataOrder?.status === "Đã hủy"
+                          ? "error"
+                          : "blue"
+                      }
+                    >
+                      {dataOrder?.status}
+                    </Tag>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Xác nhận từ khách:</Text>
+                    <Tag color={dataOrder?.isConfirm ? "success" : "error"}>
+                      {dataOrder?.isConfirm ? "Đã nhận hàng" : "Chưa nhận hàng"}
+                    </Tag>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col xs={24} md={12}>
+              <Card type="inner" title="Thanh toán" className="h-full">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Text>Phương thức:</Text>
+                    <Text strong>{dataOrder?.payment?.name}</Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Trạng thái:</Text>
+                    <Tag color={dataOrder?.isPaid ? "success" : "error"}>
+                      {dataOrder?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                    </Tag>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Phí vận chuyển:</Text>
+                    <Text>
+                      {new Intl.NumberFormat("vi-VN").format(
+                        dataOrder?.shippingFee || 0
+                      )}{" "}
+                      ₫
+                    </Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text>Mã giảm giá:</Text>
+                    <Text>{dataOrder?.voucher?.value || "Không có"}</Text>
+                  </div>
+                  <Divider style={{ margin: "12px 0" }} />
+                  <div className="flex justify-between">
+                    <Text strong>Tổng cộng:</Text>
+                    <Text type="danger" strong style={{ fontSize: "16px" }}>
+                      {new Intl.NumberFormat("vi-VN").format(
+                        dataOrder?.total || 0
+                      )}{" "}
+                      ₫
+                    </Text>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+
+        <Card title={<Title level={4}>Sản phẩm đã mua</Title>}>
+          <Table
+            dataSource={dataItemOrder}
+            columns={columns}
+            pagination={false}
+            rowKey="_id"
+            scroll={{ x: "max-content" }}
+            bordered
+            summary={() => (
+              <Table.Summary fixed>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell index={0} colSpan={5} align="right">
+                    <Text strong>Tổng tiền sản phẩm:</Text>
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} colSpan={2}>
+                    <Text type="danger" strong>
+                      {new Intl.NumberFormat("vi-VN").format(
+                        dataItemOrder.reduce(
+                          (sum, item) =>
+                            sum +
+                            Number(item?.id_variant?.id_product?.price ?? 0) *
+                              Number(item?.quantity ?? 0),
+                          0
+                        )
+                      )}{" "}
+                      ₫
+                    </Text>
+                  </Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            )}
+          />
+        </Card>
       </Skeleton>
     </div>
   );
