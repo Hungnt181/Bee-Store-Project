@@ -181,7 +181,7 @@ const CartPage: React.FC = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
-      render: (text, record: CartModalItemDetail) => (
+      render: (_text:string, record: CartModalItemDetail) => (
         <span>{formatCurrency(record.price, 'vnd')}</span>
       ),
     },
@@ -227,14 +227,14 @@ const CartPage: React.FC = () => {
       title: "Thành tiền",
       dataIndex: "totalPrice",
       key: "totalPrice",
-      render: (text, record: CartModalItemDetail) => (
+      render: (_text: string, record: CartModalItemDetail) => (
         <span className="font-bold">{formatCurrency(record.price * record.quantity, 'vnd')}</span>
       ),
     },
     {
       title: "#",
       key: "action",
-      render: (text, record: CartModalItemDetail, index: number) => (
+      render: (_text:string, _record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
@@ -281,7 +281,7 @@ const CartPage: React.FC = () => {
             rowSelection={rowSelection}
             dataSource={cartModalItems}
             columns={columns}
-            rowKey={(record, index) => index.toString()}
+            rowKey={(_record, index) => (index)?(index.toString()): ''}
             pagination={false}
           />
           <div className="mt-3">
