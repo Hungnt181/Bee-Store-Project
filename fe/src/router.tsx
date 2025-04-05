@@ -48,6 +48,7 @@ import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 import AdminBannerList from "./admin/Banner/page";
 import AdminBannerAdd from "./admin/Banner/Add/page";
 import VoucherPageBee from "./pages/Vouchers/VoucherPage";
+import NotificationPage from "./admin/Notification/page";
 
 export const router = createBrowserRouter([
   {
@@ -152,6 +153,7 @@ export const router = createBrowserRouter([
       { path: "/admin/order/:id", element: <AdminOrderDetail /> },
       { path: "/admin/banner", element: <AdminBannerList /> },
       { path: "/admin/banner/add", element: <AdminBannerAdd /> },
+      { path: "/admin/notification", element: <NotificationPage /> },
     ],
   },
 ]);

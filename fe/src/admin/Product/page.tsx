@@ -144,7 +144,7 @@ const AdminProductList = () => {
           <div>
             <Space>
               <Popconfirm
-                title="Update status of product"
+                title="Cập nhật trạng thái"
                 description="Bạn muốn cập nhật trạng thái sản phẩm không ?"
                 onConfirm={() => {
                   mutate(item._id);
@@ -351,7 +351,9 @@ const AdminProductList = () => {
       <Skeleton loading={isLoading}>
         <Table
           dataSource={
-            dataTable.length !== null ? dataTable : dataPage?.products
+            Array.isArray(dataTable) && dataTable.length > 0
+              ? dataTable
+              : dataPage?.products || []
           }
           columns={columns}
           pagination={false}

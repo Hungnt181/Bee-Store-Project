@@ -64,7 +64,7 @@ const OrderSchema = new Schema(
         "Đã xác nhận",
         "Đang giao",
         "Hoàn thành",
-        "Hoàn đơn",
+        "Giao hàng thất bại",
         "Đã hủy",
       ],
       default: "Chưa xác nhận",

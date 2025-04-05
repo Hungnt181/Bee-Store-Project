@@ -5,6 +5,8 @@ import ItemsOrder from "../../models/itemOrder/itemOrder"; //bang itemOrder
 import { orderValidator } from "../../utils/validator/order";
 import Variant from "../../models/variants/variants";
 import Voucher from "../../models/vouchers/Voucher";
+
+import { io } from "../../app.js";
 class OrderController {
   async createOrder(req, res) {
     try {
@@ -88,6 +90,18 @@ class OrderController {
       }
       // có thể ko cần thiết check phần này
 
+      // check status voucher
+
+      if (req.body.voucher) {
+        const voucher = await Voucher.findById(req.body.voucher);
+        if (voucher.quantity === 0 || voucher.status === false) {
+          return res.status(400).json({
+            message:
+              "Xin lỗi quý khách voucher hiện taị không thể dùng. Vui lòng tải lại trang và thực hiện lại thanh toán",
+          });
+        }
+      }
+
       //  Nếu không quá số lượng tồn kho, tạo order
       const order = await Order.create(req.body);
 
@@ -109,6 +123,8 @@ class OrderController {
           $inc: { quantity: -1 },
         });
       }
+
+      io.emit("newOrder", order); // Phát sự kiện đến tất cả client
 
       res.status(201).json({
         ok: true,
@@ -251,8 +267,8 @@ class OrderController {
       const validTransitions = {
         "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
         "Đã xác nhận": ["Đang giao", "Đã hủy"],
-        "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": ["Đã hủy"],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        "Hoàn thành": [],
         "Đã hủy": [],
       };
 
