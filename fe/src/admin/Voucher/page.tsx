@@ -99,7 +99,7 @@ const columns: TableProps<Voucher>["columns"] = [
     key: "action",
     render: (record: Voucher) => (
       <div>
-        <button>Xóa</button>
+        {/* <button>Xóa</button> */}
         <Button href={`/admin/voucher/${record._id}/edit`}>Sửa</Button>
       </div>
     ),
