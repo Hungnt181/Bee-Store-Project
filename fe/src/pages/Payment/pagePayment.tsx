@@ -24,6 +24,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BaseOptionType, DefaultOptionType } from "antd/es/select";
 import { RadioChangeEvent } from "antd/lib";
 import { PaymentMethod } from "../../interface/Order";
+import { formatCurrency } from "../../helpers/utils";
 const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 
 const { Title, Text, Paragraph } = Typography;
@@ -156,15 +157,15 @@ const PaymentPage = () => {
     // Lấy list payments methods
     (async () => {
       try {
-         const data = await axios.get("http://localhost:3000/api/payments");
+        const data = await axios.get("http://localhost:3000/api/payments");
         //  console.log(data.data.data);
-         (data.data)
-         const dataRadios:PayMethodsItem[]  = data.data.data.map((item:PayMethodsFetch, index: number)=>({
+        (data.data)
+        const dataRadios: PayMethodsItem[] = data.data.data.map((item: PayMethodsFetch, index: number) => ({
           id: item._id,
-          label: (<span className="" id={`${index+1}`}>{item.name}</span>),
-          value: item._id,  
+          label: (<span className="" id={`${index + 1}`}>{item.name}</span>),
+          value: item._id,
         }))
-        if (dataRadios){
+        if (dataRadios) {
           setPaymentList(dataRadios);
         }
       } catch (error) {
@@ -280,6 +281,7 @@ const PaymentPage = () => {
   };
 
   //onclick event
+  const [voucherInfor, setVoucherInfor] = useState<string | null>('');
   const getPromotionValue = async () => {
     if (selectedVoucher !== null && idSelectedVoucher) {
       const voucher = await getVoucher(idSelectedVoucher);
@@ -288,6 +290,11 @@ const PaymentPage = () => {
 
       setPromotionValue(discount);
       setPaymentPrice(totalPrice - discount);
+      setVoucherInfor(voucher.description);
+    }
+    else {
+      setPromotionValue(0);
+      setVoucherInfor(null);
     }
   };
 
@@ -423,7 +430,7 @@ const PaymentPage = () => {
         if (!newOrder.ok) {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
-        else{
+        else {
           localStorage.setItem('createdOrderId', orderData.data._id);
         }
         //loại bỏ các sản phẩm đã thanh toán
@@ -475,12 +482,12 @@ const PaymentPage = () => {
         console.log('vnpay');
         // await handleShipCodPayment();
         handleOnlinePayment()
-      }else if(selectedPayment == '67bfce96db17315614fced6f') {
+      } else if (selectedPayment == '67bfce96db17315614fced6f') {
         console.log('cod');
         await handleShipCodPayment();
         nav("/notify2");
       }
-      else{
+      else {
         message.error('Mời bạn chọn phương thức thanh toán', 3)
         return;
       }
@@ -496,7 +503,7 @@ const PaymentPage = () => {
     }
   };
 
-  const handleChangePaymentMethod = (e:RadioChangeEvent) => {
+  const handleChangePaymentMethod = (e: RadioChangeEvent) => {
     console.log(e.target.value)
     setSelectedPayment(e.target.value);
   }
@@ -670,11 +677,11 @@ const PaymentPage = () => {
                 <Space direction="vertical" className="w-full">
                   <div className="flex justify-between">
                     <Text type="secondary">Tổng giá trị sản phẩm</Text>
-                    <Text type="secondary">{totalPrice} đ</Text>
+                    <Text type="secondary">{formatCurrency(totalPrice, 'vnd')}</Text>
                   </div>
                   <div className="flex justify-between">
                     <Text type="secondary">Giảm giá từ voucher</Text>
-                    <Text type="secondary">{promotionValue} đ</Text>
+                    <Text type="secondary">{formatCurrency(promotionValue, 'vnd')}</Text>
                   </div>
                   <Divider />
                   <div className="flex justify-between">
@@ -682,17 +689,30 @@ const PaymentPage = () => {
                       Tổng thanh toán
                     </Text>
                     <Text strong type="danger" style={{ fontSize: "17px" }}>
-                      {paymentPrice} đ
+                      {formatCurrency(paymentPrice, 'vnd')}
                     </Text>
                   </div>
-                  <div className="text-right">
-                    <Text type="danger">
-                      Bạn đã tiết kiệm được:{" "}
-                      <Text type="danger" strong>
-                        {promotionValue} đ
-                      </Text>
-                    </Text>
-                  </div>
+                  {(voucherInfor) &&
+                    (
+                      <div className="text-right">
+                        <Text>
+                          {voucherInfor} đã được chọn
+                        </Text>
+                      </div>
+                    )
+                  }
+                  {(promotionValue > 0) &&
+                    (
+                      <div className="text-right">
+                        <Text type="danger">
+                          Bạn đã tiết kiệm được:{" "}
+                          <Text type="danger" strong>
+                            {formatCurrency(promotionValue, 'vnd')}
+                          </Text>
+                        </Text>
+                      </div>
+                    )
+                  }
                 </Space>
               </Card>
             </Col>
