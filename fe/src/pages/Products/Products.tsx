@@ -90,7 +90,7 @@ export default function FilterProducts() {
                   { value: "new", label: "📅 Mới nhất" },
                   { value: "lowToHight", label: "⬆️ Giá: Tăng dần" },
                   { value: "hightToLow", label: "⬇️ Giá: Giảm dần" },
-                  { value: "best", label: "🔥 Bán chạy" },
+                  // { value: "best", label: "🔥 Bán chạy" },
                 ]}
                 onChange={handleChangeSort}
               />

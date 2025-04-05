@@ -20,6 +20,7 @@ class VNPayController {
 			vnp_HashSecret: process.env.VNP_HASHSECRET,
 			vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
 			vnp_ReturnUrl: "http://localhost:5173/notify",
+			// vnp_ReturnUrl: process.env.VNP_RETURNURL,
 		};
 
 		let vnp_Params = {
@@ -62,7 +63,7 @@ class VNPayController {
 	  delete vnp_Params["vnp_SecureHash"];
 	  delete vnp_Params["vnp_SecureHashType"];
 
-	  const signData = querystring.stringify(vnp_Params, { encode: false });
+	  const signData = qs.stringify(vnp_Params, { encode: false });
 	  const hmac = crypto.createHmac("sha512", process.env.VNP_HASHSECRET);
 	  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
