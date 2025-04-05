@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import { Button, Card } from "antd";
 import axios from "axios";
-=======
->>>>>>> test/mergeUI
 import { motion } from "framer-motion";
 import { CheckCircleIcon, XCircleIcon, HomeIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
