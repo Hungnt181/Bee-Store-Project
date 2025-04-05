@@ -2,6 +2,7 @@ import { Layout, theme } from "antd";
 import Sidebar from "./_components/sidebar";
 import { Outlet } from "react-router-dom";
 import "../assets/Css/Admin/Layout.css";
+import RealTime from "./RealTime/page";
 
 const { Content, Footer } = Layout;
 
@@ -28,6 +29,7 @@ const App: React.FC = () => {
               scrollbarColor: "#1890ff #f0f0f0",
             }}
           >
+            <RealTime></RealTime>
             <Outlet></Outlet>
           </div>
         </Content>

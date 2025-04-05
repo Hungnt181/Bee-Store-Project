@@ -15,8 +15,8 @@
     "@sendgrid/mail": "^8.1.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.41.3",
     "body-parser": "^1.20.3",
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
@@ -39,6 +39,7 @@
     "nodemailer": "^6.10.0",
     "qs": "^6.14.0",
     "slugify": "^1.6.6",
+    "socket.io": "^4.8.1",
     "validator": "^13.12.0"
   },
   "devDependencies": {

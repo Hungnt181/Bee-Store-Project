@@ -63,19 +63,16 @@ const AdminOrderDetail = () => {
         status: orderDetail.status,
       });
       if (
-        orderDetail?.status === "Đã hủy" ||
-        orderDetail?.status === "Hoàn đơn"
+        orderDetail.status === "Đã hủy" ||
+        orderDetail.status === "Hoàn thành" ||
+        orderDetail.status === "Giao hàng thất bại"
       ) {
         setIsDisabled(true);
+      } else {
+        setIsDisabled(false);
       }
     }
   }, [orderDetail, form]);
-
-  useEffect(() => {
-    setIsDisabled(
-      orderDetail?.status === "Đã hủy" || orderDetail?.status === "Hoàn đơn"
-    );
-  }, [orderDetail?.status]);
 
   // Get status color
 
@@ -225,18 +222,18 @@ const AdminOrderDetail = () => {
       validTransitions = {
         "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
         "Đã xác nhận": ["Đang giao", "Đã hủy"],
-        "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": [], // Không có lựa chọn "Đã hủy" nếu khách đã xác nhận
-        "Đã hủy": [],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        // "Hoàn thành": [],
+        // "Đã hủy": [],
       };
     } else {
       // Cấu hình chuyển đổi ban đầu nếu khách chưa xác nhận
       validTransitions = {
         "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
         "Đã xác nhận": ["Đang giao", "Đã hủy"],
-        "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": ["Đã hủy"], // Có thể hủy nếu khách chưa xác nhận
-        "Đã hủy": [],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        // "Hoàn thành": [],
+        // "Đã hủy": [],
       };
     }
 

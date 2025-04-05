@@ -136,7 +136,7 @@ const AdminVariantList = () => {
           <div>
             <Space>
               <Popconfirm
-                title="Update status of product"
+                title="Cập nhật trạng thái"
                 description="Bạn muốn cập nhật trạng thái sản phẩm không ?"
                 onConfirm={() => {
                   mutate(item._id);

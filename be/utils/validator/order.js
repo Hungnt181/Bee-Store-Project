@@ -43,7 +43,7 @@ const orderValidator = Joi.object({
       "Đã xác nhận",
       "Đang giao",
       "Hoàn thành",
-      "Hoàn đơn",
+      "Giao hàng thất bại",
       "Đã hủy"
     )
     .default("Chưa xác nhận"),

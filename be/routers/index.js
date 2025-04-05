@@ -13,6 +13,7 @@ import { commentRouter } from "./comments/comment.js";
 import { receiverRouter } from "./receiverInfor/receiverInfor.js";
 import { bannerRouter } from "./banners/bannerRouters.js";
 import vnpayRouter from "./vnpay/vnpay.js";
+import notiApiRouter from "./notifications/notifications.js";
 
 const router = Router();
 
@@ -29,6 +30,7 @@ router.use(`/api`, itemOrderRouter);
 router.use(`/api`, commentRouter);
 router.use(`/api`, receiverRouter);
 router.use(`/api`, bannerRouter);
-router.use(`/vnpay`, vnpayRouter)
+router.use(`/vnpay`, vnpayRouter);
+router.use(`/api`, notiApiRouter);
 
 export default router;
