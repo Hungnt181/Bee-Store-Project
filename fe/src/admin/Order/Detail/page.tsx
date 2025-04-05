@@ -208,7 +208,11 @@ const AdminOrderDetail = () => {
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Khách hàng: </p>
-            <p>{dataOrder?.user?.name}</p>
+            <p>
+              {dataOrder?.user !== null
+                ? dataOrder?.user?.name
+                : "Không có tài khoản"}
+            </p>
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Thông tin người nhận: </p>
@@ -236,7 +240,11 @@ const AdminOrderDetail = () => {
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Mã giảm giá: </p>
-            <p>{dataOrder?.voucher?.value} </p>
+            <p>
+              {dataOrder?.voucher !== null
+                ? dataOrder?.voucher?.title
+                : "Không áp dụng voucher"}{" "}
+            </p>
           </div>
           <div className="flex m-1 text-[16px]">
             <p className="min-w-[200px]">Tổng hóa hóa đơn: </p>
