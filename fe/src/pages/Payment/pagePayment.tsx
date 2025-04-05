@@ -480,7 +480,7 @@ const PaymentPage = () => {
       console.log("Form values:", values);
       if (selectedPayment == "67bfcec4db17315614fced70") {
         console.log('vnpay');
-        // await handleShipCodPayment();
+        await handleShipCodPayment();
         handleOnlinePayment()
       } else if (selectedPayment == '67bfce96db17315614fced6f') {
         console.log('cod');
