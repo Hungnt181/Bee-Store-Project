@@ -390,6 +390,7 @@ class OrderController {
       if (!order) {
         return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
       }
+      order.isPaid = true;
       await order.save();
       return res.status(200).json({
         message: "Cập nhật trạng thái thanh toán đơn hàng thành công",

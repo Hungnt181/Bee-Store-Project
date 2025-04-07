@@ -27,6 +27,6 @@ orderApiRouter.get(
   orderController.getBestSellingProducts
 );
 //cập nhật trang thái thanh toán
-orderApiRouter.patch("/orders/:id", orderController.updatePaymentStatus)
+orderApiRouter.patch("/orders/payment/:id", orderController.updatePaymentStatus)
 
 export default orderApiRouter;
