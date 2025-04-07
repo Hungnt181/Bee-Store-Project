@@ -7,6 +7,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons"; // Import icon
+import { color } from "framer-motion";
 
 export default function OrderTable() {
   const id_user = localStorage.getItem("idUser");
@@ -31,6 +32,8 @@ export default function OrderTable() {
       setTotalPages(data_Order.totalPages);
       setCurentPages(data_Order.page);
       setDataTable(data_Order.orders);
+      console.log(dataTable);
+
     }
   }, [data_Order]);
 
@@ -90,17 +93,26 @@ export default function OrderTable() {
       dataIndex: "status",
       key: "status",
       render: (_: unknown, item: Order) => {
-        const statusColorMap: Record<string, string> = {
-          "Hoàn thành": "green",
-          "Chưa xác nhận": "yellow",
-          "Đang giao": "purple",
-          "Đã hủy": "red",
-        };
-        return (
-          <Tag color={statusColorMap[item?.status] || "blue"}>
-            {item?.status}
-          </Tag>
-        );
+        if (item.isPaid) {
+          const statusColorMap: Record<string, string> = {
+            "Hoàn thành": "green",
+            "Chưa xác nhận": "yellow",
+            "Đang giao": "purple",
+            "Đã hủy": "red",
+          };
+          return (
+            <Tag color={statusColorMap[item?.status] || "blue"}>
+              {item?.status}
+            </Tag>
+          );
+        }
+        else {
+          return (
+            <Tag color={"red"}>
+              Chưa thanh toán
+            </Tag>
+          )
+        }
       },
     },
     {
@@ -122,7 +134,8 @@ export default function OrderTable() {
   };
 
   return (
-    <div className="bg-white border border-gray-200/50 rounded-xl p-6 shadow-2xl transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)]">
+    <div className="bg-white border border-gray-200/50 rounded-xl p-3 shadow-md">
+      {/* transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] */}
       <Table
         rowKey="_id"
         bordered={false}
