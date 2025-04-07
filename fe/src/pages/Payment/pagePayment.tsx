@@ -61,7 +61,9 @@ interface VoucherItem {
   title: string;
   codeName: string;
   value: number;
+  maxValue:number;
   quantity: number;
+  status:boolean;
 }
 
 interface PayMethodsFetch {
@@ -147,9 +149,10 @@ const PaymentPage = () => {
     // Lấy list voucher
     (async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/vouchers");
-        setVoucherList(data.data);
-      } catch (error) {
+        const { data } = await axios.get("http://localhost:3000/api/vouchersList");
+        const activeVouchers = data.data.filter((item:VoucherItem)=>item.status);
+        setVoucherList(activeVouchers);
+      } catch (error) { 
         console.log("Không lấy được danh sách voucher: " + error);
       }
     })();
@@ -694,9 +697,9 @@ const PaymentPage = () => {
                   </div>
                   {(voucherInfor) &&
                     (
-                      <div className="text-right">
+                      <div className="text-right italic">
                         <Text>
-                          {voucherInfor} đã được chọn
+                          {voucherInfor}
                         </Text>
                       </div>
                     )
@@ -764,21 +767,20 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                      new Error("Vui lòng đồng ý với điều khoản và quy định!")
+                      new Error("Vui lòng xác nhận đặt hàng!")
                     ),
               },
             ]}
-            className="mt-6"
           >
             <Checkbox>
-              Đồng ý với các điều khoản và quy định của cửa hàng
+              Xác nhận đặt hàng
             </Checkbox>
           </Form.Item>
 
           <Form.Item>
             <Button
               type="primary"
-              className="w-full bg-black hover:bg-yellow-500"
+              className="w-full bg-black hover:bg-yellow-500 mt-3"
               loading={loading}
               size="large"
               htmlType="submit"

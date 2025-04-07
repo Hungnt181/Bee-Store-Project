@@ -19,6 +19,23 @@ class VoucherController {
     }
   }
 
+  async apiListClient(req, res) {
+    try {
+      //truy vấn danh sách sản phẩm
+      const vouchers = await Voucher.find({ status: true });
+
+      res.status(200).json({
+        //trả dữ liệu dưới dạng json
+        message: "Danh sách vouchers",
+        data: vouchers,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "Something went wrong",
+      });
+    }
+  }
+
   async apiDetail(req, res) {
     try {
       const id = req.params.id;
