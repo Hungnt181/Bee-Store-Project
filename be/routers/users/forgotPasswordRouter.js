@@ -1,6 +1,7 @@
 import { Router } from "express";
 import User from "../../models/users/user";
 import nodemailer from "nodemailer";
+import crypto from "crypto"
 
 const router = Router();
 
@@ -16,9 +17,11 @@ router.post("/", async (req, res) => {
   }
 
   // Tạo token
-  const resetToken = user._id;
+  const resetToken = crypto.randomBytes(32).toString('hex');
 
+  // Lưu token và thời gian hết hạn (5 phút)
   user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = Date.now() + 5 * 60 * 1000;
   await user.save();
 
   // Cấu hình nodemailer
