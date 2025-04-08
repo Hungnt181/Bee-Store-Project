@@ -45,7 +45,7 @@ const OrderDetail = () => {
     queryKey: [key],
     queryFn: async () => {
       const response = await axios.get(url);
-      console.log("response", response);
+      // console.log("response", response);
       return response.data;
     },
   });
@@ -208,15 +208,45 @@ const OrderDetail = () => {
     }
   };
 
+  // Thanh toán VNPay
+  const handleOnlinePayment = async () => {
+    try {
+      console.log(dataOrder?.total);
+      (dataOrder)?(localStorage.setItem('createdOrderId', dataOrder._id.toString())):'';
+      const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
+        amount: dataOrder?.total,
+        orderId: dataItemOrder[0].id_variant._id + "_" + Date.now(),
+      });
+      window.location.href = response.data.paymentUrl;
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
+        );
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    }
+  };
+
+
   return (
     <div className="bg-gray-50 p-6 min-h-screen">
       <Skeleton loading={isLoading} active>
         <Card className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <Title level={3} style={{ margin: 0 }}>
-              CHI TIẾT ĐƠN HÀNG #{dataOrder?._id.toString().slice(-6)}
+              CHI TIẾT ĐƠN HÀNG - {dataOrder?._id.toString().slice(-6)}
             </Title>
             <Space>
+              {!dataOrder?.isPaid && (
+                <Button
+                  type="primary"
+                onClick={() => handleOnlinePayment()}
+                >
+                  Thanh toán đơn hàng
+                </Button>
+              )}
               {dataOrder?.status !== "Đã hủy" &&
                 dataOrder?.status !== "Hoàn thành" &&
                 dataOrder?.status !== "Đang giao" && (
@@ -306,12 +336,12 @@ const OrderDetail = () => {
                         dataOrder?.status === "Hoàn thành"
                           ? "success"
                           : dataOrder?.status === "Chưa xác nhận"
-                          ? "warning"
-                          : dataOrder?.status === "Đang giao"
-                          ? "processing"
-                          : dataOrder?.status === "Đã hủy"
-                          ? "error"
-                          : "blue"
+                            ? "warning"
+                            : dataOrder?.status === "Đang giao"
+                              ? "processing"
+                              : dataOrder?.status === "Đã hủy"
+                                ? "error"
+                                : "blue"
                       }
                     >
                       {dataOrder?.status}
@@ -389,7 +419,7 @@ const OrderDetail = () => {
                           (sum, item) =>
                             sum +
                             Number(item?.id_variant?.id_product?.price ?? 0) *
-                              Number(item?.quantity ?? 0),
+                            Number(item?.quantity ?? 0),
                           0
                         )
                       )}{" "}

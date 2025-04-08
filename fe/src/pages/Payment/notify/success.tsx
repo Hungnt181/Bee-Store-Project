@@ -18,7 +18,7 @@ const PaymentSuccess = () => {
           const createdOrderId = localStorage.getItem("createdOrderId");
           //cập nhật cột isPaid thành true
           if (createdOrderId) {
-            await axios.patch(`http://localhost:3000/api/orders/${createdOrderId}`, { isPaid: true });
+            await axios.patch(`http://localhost:3000/api/orders/payment/${createdOrderId}`, { isPaid: true });
             localStorage.removeItem("createdOrderId");
           }
           else {

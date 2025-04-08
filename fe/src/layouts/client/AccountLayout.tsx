@@ -46,7 +46,7 @@ export default function AccountLayout() {
     <div className="max-w-[1240px] mx-auto px-4 mt-10">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
-        <div className="w-full lg:w-1/3 bg-white shadow-md rounded-2xl p-6">
+        <div className="w-full lg:w-1/4 bg-white shadow-md rounded-2xl p-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-1">Xin chào,</h2>
             <p className="text-xl font-semibold text-indigo-600">{nameUser}</p>
@@ -99,8 +99,8 @@ export default function AccountLayout() {
         </div>
 
         {/* Content */}
-        <div className="w-full lg:w-2/3">
-          <div className="bg-white shadow-md rounded-2xl p-6">
+        <div className="w-full lg:w-3/4">
+          <div className="bg-white shadow-md rounded-2xl p-1">
             <Outlet />
           </div>
         </div>

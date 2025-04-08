@@ -61,7 +61,9 @@ interface VoucherItem {
   title: string;
   codeName: string;
   value: number;
+  maxValue: number;
   quantity: number;
+  status: boolean;
 }
 
 interface PayMethodsFetch {
@@ -147,8 +149,9 @@ const PaymentPage = () => {
     // Lấy list voucher
     (async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/vouchers");
-        setVoucherList(data.data);
+        const { data } = await axios.get("http://localhost:3000/api/vouchersList");
+        const activeVouchers = data.data.filter((item: VoucherItem) => item.status);
+        setVoucherList(activeVouchers);
       } catch (error) {
         console.log("Không lấy được danh sách voucher: " + error);
       }
@@ -314,7 +317,6 @@ const PaymentPage = () => {
   // Thanh toán VNPay
   const handleOnlinePayment = async () => {
     try {
-      console.log(paymentPrice);
       const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
         amount: paymentPrice,
         orderId: itemOrder[0].id_variant + "_" + Date.now(),
@@ -431,6 +433,14 @@ const PaymentPage = () => {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
         }
         else {
+          if (selectedPayment == '67bfce96db17315614fced6f') {
+            console.log('cod');
+            nav("/notify2");
+          }
+          if (selectedPayment == "67bfcec4db17315614fced70"){
+            console.log('vnpay');
+            handleOnlinePayment()
+          }
           localStorage.setItem('createdOrderId', orderData.data._id);
         }
         //loại bỏ các sản phẩm đã thanh toán
@@ -477,15 +487,9 @@ const PaymentPage = () => {
     try {
       await form.validateFields();
       const values = form.getFieldsValue();
-      console.log("Form values:", values);
-      if (selectedPayment == "67bfcec4db17315614fced70") {
-        console.log('vnpay');
+      // console.log("Form values:", values);
+      if (selectedPayment == "67bfcec4db17315614fced70" || selectedPayment == '67bfce96db17315614fced6f') {
         await handleShipCodPayment();
-        handleOnlinePayment()
-      } else if (selectedPayment == '67bfce96db17315614fced6f') {
-        console.log('cod');
-        await handleShipCodPayment();
-        nav("/notify2");
       }
       else {
         message.error('Mời bạn chọn phương thức thanh toán', 3)
@@ -694,9 +698,9 @@ const PaymentPage = () => {
                   </div>
                   {(voucherInfor) &&
                     (
-                      <div className="text-right">
+                      <div className="text-right italic">
                         <Text>
-                          {voucherInfor} đã được chọn
+                          {voucherInfor}
                         </Text>
                       </div>
                     )
@@ -764,21 +768,20 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                      new Error("Vui lòng đồng ý với điều khoản và quy định!")
+                      new Error("Vui lòng xác nhận đặt hàng!")
                     ),
               },
             ]}
-            className="mt-6"
           >
             <Checkbox>
-              Đồng ý với các điều khoản và quy định của cửa hàng
+              Xác nhận đặt hàng
             </Checkbox>
           </Form.Item>
 
           <Form.Item>
             <Button
               type="primary"
-              className="w-full bg-black hover:bg-yellow-500"
+              className="w-full bg-black hover:bg-yellow-500 mt-3"
               loading={loading}
               size="large"
               htmlType="submit"

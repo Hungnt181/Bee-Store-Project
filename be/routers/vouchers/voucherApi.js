@@ -8,6 +8,7 @@ const voucherController = new VoucherController();
 //khai báo router:
 //voucherApiRouter.method('/url', checkPermission [middleware bao ve route khi ko signin]  ,tenController.tenHam);
 voucherApiRouter.get("/vouchers", voucherController.apiList);
+voucherApiRouter.get("/vouchersList", voucherController.apiListClient);
 voucherApiRouter.get("/vouchers/:id", voucherController.apiDetail);
 // voucherApiRouter.delete('/vouchers/:id',checkPermission , voucherController.apiDelete);
 voucherApiRouter.post("/vouchers", voucherController.apiCreate);
