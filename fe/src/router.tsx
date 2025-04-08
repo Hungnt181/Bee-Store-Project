@@ -43,17 +43,17 @@ import Signin from "./website/components/Signin/page";
 import ResetPassword from "./website/components/ResetPassword/page";
 import ForgotPassword from "./website/components/ForgotPassword/page";
 import Success from "./website/components/Success/page";
-import PrivateRoute from "./website/components/PrivateRoute/page";
 import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 import AdminBannerList from "./admin/Banner/page";
 import AdminBannerAdd from "./admin/Banner/Add/page";
 import VoucherPageBee from "./pages/Vouchers/VoucherPage";
+import PrivateRoute, { AdminForbiddenRoute, PublicRoute } from "./website/components/PrivateRoute/page";
 import NotificationPage from "./admin/Notification/page";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ClientLayout />,
+    element: <AdminForbiddenRoute><ClientLayout /></AdminForbiddenRoute>,
     errorElement: <Navigate to={"/"} />,
     children: [
       { index: true, element: <HomePage /> },
@@ -62,13 +62,19 @@ export const router = createBrowserRouter([
       { path: "/products/:id", element: <ProductDetail /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/payment", element: <PaymentPage /> },
-      { path: "/signup", element: <Signup /> },
-      { path: "/signin", element: <Signin /> },
-      { path: "/reset/:id", element: <ResetPassword /> },
+      {
+        path: "/signin",
+        element: <PublicRoute><Signin /></PublicRoute>
+      },
+      {
+        path: "/signup",
+        element: <PublicRoute><Signup /></PublicRoute>
+      },
+      { path: "/reset/:token", element: <ResetPassword /> },
       { path: "/forgot", element: <ForgotPassword /> },
       {
         path: "/account",
-        element: <AccountLayout />,
+        element: <PrivateRoute requiredRole="user" adminForbidden={true}><AccountLayout /></PrivateRoute>,
         children: [
           {
             index: true,
@@ -92,23 +98,23 @@ export const router = createBrowserRouter([
   },
   {
     path: "/invoice",
-    element: <OrderConfirmation />,
+    element: <AdminForbiddenRoute><OrderConfirmation /></AdminForbiddenRoute>,
   },
   {
     path: "/VnPayQR",
-    element: <PaymentPageOl />,
+    element: <AdminForbiddenRoute><PaymentPageOl /></AdminForbiddenRoute>,
   },
   {
     path: "/notify",
-    element: <PaymentSuccess />,
+    element: <AdminForbiddenRoute><PaymentSuccess /></AdminForbiddenRoute>,
   },
   {
     path: "/notify2",
-    element: <PaymentSuccess2 />,
+    element: <AdminForbiddenRoute><PaymentSuccess2 /></AdminForbiddenRoute>,
   },
   {
     path: "/cancel",
-    element: <OrderCancelled />,
+    element: <AdminForbiddenRoute><OrderCancelled /></AdminForbiddenRoute>,
   },
 
   {
@@ -117,7 +123,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/success",
-    element: <Success />,
+    element: <AdminForbiddenRoute><Success /></AdminForbiddenRoute>,
   },
   {
     path: "/admin",

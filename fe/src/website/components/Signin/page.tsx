@@ -11,7 +11,7 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import beeImage from "./anhong.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Rule } from "antd/es/form";
 // --- VALIDATION RULES ---
 const validationRules = {
@@ -30,6 +30,15 @@ const validationRules = {
 const Signin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    const userRole = localStorage.getItem("userRole");
+
+    if (user) {
+      navigate(userRole === "admin" ? "/admin" : "/");
+    }
+  }, [navigate]);
 
   const { mutate } = useMutation({
     mutationFn: async (formData) => {

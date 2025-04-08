@@ -179,40 +179,28 @@ class UserController {
   }
   async updatePasswordUser(req, res) {
     try {
-      const { oldPassword, newPassword } = req.body;
-
-      if (!oldPassword || !newPassword) {
+      const { error } = updatePasswordUser.validate(req.body, { abortEarly: false });
+      if (error) { // nếu có lỗi validate -> bắn ra lỗi
+        const listErrors = error.details.map((item) => item.message);
         return res.status(400).json({
-          message: '"oldPassword" và "newPassword" là bắt buộc',
+          'message': listErrors
         });
       }
 
-      const user = await User.findById(req.params.id).select("+password");
-      if (!user) {
-        return res.status(404).json({
-          message: "Người dùng không tồn tại",
-        });
+      const { password, ...updateData } = req.body;
+      if (password) {
+        updateData.password = await bcryptjs.hash(password, 10);
       }
 
-      const isMatch = await bcrypt.compare(oldPassword, user.password);
-      if (!isMatch) {
-        return res.status(400).json({
-          message: "Mật khẩu hiện tại không đúng",
-        });
-      }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
-      await user.save();
-
-      return res.status(200).json({
-        message: "Đổi mật khẩu thành công!",
+      const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+      res.status(200).json({
+        'message': 'Cập nhật thành công',
+        'data': updatedUser
       });
     } catch (error) {
-      console.error("Password update error:", error);
-      return res.status(500).json({
-        message: "Lỗi khi đổi mật khẩu",
-        error: error.message,
+      res.status(500).json({
+        'message': 'Lỗi khi cập nhật mật khẩu người dùng',
+        'error': error.message
       });
     }
   }
