@@ -17,11 +17,15 @@ import {
   Image,
   Form,
   notification,
+  Skeleton,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseOptionType, DefaultOptionType } from "antd/es/select";
 import { RadioChangeEvent } from "antd/lib";
+import { PaymentMethod } from "../../interface/Order";
+import { formatCurrency } from "../../helpers/utils";
+const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -60,6 +64,17 @@ interface VoucherItem {
   quantity: number;
 }
 
+interface PayMethodsFetch {
+  _id: string;
+  name: string;
+  status: string;
+}
+interface PayMethodsItem {
+  id: string;
+  label: string;
+  value: string;
+}
+
 interface FormValues {
   customerName: string;
   phoneNumber: string;
@@ -75,9 +90,8 @@ const PaymentPage = () => {
   const nav = useNavigate();
   const [form] = Form.useForm<FormValues>();
 
-  const [selectedPayment, setSelectedPayment] = useState<string>(
-    "67bfce96db17315614fced6f"
-  );
+  const [selectedPayment, setSelectedPayment] = useState<string>("");
+  const [selectedPaymentName, setSelectedPaymentName] = useState();
 
   // Lấy thông tin tài khoản nếu có
   const id = localStorage.getItem("idUser");
@@ -111,6 +125,9 @@ const PaymentPage = () => {
     null
   );
 
+  //
+  const [paymentList, setPaymentList] = useState<PayMethodsItem[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [userInForm, setUserInForm] = useState<string | null>(null);
 
@@ -123,7 +140,7 @@ const PaymentPage = () => {
       setStoredCartItems(JSON.parse(storedCartItems));
     }
     else {
-      message.error("Không có sản phẩm để thanh toán", 3);
+      notification.error({ message: "Không có sản phẩm để thanh toán" });
       nav('/')
     }
 
@@ -136,6 +153,26 @@ const PaymentPage = () => {
         console.log("Không lấy được danh sách voucher: " + error);
       }
     })();
+
+    // Lấy list payments methods
+    (async () => {
+      try {
+        const data = await axios.get("http://localhost:3000/api/payments");
+        //  console.log(data.data.data);
+        (data.data)
+        const dataRadios: PayMethodsItem[] = data.data.data.map((item: PayMethodsFetch, index: number) => ({
+          id: item._id,
+          label: (<span className="" id={`${index + 1}`}>{item.name}</span>),
+          value: item._id,
+        }))
+        if (dataRadios) {
+          setPaymentList(dataRadios);
+        }
+      } catch (error) {
+        console.log("Không lấy được phương thức thanh toán: " + error);
+      }
+    })();
+
   }, []);
 
   // Lấy sản phẩm từ id
@@ -230,7 +267,6 @@ const PaymentPage = () => {
     setSelectedVoucher(selectedValue);
     setIdSelectedVoucher(selectedId);
   };
-  // const fetchVoucher (idSelectedVoucher)
 
   // lấy voucher tu id
   const getVoucher = async (idVoucher: string) => {
@@ -245,6 +281,7 @@ const PaymentPage = () => {
   };
 
   //onclick event
+  const [voucherInfor, setVoucherInfor] = useState<string | null>('');
   const getPromotionValue = async () => {
     if (selectedVoucher !== null && idSelectedVoucher) {
       const voucher = await getVoucher(idSelectedVoucher);
@@ -253,6 +290,11 @@ const PaymentPage = () => {
 
       setPromotionValue(discount);
       setPaymentPrice(totalPrice - discount);
+      setVoucherInfor(voucher.description);
+    }
+    else {
+      setPromotionValue(0);
+      setVoucherInfor(null);
     }
   };
 
@@ -272,13 +314,16 @@ const PaymentPage = () => {
   // Thanh toán VNPay
   const handleOnlinePayment = async () => {
     try {
+      console.log(paymentPrice);
       const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
         amount: paymentPrice,
         orderId: itemOrder[0].id_variant + "_" + Date.now(),
       });
       window.location.href = response.data.paymentUrl;
+      // if (searchParams.get("vnp_ResponseCode") === "00") {
+      //   handleShipCodPayment();
+      // }
     } catch (error) {
-      // console.error("Validation failed:", error);
       if (error instanceof Error) {
         message.error(
           error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
@@ -372,8 +417,7 @@ const PaymentPage = () => {
           body: JSON.stringify({
             total: paymentPrice,
             shippingFee: 0,
-            isPaid:
-              selectedPayment === "67bfce96db17315614fced6f" ? false : true,
+            isPaid: false,
             voucher: idSelectedVoucher === "" ? null : idSelectedVoucher,
             user: userInForm,
             payment: selectedPayment,
@@ -382,10 +426,12 @@ const PaymentPage = () => {
             status: "Chưa xác nhận",
           }),
         });
-
         const orderData = await newOrder.json();
         if (!newOrder.ok) {
           throw new Error(orderData.message || "Tạo đơn hàng thất bại");
+        }
+        else {
+          localStorage.setItem('createdOrderId', orderData.data._id);
         }
         //loại bỏ các sản phẩm đã thanh toán
         const listItemAfterPay = storedCartItems.filter(
@@ -397,20 +443,16 @@ const PaymentPage = () => {
         );
         //storedCartItems - Tất cả sản phẩm trong cart
         //cartItems - Tất cả sản phẩm để thanh toán
-        console.log(cartItems);
-        console.log(listItemAfterPay);
+
         //cập nhật lại cart sau khi thanh toán
         localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
         localStorage.removeItem("selectedItemArray");
         //clear cart items
         setCartItems([]);
-        // localStorage.removeItem("cartItems");
         setListCheckout([]);
         setPaymentPrice(0);
         setSelectedVoucher(null);
         setPromotionValue(0);
-
-        nav("/notify2");
       } catch (error) {
         if (error instanceof Error) {
           message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
@@ -436,10 +478,18 @@ const PaymentPage = () => {
       await form.validateFields();
       const values = form.getFieldsValue();
       console.log("Form values:", values);
-      if (selectedPayment === "vnpay_payment") {
+      if (selectedPayment == "67bfcec4db17315614fced70") {
+        console.log('vnpay');
+        await handleShipCodPayment();
         handleOnlinePayment()
-      } else {
-        handleShipCodPayment();
+      } else if (selectedPayment == '67bfce96db17315614fced6f') {
+        console.log('cod');
+        await handleShipCodPayment();
+        nav("/notify2");
+      }
+      else {
+        message.error('Mời bạn chọn phương thức thanh toán', 3)
+        return;
       }
     } catch (error) {
       console.error("Validation failed:", error);
@@ -453,15 +503,14 @@ const PaymentPage = () => {
     }
   };
 
-  const handleChangePaymentMethod = useCallback((e: RadioChangeEvent) => {
+  const handleChangePaymentMethod = (e: RadioChangeEvent) => {
     console.log(e.target.value)
     setSelectedPayment(e.target.value);
-  }, [])
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <Card className="w-full max-w-7xl">
-        {/* Thông tin sản phẩm */}
         <Title
           level={2}
           className="mb-4 pb-2 border-b border-gray-300"
@@ -469,7 +518,6 @@ const PaymentPage = () => {
         >
           Thông tin sản phẩm
         </Title>
-
         <Card className="mb-6 bg-gray-50">
           {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
@@ -496,11 +544,11 @@ const PaymentPage = () => {
                 </Text>
                 <Text type="secondary" className="flex items-end">
                   Màu:
-                  <div className="h-[20px] w-[20px] ml-2" style={{background: item.color}}/>
+                  <div className="h-[20px] w-[20px] ml-2" style={{ background: item.color }} />
                 </Text>
                 <Text type="secondary" className="">
-                 Size: 
-                 <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
+                  Size:
+                  <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
                 </Text>
                 <div className="flex justify-between items-center">
                   <Text strong className="text-lg">
@@ -514,12 +562,11 @@ const PaymentPage = () => {
             </div>
           ))}
         </Card>
-
         {/* Form thông tin người nhận */}
-        <Form form={form} layout="vertical" requiredMark={false} onFinish={handleFormSubmit}>
+        <Form form={form} layout="vertical" requiredMark={true} onFinish={handleFormSubmit}>
           <Title
             level={2}
-            className="mb-4 pb-2 border-b border-gray-300"
+            className="mb-4 pb-2 border-b border-gray-300 mt-5"
             style={{ fontSize: "28px" }}
           >
             Người nhận
@@ -604,17 +651,18 @@ const PaymentPage = () => {
               Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
             </Paragraph>
 
-            <Form.Item name="paymentMethod">
+            <Form.Item name="paymentMethod" rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn phương thức thanh toán!"
+              }
+            ]}>
               <Radio.Group
                 onChange={(e) => handleChangePaymentMethod(e)}
+                value={selectedPayment}
                 className="flex flex-col gap-6"
+                options={paymentList}
               >
-                <Radio value="67bfce96db17315614fced6f">
-                  Thanh toán khi nhận hàng
-                </Radio>
-                <Radio value="vnpay_payment">
-                  Thanh toán qua ví điện tử VNPAY
-                </Radio>
               </Radio.Group>
             </Form.Item>
           </div>
@@ -629,11 +677,11 @@ const PaymentPage = () => {
                 <Space direction="vertical" className="w-full">
                   <div className="flex justify-between">
                     <Text type="secondary">Tổng giá trị sản phẩm</Text>
-                    <Text type="secondary">{totalPrice} đ</Text>
+                    <Text type="secondary">{formatCurrency(totalPrice, 'vnd')}</Text>
                   </div>
                   <div className="flex justify-between">
                     <Text type="secondary">Giảm giá từ voucher</Text>
-                    <Text type="secondary">{promotionValue} đ</Text>
+                    <Text type="secondary">{formatCurrency(promotionValue, 'vnd')}</Text>
                   </div>
                   <Divider />
                   <div className="flex justify-between">
@@ -641,17 +689,30 @@ const PaymentPage = () => {
                       Tổng thanh toán
                     </Text>
                     <Text strong type="danger" style={{ fontSize: "17px" }}>
-                      {paymentPrice} đ
+                      {formatCurrency(paymentPrice, 'vnd')}
                     </Text>
                   </div>
-                  <div className="text-right">
-                    <Text type="danger">
-                      Bạn đã tiết kiệm được:{" "}
-                      <Text type="danger" strong>
-                        {promotionValue} đ
-                      </Text>
-                    </Text>
-                  </div>
+                  {(voucherInfor) &&
+                    (
+                      <div className="text-right">
+                        <Text>
+                          {voucherInfor} đã được chọn
+                        </Text>
+                      </div>
+                    )
+                  }
+                  {(promotionValue > 0) &&
+                    (
+                      <div className="text-right">
+                        <Text type="danger">
+                          Bạn đã tiết kiệm được:{" "}
+                          <Text type="danger" strong>
+                            {formatCurrency(promotionValue, 'vnd')}
+                          </Text>
+                        </Text>
+                      </div>
+                    )
+                  }
                 </Space>
               </Card>
             </Col>
@@ -703,7 +764,7 @@ const PaymentPage = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                      new Error("Vui lòng đồng ý với điều khoản và quy định")
+                      new Error("Vui lòng đồng ý với điều khoản và quy định!")
                     ),
               },
             ]}
@@ -718,7 +779,6 @@ const PaymentPage = () => {
             <Button
               type="primary"
               className="w-full bg-black hover:bg-yellow-500"
-              // onClick={handleFormSubmit}
               loading={loading}
               size="large"
               htmlType="submit"

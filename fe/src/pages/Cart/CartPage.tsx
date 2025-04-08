@@ -3,6 +3,7 @@ import { Button, message, Modal, Table } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import type { TableRowSelection } from 'antd/es/table/interface';
+import { formatCurrency } from "../../helpers/utils";
 
 
 interface CartItemDetail {
@@ -180,6 +181,9 @@ const CartPage: React.FC = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
+      render: (_text:string, record: CartModalItemDetail) => (
+        <span>{formatCurrency(record.price, 'vnd')}</span>
+      ),
     },
     {
       title: "Màu sắc",
@@ -220,14 +224,17 @@ const CartPage: React.FC = () => {
       ),
     },
     {
-      title: "Giá",
+      title: "Thành tiền",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      render: (_text: string, record: CartModalItemDetail) => (
+        <span className="font-bold">{formatCurrency(record.price * record.quantity, 'vnd')}</span>
+      ),
     },
     {
       title: "#",
       key: "action",
-      render: (text, record: CartModalItemDetail, index: number) => (
+      render: (_text:string, _record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
@@ -274,11 +281,11 @@ const CartPage: React.FC = () => {
             rowSelection={rowSelection}
             dataSource={cartModalItems}
             columns={columns}
-            rowKey={(record, index) => index.toString()}
+            rowKey={(_record, index) => (index)?(index.toString()): ''}
             pagination={false}
           />
-          <div>
-            Tổng tiền: <span className="font-bold">{totalPrice} vnd</span>
+          <div className="mt-3">
+            Tổng tiền: <span className="font-bold">{formatCurrency(totalPrice, 'vnd')}</span>
           </div>
         </div>
 

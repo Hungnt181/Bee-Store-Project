@@ -85,10 +85,10 @@ const VoucherAddPage = () => {
                     <Input className='uppercase' />
                 </Form.Item>
                 <Form.Item label="Giá trị phần trăm giảm (%)" name={"value"} labelCol={{ className: 'w-auto text-left' }}>
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
                 <Form.Item label="Giá trị tối đa giảm (vnđ)" name={"maxValue"} labelCol={{ className: 'w-auto text-left' }}>
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
                 <Form.Item label="Số lượng" name={'quantity'} labelCol={{ className: 'w-auto text-left' }}>
                     <InputNumber min="0" />

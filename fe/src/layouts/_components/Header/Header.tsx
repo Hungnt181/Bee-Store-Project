@@ -87,9 +87,6 @@ export default function Header() {
       <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center justify-between mt-6">
         {/* BOX 1 IN HEADER */}
         <Link to={"/"} className="flex-1">
-          {/* <h3 className="font-bold font-sans text-2xl text-yellow-700">
-            BEE<span className="text-black"> - STORE</span>
-          </h3> */}
           <img className="w-58" src={logoImage} alt="" />
         </Link>
         {/* BOX 2 IN HEADER */}

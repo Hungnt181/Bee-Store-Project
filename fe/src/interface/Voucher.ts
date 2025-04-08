@@ -1,6 +1,6 @@
 interface Voucher {
     id: String;
-    title: Date;
+    title: string;
     codeName: String;
     value: number; 
     quantity:  Number;
