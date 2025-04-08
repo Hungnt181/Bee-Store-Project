@@ -1,747 +1,738 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { User, Phone, Mail, MapPin, Pencil, Tag, Lock } from "lucide-react";
+import axios from "axios";
+import {
+  message,
+  Input,
+  Radio,
+  Checkbox,
+  Button,
+  Select,
+  Card,
+  Divider,
+  Typography,
+  Space,
+  Row,
+  Col,
+  Image,
+  Form,
+  notification,
+} from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { BaseOptionType, DefaultOptionType } from "antd/es/select";
+import { RadioChangeEvent } from "antd/lib";
 
-interface Districts {
-  [key: string]: string[];
+const { Title, Text, Paragraph } = Typography;
+const { Option } = Select;
+
+interface CartItemDetail {
+  idProduct: string;
+  idVariant: string;
+  color: string;
+  size: string;
+  quantity: number;
 }
-//Tỉnh và Thành phố
-const provinces = [
-  "Hà Nội",
-  "Hồ Chí Minh",
-  "Đà Nẵng",
-  "Hải Phòng",
-  "Cần Thơ",
-  "An Giang",
-  "Bà Rịa - Vũng Tàu",
-  "Bắc Giang",
-  "Bắc Kạn",
-  "Bạc Liêu",
-  "Bắc Ninh",
-  "Bến Tre",
-  "Bình Định",
-  "Bình Dương",
-  "Bình Phước",
-  "Bình Thuận",
-  "Cà Mau",
-  "Cao Bằng",
-  "Đắk Lắk",
-  "Đắk Nông",
-  "Điện Biên",
-  "Đồng Nai",
-  "Đồng Tháp",
-  "Gia Lai",
-  "Hà Giang",
-  "Hà Nam",
-  "Hà Tĩnh",
-  "Hải Dương",
-  "Hậu Giang",
-  "Hòa Bình",
-  "Hưng Yên",
-  "Khánh Hòa",
-  "Kiên Giang",
-  "Kon Tum",
-  "Lai Châu",
-  "Lâm Đồng",
-  "Lạng Sơn",
-  "Lào Cai",
-  "Long An",
-  "Nam Định",
-  "Nghệ An",
-  "Ninh Bình",
-  "Ninh Thuận",
-  "Phú Thọ",
-  "Phú Yên",
-  "Quảng Bình",
-  "Quảng Nam",
-  "Quảng Ngãi",
-  "Quảng Ninh",
-  "Quảng Trị",
-  "Sóc Trăng",
-  "Sơn La",
-  "Tây Ninh",
-  "Thái Bình",
-  "Thái Nguyên",
-  "Thanh Hóa",
-  "Thừa Thiên Huế",
-  "Tiền Giang",
-  "Trà Vinh",
-  "Tuyên Quang",
-  "Vĩnh Long",
-  "Vĩnh Phúc",
-  "Yên Bái",
-];
-//Quận và Huyện
-const districts: Districts = {
-  "Hà Nội": [
-    "Ba Đình",
-    "Hoàn Kiếm",
-    "Hai Bà Trưng",
-    "Đống Đa",
-    "Tây Hồ",
-    "Cầu Giấy",
-    "Thanh Xuân",
-    "Hoàng Mai",
-    "Long Biên",
-    "Nam Từ Liêm",
-    "Bắc Từ Liêm",
-    "Hà Đông",
-    "Sóc Sơn",
-    "Đông Anh",
-    "Gia Lâm",
-    "Thanh Trì",
-    "Thường Tín",
-    "Phú Xuyên",
-    "Ứng Hòa",
-    "Mỹ Đức",
-    "Chương Mỹ",
-    "Thanh Oai",
-    "Thạch Thất",
-    "Quốc Oai",
-    "Ba Vì",
-    "Phúc Thọ",
-    "Đan Phượng",
-    "Hoài Đức",
-    "Mê Linh",
-  ],
-  "Hồ Chí Minh": [
-    "Quận 1",
-    "Quận 3",
-    "Quận 4",
-    "Quận 5",
-    "Quận 6",
-    "Quận 7",
-    "Quận 8",
-    "Quận 10",
-    "Quận 11",
-    "Quận 12",
-    "Bình Tân",
-    "Tân Phú",
-    "Gò Vấp",
-    "Phú Nhuận",
-    "Tân Bình",
-    "Bình Thạnh",
-    "Thủ Đức",
-    "Bình Chánh",
-    "Cần Giờ",
-    "Củ Chi",
-    "Hóc Môn",
-    "Nhà Bè",
-  ],
-  "Đà Nẵng": [
-    "Hải Châu",
-    "Thanh Khê",
-    "Sơn Trà",
-    "Ngũ Hành Sơn",
-    "Liên Chiểu",
-    "Cẩm Lệ",
-    "Hòa Vang",
-    "Hoàng Sa",
-  ],
-  "Hải Phòng": [
-    "Hồng Bàng",
-    "Ngô Quyền",
-    "Lê Chân",
-    "Hải An",
-    "Kiến An",
-    "Đồ Sơn",
-    "Dương Kinh",
-    "Thủy Nguyên",
-    "An Dương",
-    "An Lão",
-    "Kiến Thụy",
-    "Tiên Lãng",
-    "Vĩnh Bảo",
-    "Cát Hải",
-    "Bạch Long Vĩ",
-  ],
-  "Cần Thơ": [
-    "Ninh Kiều",
-    "Bình Thủy",
-    "Cái Răng",
-    "Ô Môn",
-    "Thốt Nốt",
-    "Phong Điền",
-    "Cờ Đỏ",
-    "Thới Lai",
-    "Vĩnh Thạnh",
-  ],
-  "An Giang": [
-    "Long Xuyên",
-    "Châu Đốc",
-    "Tân Châu",
-    "An Phú",
-    "Châu Phú",
-    "Châu Thành",
-    "Phú Tân",
-    "Thoại Sơn",
-    "Tri Tôn",
-    "Tịnh Biên",
-  ],
-  "Bà Rịa - Vũng Tàu": [
-    "Vũng Tàu",
-    "Bà Rịa",
-    "Châu Đức",
-    "Côn Đảo",
-    "Đất Đỏ",
-    "Long Điền",
-    "Tân Thành",
-    "Xuyên Mộc",
-  ],
-  "Hà Giang": [
-    "Hà Giang",
-    "Bắc Mê",
-    "Bắc Quang",
-    "Đồng Văn",
-    "Hoàng Su Phì",
-    "Mèo Vạc",
-    "Quản Bạ",
-    "Quang Bình",
-    "Vị Xuyên",
-    "Xín Mần",
-    "Yên Minh",
-  ],
-  "Hà Nam": [
-    "Phủ Lý",
-    "Bình Lục",
-    "Duy Tiên",
-    "Kim Bảng",
-    "Lý Nhân",
-    "Thanh Liêm",
-  ],
-  "Hà Tĩnh": [
-    "Hà Tĩnh",
-    "Hồng Lĩnh",
-    "Kỳ Anh",
-    "Cẩm Xuyên",
-    "Can Lộc",
-    "Đức Thọ",
-    "Hương Khê",
-    "Hương Sơn",
-    "Lộc Hà",
-    "Nghi Xuân",
-    "Thạch Hà",
-    "Vũ Quang",
-  ],
-  "Hải Dương": [
-    "Hải Dương",
-    "Chí Linh",
-    "Cẩm Giàng",
-    "Gia Lộc",
-    "Kim Thành",
-    "Kinh Môn",
-    "Nam Sách",
-    "Ninh Giang",
-    "Thanh Hà",
-    "Thanh Miện",
-    "Tứ Kỳ",
-    "Bình Giang",
-  ],
-  "Hậu Giang": [
-    "Vị Thanh",
-    "Ngã Bảy",
-    "Châu Thành",
-    "Châu Thành A",
-    "Long Mỹ",
-    "Phụng Hiệp",
-    "Vị Thủy",
-  ],
-  "Hòa Bình": [
-    "Hòa Bình",
-    "Cao Phong",
-    "Đà Bắc",
-    "Kim Bôi",
-    "Kỳ Sơn",
-    "Lạc Sơn",
-    "Lạc Thủy",
-    "Lương Sơn",
-    "Mai Châu",
-    "Tân Lạc",
-    "Yên Thủy",
-  ],
-  "Hưng Yên": [
-    "Hưng Yên",
-    "Ân Thi",
-    "Khoái Châu",
-    "Kim Động",
-    "Mỹ Hào",
-    "Phù Cừ",
-    "Tiên Lữ",
-    "Văn Giang",
-    "Văn Lâm",
-    "Yên Mỹ",
-  ],
-  "Khánh Hòa": [
-    "Nha Trang",
-    "Cam Ranh",
-    "Ninh Hòa",
-    "Vạn Ninh",
-    "Diên Khánh",
-    "Khánh Sơn",
-    "Khánh Vĩnh",
-    "Trường Sa",
-  ],
-  "Kiên Giang": [
-    "Rạch Giá",
-    "Hà Tiên",
-    "An Biên",
-    "An Minh",
-    "Châu Thành",
-    "Giang Thành",
-    "Giồng Riềng",
-    "Gò Quao",
-    "Hòn Đất",
-    "Kiên Hải",
-    "Kiên Lương",
-    "Tân Hiệp",
-    "U Minh Thượng",
-    "Vĩnh Thuận",
-    "Phú Quốc",
-  ],
-  "Kon Tum": [
-    "Kon Tum",
-    "Đắk Glei",
-    "Đắk Hà",
-    "Đắk Tô",
-    "Ia H’Drai",
-    "Kon Plông",
-    "Kon Rẫy",
-    "Ngọc Hồi",
-    "Sa Thầy",
-    "Tu Mơ Rông",
-  ],
-  "Lai Châu": [
-    "Lai Châu",
-    "Mường Tè",
-    "Nậm Nhùn",
-    "Phong Thổ",
-    "Sìn Hồ",
-    "Tam Đường",
-    "Tân Uyên",
-    "Than Uyên",
-  ],
-  "Lâm Đồng": [
-    "Đà Lạt",
-    "Bảo Lộc",
-    "Bảo Lâm",
-    "Cát Tiên",
-    "Đạ Huoai",
-    "Đạ Tẻh",
-    "Đam Rông",
-    "Di Linh",
-    "Đơn Dương",
-    "Đức Trọng",
-    "Lạc Dương",
-    "Lâm Hà",
-  ],
-  "Lạng Sơn": [
-    "Lạng Sơn",
-    "Bắc Sơn",
-    "Bình Gia",
-    "Cao Lộc",
-    "Chi Lăng",
-    "Đình Lập",
-    "Hữu Lũng",
-    "Lộc Bình",
-    "Tràng Định",
-    "Văn Lãng",
-    "Văn Quan",
-  ],
-  "Lào Cai": [
-    "Lào Cai",
-    "Bát Xát",
-    "Bảo Thắng",
-    "Bảo Yên",
-    "Bắc Hà",
-    "Mường Khương",
-    "Sa Pa",
-    "Si Ma Cai",
-    "Văn Bàn",
-  ],
-  "Long An": [
-    "Tân An",
-    "Bến Lức",
-    "Cần Đước",
-    "Cần Giuộc",
-    "Châu Thành",
-    "Đức Hòa",
-    "Đức Huệ",
-    "Mộc Hóa",
-    "Tân Hưng",
-    "Tân Thạnh",
-    "Tân Trụ",
-    "Thạnh Hóa",
-    "Thủ Thừa",
-    "Vĩnh Hưng",
-  ],
-  "Nam Định": [
-    "Nam Định",
-    "Giao Thủy",
-    "Hải Hậu",
-    "Mỹ Lộc",
-    "Nam Trực",
-    "Nghĩa Hưng",
-    "Trực Ninh",
-    "Vụ Bản",
-    "Xuân Trường",
-    "Ý Yên",
-  ],
-  "Nghệ An": [
-    "Vinh",
-    "Cửa Lò",
-    "Hoàng Mai",
-    "Thái Hòa",
-    "Anh Sơn",
-    "Con Cuông",
-    "Diễn Châu",
-    "Đô Lương",
-    "Hưng Nguyên",
-    "Kỳ Sơn",
-    "Nam Đàn",
-    "Nghi Lộc",
-    "Nghĩa Đàn",
-    "Quế Phong",
-    "Quỳ Châu",
-    "Quỳ Hợp",
-    "Quỳnh Lưu",
-    "Tân Kỳ",
-    "Thanh Chương",
-    "Tương Dương",
-    "Yên Thành",
-  ],
-  "Ninh Bình": [
-    "Ninh Bình",
-    "Tam Điệp",
-    "Gia Viễn",
-    "Hoa Lư",
-    "Kim Sơn",
-    "Nho Quan",
-    "Yên Khánh",
-    "Yên Mô",
-  ],
-  "Ninh Thuận": [
-    "Phan Rang - Tháp Chàm",
-    "Bác Ái",
-    "Ninh Hải",
-    "Ninh Phước",
-    "Ninh Sơn",
-    "Thuận Bắc",
-    "Thuận Nam",
-  ],
-  "Phú Thọ": [
-    "Việt Trì",
-    "Phú Thọ",
-    "Cẩm Khê",
-    "Đoan Hùng",
-    "Hạ Hòa",
-    "Lâm Thao",
-    "Tam Nông",
-    "Tân Sơn",
-    "Thanh Ba",
-    "Thanh Sơn",
-    "Thanh Thủy",
-    "Yên Lập",
-  ],
-  "Phú Yên": [
-    "Tuy Hòa",
-    "Sông Cầu",
-    "Đồng Xuân",
-    "Sơn Hòa",
-    "Sông Hinh",
-    "Tây Hòa",
-    "Tuy An",
-    "Phú Hòa",
-    "Đông Hòa",
-  ],
-  "Quảng Bình": [
-    "Đồng Hới",
-    "Ba Đồn",
-    "Bố Trạch",
-    "Lệ Thủy",
-    "Minh Hóa",
-    "Quảng Ninh",
-    "Quảng Trạch",
-    "Tuyên Hóa",
-  ],
-  "Quảng Nam": [
-    "Tam Kỳ",
-    "Hội An",
-    "Bắc Trà My",
-    "Đại Lộc",
-    "Điện Bàn",
-    "Duy Xuyên",
-    "Hiệp Đức",
-    "Nam Giang",
-    "Nam Trà My",
-    "Nông Sơn",
-    "Núi Thành",
-    "Phú Ninh",
-    "Phước Sơn",
-    "Quế Sơn",
-    "Tây Giang",
-    "Thăng Bình",
-    "Tiên Phước",
-  ],
-  "Quảng Ngãi": [
-    "Quảng Ngãi",
-    "Ba Tơ",
-    "Bình Sơn",
-    "Đức Phổ",
-    "Lý Sơn",
-    "Minh Long",
-    "Mộ Đức",
-    "Nghĩa Hành",
-    "Sơn Hà",
-    "Sơn Tây",
-    "Sơn Tịnh",
-    "Tây Trà",
-    "Trà Bồng",
-    "Tư Nghĩa",
-  ],
-};
+
+interface ItemOrder {
+  name: string;
+  quantity: number;
+  id_variant: string;
+  uniqueId?: string; // Thêm một trường để tạo định danh duy nhất
+}
+
+interface ItemCheckout {
+  idProduct: string;
+  nameProduct: string;
+  imgVariant: string;
+  price: number;
+  color: string;
+  size: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+interface VoucherItem {
+  _id: string;
+  title: string;
+  codeName: string;
+  value: number;
+  quantity: number;
+}
+
+interface FormValues {
+  customerName: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  note: string;
+  agreement: boolean;
+  paymentMethod: string;
+  voucher: string;
+}
 
 const PaymentPage = () => {
-  const [quantity] = useState(1);
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState<string>("cod"); // Mặc định chọn "cod"
+  const nav = useNavigate();
+  const [form] = Form.useForm<FormValues>();
 
-  const orders = [
-    {
-      id: 1,
-      name: "CHACO J105375 - ĐEN - 8",
-      code: "J105375-8",
-      oldPrice: 2290000,
-      newPrice: 1900000,
-      image: "https://picsum.photos/100/100",
+  const [selectedPayment, setSelectedPayment] = useState<string>(
+    "67bfce96db17315614fced6f"
+  );
+
+  // Lấy thông tin tài khoản nếu có
+  const id = localStorage.getItem("idUser");
+
+  // Fetch user data từ API
+  const { data: userDataApi } = useQuery({
+    queryKey: ["USER_INFO", id],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/user_account/${id}`
+      );
+      return data.data;
     },
-  ];
+    enabled: !!id, // Chỉ chạy khi có ID
+  });
+
+  const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
+  const [storedCartItems, setStoredCartItems] = useState<CartItemDetail[]>([]);
+  const [itemOrder, setItemOrder] = useState<ItemOrder[]>([]);
+  const [listCheckout, setListCheckout] = useState<ItemCheckout[]>([]);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+
+  // Tiền thanh toán
+  const [paymentPrice, setPaymentPrice] = useState<number>(0);
+
+  // Voucher
+  const [voucherList, setVoucherList] = useState<VoucherItem[]>([]);
+  const [promotionValue, setPromotionValue] = useState<number>(0);
+  const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
+  const [idSelectedVoucher, setIdSelectedVoucher] = useState<string | null>(
+    null
+  );
+
+  const [loading, setLoading] = useState(false);
+  const [userInForm, setUserInForm] = useState<string | null>(null);
+
+  // Lấy cartItems từ localStorage
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    const storedPayCartItems = localStorage.getItem("selectedItemArray");
+    if (storedPayCartItems && storedCartItems) {
+      setCartItems(JSON.parse(storedPayCartItems));
+      setStoredCartItems(JSON.parse(storedCartItems));
+    }
+    else {
+      message.error("Không có sản phẩm để thanh toán", 3);
+      nav('/')
+    }
+
+    // Lấy list voucher
+    (async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/api/vouchers");
+        setVoucherList(data.data);
+      } catch (error) {
+        console.log("Không lấy được danh sách voucher: " + error);
+      }
+    })();
+  }, []);
+
+  // Lấy sản phẩm từ id
+  const getPdts = async (idProduct: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/products/" + idProduct
+      );
+      return data.data;
+    } catch (error) {
+      console.log("Không lấy được sản phẩm từ id: " + error);
+    }
+  };
+
+  // Lấy variant từ id
+  const getVariant = async (idVariant: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/variants/" + idVariant
+      );
+      return data.variants[0];
+    } catch (error) {
+      console.log("Không lấy được biến thể từ id: " + error);
+    }
+  };
+
+  // Tạo item cho listCheckout
+  const fetchProducts = useCallback(async () => {
+    try {
+      const productPromises = cartItems.map((item) => getPdts(item.idProduct));
+      const variantPromises = cartItems.map((item) =>
+        getVariant(item.idVariant)
+      );
+
+      const products = await Promise.all(productPromises);
+      const variants = await Promise.all(variantPromises);
+
+      const updatedListCheckout: ItemCheckout[] = [];
+      const updatedListItemOrder: ItemOrder[] = [];
+
+      cartItems.forEach((cartItem, index) => {
+        const productData = products[index];
+        const variantData = variants[index];
+
+        if (productData && variantData) {
+          updatedListCheckout.push({
+            idProduct: cartItem.idProduct,
+            nameProduct: productData.name,
+            imgVariant: variantData.image?.[0] || "",
+            price: productData.price,
+            color: cartItem.color,
+            size: cartItem.size,
+            quantity: cartItem.quantity,
+            totalPrice: productData.price * cartItem.quantity,
+          });
+
+          // Thêm trường uniqueId để đảm bảo tính duy nhất của mỗi item
+          updatedListItemOrder.push({
+            name: `${productData.name}_${cartItem.color}_${cartItem.size}`,
+            quantity: cartItem.quantity,
+            id_variant: cartItem.idVariant,
+            uniqueId: `${cartItem.idVariant}_${Date.now()}_${Math.floor(
+              Math.random() * 1000
+            )}`,
+          });
+        }
+      });
+
+      setListCheckout(updatedListCheckout);
+      setItemOrder(updatedListItemOrder);
+      calculateTotalPrice(updatedListCheckout);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Tính tổng giá tiền
+  const calculateTotalPrice = (items: ItemCheckout[]) => {
+    const total = items.reduce((sum, item) => sum + item.totalPrice, 0);
+    setTotalPrice(total);
+    setPaymentPrice(total);
+  };
+
+  // Lấy giá trị voucher từ select
+  const handleSelectChange = (value: string, option: BaseOptionType | DefaultOptionType) => {
+    const selectedValue = Number(value);
+    const selectedId = option?.["data-id"] || null;
+    setSelectedVoucher(selectedValue);
+    setIdSelectedVoucher(selectedId);
+  };
+  // const fetchVoucher (idSelectedVoucher)
+
+  // lấy voucher tu id
+  const getVoucher = async (idVoucher: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/vouchers/" + idVoucher
+      );
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id" + error);
+    }
+  };
+
+  //onclick event
+  const getPromotionValue = async () => {
+    if (selectedVoucher !== null && idSelectedVoucher) {
+      const voucher = await getVoucher(idSelectedVoucher);
+      let discount = (totalPrice / 100) * voucher.value;
+      discount = discount > voucher.maxValue ? voucher.maxValue : discount;
+
+      setPromotionValue(discount);
+      setPaymentPrice(totalPrice - discount);
+    }
+  };
+
+  // Nếu có tài khoản thì tự render vào
+  useEffect(() => {
+    if (userDataApi) {
+      form.setFieldsValue({
+        customerName: userDataApi.name,
+        phoneNumber: userDataApi.tel,
+        email: userDataApi.email,
+        address: userDataApi.address,
+      });
+      setUserInForm(userDataApi._id);
+    }
+  }, [userDataApi, form]);
+
+  // Thanh toán VNPay
+  const handleOnlinePayment = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
+        amount: paymentPrice,
+        orderId: itemOrder[0].id_variant + "_" + Date.now(),
+      });
+      window.location.href = response.data.paymentUrl;
+    } catch (error) {
+      // console.error("Validation failed:", error);
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
+        );
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    }
+  };
+
+  // Thanh toán tiền mặt
+  const handleShipCodPayment = async () => {
+    try {
+      const values = form.getFieldsValue();
+      setLoading(true);
+      let receiverId = "";
+      let itemOrderIds: string[] = [];
+
+      // Api tạo thông tin người nhận
+      try {
+        const receiverInfo = await fetch(
+          `http://localhost:3000/api/receivers`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: values.customerName,
+              phone: values.phoneNumber,
+              address: values.address,
+            }),
+          }
+        );
+        const receiverData = await receiverInfo.json();
+        if (!receiverInfo.ok) {
+          message.error(
+            receiverData.message || "Tạo thông tin người nhận thất bại"
+          );
+          return;
+        }
+        receiverId = receiverData.data._id;
+      } catch (error) {
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+        return;
+      }
+
+      // Api tạo item order - Đã sửa để giải quyết lỗi duplicate key
+      try {
+        // Xử lý từng item riêng biệt để tránh lỗi duplicate key
+        const itemOrderPromises = itemOrder.map(async (item: ItemOrder) => {
+          const response = await fetch(`http://localhost:3000/api/itemOrder`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify([
+              {
+                name: item.name,
+                quantity: item.quantity,
+                id_variant: item.id_variant,
+                // uniqueId: item.uniqueId, // Thêm uniqueId nếu backend hỗ trợ
+              },
+            ]),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Tạo item order thất bại");
+          }
+
+          const data = await response.json();
+          return data.data[0]._id;
+        });
+
+        itemOrderIds = await Promise.all(itemOrderPromises);
+      } catch (error) {
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+        return;
+      }
+
+      // Api tạo order
+      try {
+        const newOrder = await fetch(`http://localhost:3000/api/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            total: paymentPrice,
+            shippingFee: 0,
+            isPaid:
+              selectedPayment === "67bfce96db17315614fced6f" ? false : true,
+            voucher: idSelectedVoucher === "" ? null : idSelectedVoucher,
+            user: userInForm,
+            payment: selectedPayment,
+            receiverInfo: receiverId,
+            itemsOrder: itemOrderIds,
+            status: "Chưa xác nhận",
+          }),
+        });
+
+        const orderData = await newOrder.json();
+        if (!newOrder.ok) {
+          throw new Error(orderData.message || "Tạo đơn hàng thất bại");
+        }
+        //loại bỏ các sản phẩm đã thanh toán
+        const listItemAfterPay = storedCartItems.filter(
+          //lọc storedCartItems theo các item có idVariant giống nhau
+          (itemFromStored: CartItemDetail) =>
+            !cartItems.some(itemFromCart =>
+              itemFromCart.idVariant == itemFromStored.idVariant
+            )
+        );
+        //storedCartItems - Tất cả sản phẩm trong cart
+        //cartItems - Tất cả sản phẩm để thanh toán
+        console.log(cartItems);
+        console.log(listItemAfterPay);
+        //cập nhật lại cart sau khi thanh toán
+        localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+        localStorage.removeItem("selectedItemArray");
+        //clear cart items
+        setCartItems([]);
+        // localStorage.removeItem("cartItems");
+        setListCheckout([]);
+        setPaymentPrice(0);
+        setSelectedVoucher(null);
+        setPromotionValue(0);
+
+        nav("/notify2");
+      } catch (error) {
+        if (error instanceof Error) {
+          message.error(error.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        } else {
+          message.error("Đã xảy ra lỗi, vui lòng thử lại.");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        message.error(err.message || "Vui lòng điền đầy đủ thông tin bắt buộc");
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // submit form
+  const handleFormSubmit = async () => {
+    try {
+      await form.validateFields();
+      const values = form.getFieldsValue();
+      console.log("Form values:", values);
+      if (selectedPayment === "vnpay_payment") {
+        handleOnlinePayment()
+      } else {
+        handleShipCodPayment();
+      }
+    } catch (error) {
+      console.error("Validation failed:", error);
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Vui lòng điền đầy đủ thông tin bắt buộc"
+        );
+      } else {
+        message.error("Vui lòng điền đầy đủ thông tin bắt buộc");
+      }
+    }
+  };
+
+  const handleChangePaymentMethod = useCallback((e: RadioChangeEvent) => {
+    console.log(e.target.value)
+    setSelectedPayment(e.target.value);
+  }, [])
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl">
+      <Card className="w-full max-w-7xl">
         {/* Thông tin sản phẩm */}
-        <h2 className="text-2xl font-semibold mb-4 border-b border-gray-300 pb-2">
+        <Title
+          level={2}
+          className="mb-4 pb-2 border-b border-gray-300"
+          style={{ fontSize: "28px" }}
+        >
           Thông tin sản phẩm
-        </h2>
-        <div className="border border-gray-300 p-4 mb-6 rounded-lg bg-gray-50">
-          {orders.map((order) => (
+        </Title>
+
+        <Card className="mb-6 bg-gray-50">
+          {listCheckout.map((item: ItemCheckout, index: number) => (
             <div
-              key={order.id}
-              className="flex gap-4 mb-4 border-b border-gray-300 pb-4 last:border-b-0"
+              key={index}
+              className={`flex gap-4 mb-4 pb-4 ${index !== listCheckout.length - 1
+                ? "border-b border-gray-300"
+                : ""
+                }`}
             >
-              <img
-                src={order.image}
-                alt={order.name}
-                className="w-24 h-24 object-cover rounded-lg"
+              <Image
+                src={item.imgVariant}
+                alt={item.nameProduct}
+                width={96}
+                height={96}
+                className="object-cover rounded-lg"
+                preview={false}
               />
               <div className="flex-1">
-                <p className="font-semibold">{order.name}</p>
-                <p className="text-sm text-gray-600">
-                  Mã sản phẩm: {order.code}
-                </p>
-                <p className="line-through text-gray-500">
-                  {order.oldPrice.toLocaleString()} đ
-                </p>
-                <div className="flex justify-between items-center mt-1">
-                  <p className="text-lg font-semibold text-black-500">
-                    {order.newPrice.toLocaleString()} đ
-                  </p>
+                <Text strong>
+                  {" "}
+                  <Link to={`/products/${item.idProduct}`}>
+                    <span className="text-black">{item.nameProduct}</span>
+                  </Link>{" "}
+                </Text>
+                <Text type="secondary" className="flex items-end">
+                  Màu:
+                  <div className="h-[20px] w-[20px] ml-2" style={{background: item.color}}/>
+                </Text>
+                <Text type="secondary" className="">
+                 Size: 
+                 <span className="font-bold text-black text-[16px] ml-1">{item.size}</span>
+                </Text>
+                <div className="flex justify-between items-center">
+                  <Text strong className="text-lg">
+                    <span className="text-[18px]">{item.price}</span> vnđ
+                  </Text>
                   <div className="flex items-center gap-2">
-                    <span className="w-12  p-1 rounded-md text-center">
-                      x {quantity}
-                    </span>
+                    <Text>x {item.quantity}</Text>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-        </div>
+        </Card>
 
-        {/* Thông tin người nhận */}
-        <div className="grid gap-3 mb-6">
-          <h2 className="text-2xl font-semibold mb-4 border-b border-gray-300 pb-2">
+        {/* Form thông tin người nhận */}
+        <Form form={form} layout="vertical" requiredMark={false} onFinish={handleFormSubmit}>
+          <Title
+            level={2}
+            className="mb-4 pb-2 border-b border-gray-300"
+            style={{ fontSize: "28px" }}
+          >
             Người nhận
-          </h2>
-          <div className="relative w-full">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Title>
+
+          <Form.Item
+            name="customerName"
+            rules={[
+              { required: true, message: "Vui lòng nhập tên khách hàng!" },
+            ]}
+          >
+            <Input
+              prefix={<User className="text-gray-500 w-5 h-5" />}
               placeholder="Tên khách hàng"
-              className="border border-gray-300 p-3 pl-10 rounded w-full 
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item
+            name="phoneNumber"
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại!" },
+              {
+                pattern: /^(0|\+84)[3|5|7|8|9][0-9]{8}$/,
+                message: "Số điện thoại không hợp lệ!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<Phone className="text-gray-500 w-5 h-5" />}
               placeholder="Số điện thoại"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="email"
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                type: "email",
+                message: "Email không hợp lệ!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<Mail className="text-gray-500 w-5 h-5" />}
               placeholder="Địa chỉ email (không bắt buộc)"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-          <div className="flex gap-2">
-            <label htmlFor="province" className="sr-only">
-              Chọn tỉnh/thành
-            </label>
-            <select
-              id="province"
-              className="border border-gray-300 p-3 rounded flex-1"
-              onChange={(e) => {
-                setSelectedProvince(e.target.value);
-                setSelectedDistrict(""); // Reset quận/huyện khi chọn tỉnh mới
-              }}
-              value={selectedProvince}
-              aria-label="Chọn tỉnh/thành"
-            >
-              <option value="">Chọn Tỉnh/Thành Phố</option>
-              {provinces.map((province, index) => (
-                <option key={index} value={province}>
-                  {province}
-                </option>
-              ))}
-            </select>
+          </Form.Item>
 
-            <label htmlFor="district" className="sr-only">
-              Chọn quận/huyện
-            </label>
-            <select
-              id="district"
-              className="border border-gray-300 p-3 rounded flex-1"
-              value={selectedDistrict}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              aria-label="Chọn quận/huyện"
-              disabled={!selectedProvince} // Disable khi chưa chọn tỉnh/thành
-            >
-              <option value="">Chọn Quận/Huyện</option>
-              {districts[selectedProvince]?.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="relative w-full">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          <Form.Item
+            name="address"
+            rules={[
+              { required: true, message: "Vui lòng nhập địa chỉ nhận hàng!" },
+            ]}
+          >
+            <Input
+              prefix={<MapPin className="text-gray-500 w-5 h-5" />}
               placeholder="Nhập địa chỉ cụ thể"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-          <div className="relative w-full">
-            <Pencil className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item name="note">
+            <Input
+              prefix={<Pencil className="text-gray-500 w-5 h-5" />}
               placeholder="Nhập ghi chú (không bắt buộc)"
-              className="border border-gray-300 p-3 pl-10 rounded w-full
-               focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
+              size="large"
             />
-          </div>
-        </div>
-        {/* Phuong thức thanh toán */}
-        <div>
-          <h2 className="text-2xl font-semibold">Phương thức thanh toán</h2>
-          <h2 className="mb-4 border-b border-gray-300 text-gray-400 pb-2">
-            Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
-          </h2>
+          </Form.Item>
 
-          <label className="flex items-center gap-2 mb-6">
-            <input
-              type="radio"
-              name="payment"
-              className="w-4 h-4"
-              value="cod"
-              checked={selectedPayment === "cod"}
-              onChange={() => setSelectedPayment("cod")}
-            />
-            Thanh toán khi nhận hàng
-          </label>
-
-          <label className="flex items-center gap-2 mb-6">
-            <input
-              type="radio"
-              name="payment"
-              className="w-4 h-4"
-              value="bank"
-              checked={selectedPayment === "bank"}
-              onChange={() => setSelectedPayment("bank")}
-            />
-            Thanh toán qua ví điện tử VNPAY
-          </label>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Thanh toán */}
-          <div className="flex-1 border border-gray-300 p-6 bg-gray-100 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Thanh toán</h3>
-            <p className="flex justify-between text-gray-500">
-              Tổng giá trị sản phẩm <span>1,900,000 đ</span>
-            </p>
-            <p className="flex justify-between text-gray-500">
-              Giảm giá <span>0 đ</span>
-            </p>
-            <p className="flex justify-between text-gray-500">
-              Vận chuyển <span>20,000 đ</span>
-            </p>
-            <p className="flex justify-between border-b border-gray-300 text-gray-500 pb-2">
-              Giảm giá vận chuyển{" "}
-              <span className="text-red-500">- 20,000 đ</span>
-            </p>
-            <p className="flex justify-between text-lg font-semibold text-red-500  pt-2 ">
-              Tổng thanh toán{" "}
-              <span className="text-xl font-bold">1,900,000 đ</span>
-            </p>
-            <p className="text-right text-red-500">
-              Bạn đã tiết kiệm được <span>20,000 đ</span>
-            </p>
-          </div>
-          {/* Giảm giá */}
-          <div className="w-full md:w-1/3 border border-gray-300 p-6 bg-gray-100 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Mã giảm giá</h3>
-            <div className="relative w-full">
-              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Nhập mã giảm giá"
-                className="border border-gray-300 p-3 pl-10 rounded w-full mb-2
-                focus:border-blue-200 focus:ring-1 focus:ring-blue-300 outline-none"
-              />
-            </div>
-            <button
-              className="bg-black text-white px-4 py-2 w-full rounded 
-                   hover:bg-yellow-500 transition duration-300"
+          {/* Phương thức thanh toán */}
+          <div className="mb-6">
+            <Title level={2} style={{ fontSize: "28px" }}>
+              Phương thức thanh toán
+            </Title>
+            <Paragraph
+              type="secondary"
+              className="mb-4 pb-2 border-b border-gray-300"
             >
-              Áp dụng
-            </button>
-          </div>
-        </div>
+              Lựa chọn phương thức thanh toán phù hợp nhất cho bạn
+            </Paragraph>
 
-        <label className="flex items-center gap-2 mt-6">
-          <input type="checkbox" className="w-4 h-4" /> Đồng ý với các điều
-          khoản và quy định của website
-        </label>
-        <button
-          className="bg-black text-white px-6 py-3 w-full mt-4 rounded-lg text-lg font-semibold 
-                   hover:bg-yellow-500 transition duration-300"
-        >
-          ĐẶT HÀNG
-        </button>
-        <h5 className="text-center pt-2 flex items-center justify-center gap-2 text-gray-700">
+            <Form.Item name="paymentMethod">
+              <Radio.Group
+                onChange={(e) => handleChangePaymentMethod(e)}
+                className="flex flex-col gap-6"
+              >
+                <Radio value="67bfce96db17315614fced6f">
+                  Thanh toán khi nhận hàng
+                </Radio>
+                <Radio value="vnpay_payment">
+                  Thanh toán qua ví điện tử VNPAY
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+          </div>
+
+          <Row gutter={24}>
+            {/* Thanh toán */}
+            <Col xs={24} md={16}>
+              <Card className="bg-gray-100 h-full">
+                <Title level={3} className="mb-2" style={{ fontSize: "20px" }}>
+                  Thanh toán
+                </Title>
+                <Space direction="vertical" className="w-full">
+                  <div className="flex justify-between">
+                    <Text type="secondary">Tổng giá trị sản phẩm</Text>
+                    <Text type="secondary">{totalPrice} đ</Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text type="secondary">Giảm giá từ voucher</Text>
+                    <Text type="secondary">{promotionValue} đ</Text>
+                  </div>
+                  <Divider />
+                  <div className="flex justify-between">
+                    <Text strong type="danger" style={{ fontSize: "17px" }}>
+                      Tổng thanh toán
+                    </Text>
+                    <Text strong type="danger" style={{ fontSize: "17px" }}>
+                      {paymentPrice} đ
+                    </Text>
+                  </div>
+                  <div className="text-right">
+                    <Text type="danger">
+                      Bạn đã tiết kiệm được:{" "}
+                      <Text type="danger" strong>
+                        {promotionValue} đ
+                      </Text>
+                    </Text>
+                  </div>
+                </Space>
+              </Card>
+            </Col>
+
+            {/* Giảm giá */}
+            <Col xs={24} md={8}>
+              <Card className="bg-gray-100 h-full">
+                <Title level={3} className="mb-2" style={{ fontSize: "20px" }}>
+                  Mã giảm giá
+                </Title>
+                <Form.Item name="voucher">
+                  <Select
+                    placeholder="Mời bạn chọn voucher"
+                    onChange={handleSelectChange}
+                    className="w-full"
+                    suffixIcon={<Tag className="text-gray-500 w-5 h-5" />}
+                    size="large"
+                  >
+                    <Option value="0">Không dùng voucher</Option>
+                    {voucherList.map((voucher: VoucherItem) => (
+                      <Option
+                        key={voucher._id}
+                        value={voucher.value.toString()}
+                        data-id={voucher._id}
+                      >
+                        {voucher.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Button
+                  type="primary"
+                  onClick={getPromotionValue}
+                  className="w-full bg-black hover:bg-yellow-500"
+                  size="large"
+                >
+                  Áp dụng
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="agreement"
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value
+                    ? Promise.resolve()
+                    : Promise.reject(
+                      new Error("Vui lòng đồng ý với điều khoản và quy định")
+                    ),
+              },
+            ]}
+            className="mt-6"
+          >
+            <Checkbox>
+              Đồng ý với các điều khoản và quy định của cửa hàng
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              className="w-full bg-black hover:bg-yellow-500"
+              // onClick={handleFormSubmit}
+              loading={loading}
+              size="large"
+              htmlType="submit"
+            >
+              ĐẶT HÀNG
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <div className="text-center pt-2 flex items-center justify-center gap-2 text-gray-700">
           <Lock className="w-5 h-5 text-green-600" />
-          Đảm bảo thanh toán an toàn và bảo mật
-        </h5>
-      </div>
+          <Text type="secondary">Đảm bảo thanh toán an toàn và bảo mật</Text>
+        </div>
+      </Card>
     </div>
   );
 };

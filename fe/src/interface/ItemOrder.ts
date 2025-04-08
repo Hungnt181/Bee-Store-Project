@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { Variant } from "./Variant";
 
 export interface ItemOrder {
     _id: ObjectId;
@@ -12,8 +13,5 @@ export interface ItemOrder {
     type: number;
     required: true;
   };
-  id_variant: {
-    type: ObjectId;
-    ref: "Variant"
-};
+  id_variant: Variant
 }

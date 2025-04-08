@@ -1,39 +1,43 @@
-import { Router } from 'express';
-import User from '../../models/users/user';
-import nodemailer from 'nodemailer';
+import { Router } from "express";
+import User from "../../models/users/user";
+import nodemailer from "nodemailer";
+import crypto from "crypto"
 
 const router = Router();
 
-router.post('/', async (req, res) => {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+router.post("/", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
 
-    if (!user) {
-        return res.status(400).json({
-            'message': 'Email không tồn tại'
-        });
-    }
-
-    // Tạo token 
-    const resetToken = user._id;
-
-    user.resetPasswordToken = resetToken;
-    await user.save();
-
-    // Cấu hình nodemailer
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'beestore1802@gmail.com',
-            pass: 'jqst iupd chwk tnsx'
-        }
+  if (!user) {
+    return res.status(400).json({
+      message:
+        "Oops! Có vẻ bạn chưa có tài khoản. Vui lòng đăng ký để tiếp tục.",
     });
+  }
 
-    const mailOptions = {
-        from: 'BeeStore',
-        to: email,
-        subject: 'BeeStore - Đặt lại mật khẩu',
-        html: `
+  // Tạo token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // Lưu token và thời gian hết hạn (5 phút)
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = Date.now() + 5 * 60 * 1000;
+  await user.save();
+
+  // Cấu hình nodemailer
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "beestore1802@gmail.com",
+      pass: "jqst iupd chwk tnsx",
+    },
+  });
+
+  const mailOptions = {
+    from: "BeeStore",
+    to: email,
+    subject: "BeeStore - Đặt lại mật khẩu",
+    html: `
             <div style="
                 font-family:'Segoe UI';
                 margin: 0;
@@ -74,19 +78,19 @@ router.post('/', async (req, res) => {
             </div>
         </div>
     </div>
-        `
-    };
+        `,
+  };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return res.status(500).json({
-                'message': 'Lỗi khi gửi email'
-            });
-        }
-        res.status(200).json({
-            'message': 'Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.'
-        });
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).json({
+        message: "Lỗi khi gửi email",
+      });
+    }
+    res.status(200).json({
+      message: "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.",
     });
+  });
 });
 
 export default router;

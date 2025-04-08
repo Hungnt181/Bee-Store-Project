@@ -63,7 +63,7 @@ const AdminProductList = () => {
       setDataTable(dataPage.products);
     }
   }, [dataPage]);
-  const urlDelete = "http://localhost:3000/api/products/status/";
+  const urlDelete = `http://localhost:3000/api/products/status/`;
   const { mutate } = useDelete(urlDelete, key);
 
   const handleSearchVariant = (id: string) => {
@@ -102,6 +102,9 @@ const AdminProductList = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
+      render: (_: unknown, item: Product) => {
+        return <>{Number(item?.price).toLocaleString("vi-VN")} VNĐ</>;
+      },
     },
 
     {
@@ -304,7 +307,10 @@ const AdminProductList = () => {
         >
           <Tooltip title="Nhập tên danh mục" placement="right">
             <Form.Item label={null} name="searchKey" style={{ width: "400px" }}>
-              <Input placeholder="Tìm kiếm sản phẩm..." prefix={<SearchOutlined />} />
+              <Input
+                placeholder="Tìm kiếm sản phẩm..."
+                prefix={<SearchOutlined />}
+              />
             </Form.Item>
           </Tooltip>
           <Form.Item label={null}>
@@ -319,7 +325,7 @@ const AdminProductList = () => {
             />
           </Tooltip>
         </Form>
-        <Space >
+        <Space>
           <Select
             style={{ width: 150 }}
             defaultValue={"Tất cả danh mục"}

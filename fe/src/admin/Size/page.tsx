@@ -8,17 +8,34 @@ import {
   TableProps,
   MenuProps,
   Tooltip,
+  Modal,
+  Typography,
+  Descriptions,
+  Tag,
+  Skeleton,
 } from "antd";
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Size from "../../interface/Size";
 import dayjs from "dayjs";
+
+const { Title } = Typography;
+
+interface Size {
+  _id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  key?: string;
+}
 
 const AdminSizeList = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedSizeData, setSelectedSizeData] = useState<Size | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   const {
     data: sizes,
@@ -30,7 +47,7 @@ const AdminSizeList = () => {
       try {
         const res = await axios.get("http://localhost:3000/api/sizes");
         return res.data.data.map((size: Size) => ({
-          key: size._id.toString(), // Ensure _id is a string
+          key: size._id.toString(),
           ...size,
         }));
       } catch (err) {
@@ -47,13 +64,23 @@ const AdminSizeList = () => {
     }
   }, [error]);
 
-  if (isLoading) {
-    return <p>Đang tải dữ liệu...</p>;
-  }
+  const fetchSizeDetails = async (id: string) => {
+    setLoadingDetails(true);
+    try {
+      const res = await axios.get(`http://localhost:3000/api/sizes/${id}`);
+      setSelectedSizeData(res.data.data);
+    } catch (err) {
+      message.error("Không thể lấy thông tin chi tiết kích thước!");
+      console.error(err);
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
 
-  if (!sizes || sizes.length === 0) {
-    return <p>Không có kích thước nào để hiển thị.</p>;
-  }
+  const showSizeDetails = (id: string) => {
+    fetchSizeDetails(id);
+    setDetailModalVisible(true);
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -66,25 +93,33 @@ const AdminSizeList = () => {
     }
   };
 
+  if (isLoading) {
+    return <p>Đang tải dữ liệu...</p>;
+  }
+
+  if (!sizes || sizes.length === 0) {
+    return <p>Không có kích thước nào để hiển thị.</p>;
+  }
+
   const columns: TableProps<Size>["columns"] = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      width: 80,
+      width: 100,
       render: (_: string, __: Size, index: number) => index + 1,
     },
     {
       title: "Tên kích thước",
       dataIndex: "name",
       key: "name",
-      width: 300
+      width: 200,
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 300,
+      width: 250,
       render: (value: string) => (
         <Tooltip title={dayjs(value).format("DD/MM/YYYY HH:mm:ss")}>
           <span>{dayjs(value).format("DD/MM/YYYY")}</span>
@@ -111,19 +146,11 @@ const AdminSizeList = () => {
       render: (_: unknown, size: Size) => {
         const items: MenuProps["items"] = [
           {
-            key: "UPDATE",
-            label: (
-              <a onClick={() => navigate(`/admin/size/edit/${size._id}`)}>
-                Chỉnh sửa
-              </a>
-            ),
-          },
-          {
             key: "DELETE",
             label: (
               <Popconfirm
                 title="Bạn có chắc chắn muốn xóa kích thước này?"
-                onConfirm={() => handleDelete(size._id.toString())} // Ensure _id is a string
+                onConfirm={() => handleDelete(size._id.toString())}
                 okText="Có"
                 cancelText="Không"
                 onCancel={() => message.error("Xóa bị hủy")}
@@ -136,14 +163,15 @@ const AdminSizeList = () => {
         ];
         return (
           <>
-            <Button
-              onClick={() => navigate(`/admin/size/detail/${size._id}`)}
-              type="primary"
-            >
+            <Button onClick={() => showSizeDetails(size._id)} type="primary">
               Chi tiết
             </Button>
             <Dropdown menu={{ items }}>
-              <Button type="text" icon={<MoreOutlined />} style={{ marginLeft: 8 }} />
+              <Button
+                type="text"
+                icon={<MoreOutlined />}
+                style={{ marginLeft: 8 }}
+              />
             </Dropdown>
           </>
         );
@@ -169,6 +197,53 @@ const AdminSizeList = () => {
         rowKey="_id"
         scroll={{ y: 55 * 7 }}
       />
+
+      {/* Size Detail Modal */}
+      <Modal
+        title={
+          <Title level={4} className="m-0 text-blue-700">
+            CHI TIẾT KÍCH THƯỚC
+          </Title>
+        }
+        open={detailModalVisible}
+        onCancel={() => setDetailModalVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setDetailModalVisible(false)}>
+            Đóng
+          </Button>,
+        ]}
+        width={700}
+        centered
+      >
+        {loadingDetails ? (
+          <Skeleton active paragraph={{ rows: 4 }} />
+        ) : selectedSizeData ? (
+          <Descriptions
+            layout="vertical"
+            bordered
+            column={1}
+            labelStyle={{ fontWeight: "bold" }}
+          >
+            <Descriptions.Item label="Tên kích thước">
+              <Tag color="blue" className="text-lg px-4 py-1">
+                {selectedSizeData.name}
+              </Tag>
+            </Descriptions.Item>
+
+            <Descriptions.Item label="Ngày tạo">
+              {dayjs(selectedSizeData.createdAt).format("DD/MM/YYYY HH:mm")}
+            </Descriptions.Item>
+
+            <Descriptions.Item label="Ngày cập nhật">
+              {dayjs(selectedSizeData.updatedAt).format("DD/MM/YYYY HH:mm")}
+            </Descriptions.Item>
+          </Descriptions>
+        ) : (
+          <Typography.Text type="danger">
+            Không tìm thấy thông tin kích thước!
+          </Typography.Text>
+        )}
+      </Modal>
     </div>
   );
 };

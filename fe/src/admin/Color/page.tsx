@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"; // Import useQuery từ react-query để quản lý truy vấn dữ liệu
+import { useQuery } from "@tanstack/react-query";
 import {
   Table,
   Tag,
@@ -11,18 +11,19 @@ import {
   notification,
   Form,
   Input,
-  Flex,
-} from "antd"; // Import các thành phần UI từ Ant Design
-import { MoreOutlined, PlusOutlined } from "@ant-design/icons"; // Import biểu tượng từ Ant Design
-import axios from "axios"; // Import axios để gọi API
-import { useEffect, useState } from "react"; // Import useEffect và useState để quản lý trạng thái và hiệu ứng
-import { useNavigate } from "react-router-dom"; // Import useNavigate để điều hướng trang
-import Color from "../../interface/Color"; // Import interface Color để sử dụng kiểu dữ liệu
-import dayjs from "dayjs"; // Import dayjs để xử lý thời gian
+  Row,
+  Col,
+} from "antd";
+import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Color from "../../interface/Color";
+import dayjs from "dayjs";
 
 const AdminColorList = () => {
-  const navigate = useNavigate(); // Hook dùng để điều hướng
-  const [searchText, setSearchText] = useState(""); // State để lưu giá trị tìm kiếm
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
 
   // Gọi API để lấy danh sách màu sắc sử dụng react-query
   const {
@@ -30,17 +31,17 @@ const AdminColorList = () => {
     error,
     isLoading,
   } = useQuery<Color[]>({
-    queryKey: ["colors"], // Khóa truy vấn, giúp react-query biết khi nào cần refetch
+    queryKey: ["colors"],
     queryFn: async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/colors"); // Gửi request GET để lấy danh sách màu
+        const res = await axios.get("http://localhost:3000/api/colors");
         return res.data.data.map((color: Color) => ({
-          key: color._id, // Thêm key cho mỗi mục để sử dụng trong bảng
+          key: color._id,
           ...color,
         }));
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-          message.error(error.response?.data); // Hiển thị lỗi nếu có
+          message.error(error.response?.data);
         } else {
           notification.error({
             message: "Chỉnh sửa màu sắc thất bại",
@@ -176,35 +177,36 @@ const AdminColorList = () => {
     <div>
       <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH MÀU SẮC</h1>
       {/* Ô tìm kiếm */}
-      <Flex gap={0} justify="space-between">
-        <Form style={{ marginBottom: 10 }}>
-          <Form.Item style={{ width: "400px" }}>
+      <Form style={{ marginBottom: 10 }}>
+        <Row gutter={8} align="middle">
+          <Col span={12}>
             <Input
               placeholder="Tìm kiếm theo tên hoặc mã màu"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
             />
-          </Form.Item>
-        </Form>
+          </Col>
+        </Row>
+      </Form>
+      {/* Nút thêm màu sắc */}
+      <Button
+        type="primary"
+        onClick={() => navigate("/admin/color/add")}
+        style={{ marginBottom: 10 }}
+        icon={<PlusOutlined />}
+      >
+        Thêm mới
+      </Button>
 
-        {/* Nút thêm màu sắc */}
-        <Button
-          type="primary"
-          onClick={() => navigate("/admin/color/add")}
-          style={{ marginBottom: 10 }}
-          icon={<PlusOutlined />}
-        >
-          Thêm mới
-        </Button>
-      </Flex>
       {/* Bảng hiển thị danh sách màu */}
       <Table<Color>
-        dataSource={filteredColors} // Dữ liệu nguồn cho bảng
-        columns={columns} // Cấu trúc cột
-        pagination={{ pageSize: 10 }} // Phân trang, mỗi trang hiển thị 10 dòng
-        rowKey="_id" // Định danh duy nhất cho mỗi dòng
-        scroll={{ y: 55 * 7 }} // Kích thước cuộn của bảng
+        dataSource={filteredColors}
+        columns={columns}
+        pagination={{ pageSize: 30 }}
+        // pagination={false}
+        rowKey="_id"
+        scroll={{ y: 55 * 7 }}
       />
     </div>
   );

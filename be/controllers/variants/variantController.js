@@ -167,12 +167,26 @@ class VariantController {
       const result = await Variant.paginate(query, options);
       const { docs, ...paginationData } = result;
 
+      const sizeText = ["S", "M", "L", "XL", "XXL"];
       docs.sort((a, b) => {
-        if (a.id_size.name < b.id_size.name) return -1;
-        if (a.id_size.name > b.id_size.name) return 1;
-        if (a.id_color.name < b.id_color.name) return -1;
-        if (a.id_color.name > b.id_color.name) return 1;
-        return 0;
+        const sizeA = a.id_size.name;
+        const sizeB = b.id_size.name;
+        // Kiểm tra nếu size là số hay không
+        const isNumA = !isNaN(sizeA);
+        const isNumB = !isNaN(sizeB);
+        if (isNumA && isNumB) {
+          // Nếu cả hai là số, so sánh theo số
+          return parseInt(sizeA) - parseInt(sizeB);
+        } else if (!isNumA && !isNumB) {
+          // Nếu cả hai là chữ, so sánh theo mảng sizeOrder
+          const indexA = sizeText.indexOf(sizeA);
+          const indexB = sizeText.indexOf(sizeB);
+          if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+          return sizeA.localeCompare(sizeB); // Nếu không có trong danh sách, sắp xếp theo chữ cái
+        } else {
+          // Nếu một cái là số, một cái là chữ -> số sẽ được đặt trước chữ
+          return isNumA ? -1 : 1;
+        }
       });
 
       return res.status(StatusCodes.OK).json({

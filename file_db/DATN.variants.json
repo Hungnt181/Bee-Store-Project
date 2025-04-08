@@ -1,69 +1,2841 @@
 [{
   "_id": {
-    "$oid": "67935eba4e9891e401940465"
+    "$oid": "67d8d34a1f79d94f72ebc890"
   },
-  "image": "link pic",
-  "quantity": 100,
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263094/boj3lk5vwpoqgltyyxhu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263096/ifmr3uslrpi0xnbi5hlf.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263099/kvlhjb8fy7q60zendpb1.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263101/y1iy6gxtof6tqxgorl7b.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263104/awz1gpkp9y6e0tlir3bg.webp"
+  ],
+  "quantity": 50,
   "status": true,
   "id_color": {
-    "$oid": "6784cd9ba0dcf097b49a6448"
+    "$oid": "67d8d2801f79d94f72ebc85c"
   },
   "id_size": {
-    "$oid": "6784cde1a0dcf097b49a644b"
+    "$oid": "67d833f14cd471a07c33a78a"
   },
   "id_product": {
-    "$oid": "67832e6cfa9cb63c22b31da5"
+    "$oid": "67d8d34a1f79d94f72ebc88d"
   },
   "createdAt": {
-    "$date": "2025-01-24T09:34:50.491Z"
+    "$date": "2025-03-18T01:58:34.086Z"
   },
   "updatedAt": {
-    "$date": "2025-01-25T14:02:50.449Z"
+    "$date": "2025-03-18T01:58:34.086Z"
   }
 },
 {
   "_id": {
-    "$oid": "67935ee04e9891e401940468"
+    "$oid": "67d8d3691f79d94f72ebc8a1"
   },
-  "image": "link pic",
-  "quantity": 100,
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263124/oj8bwkm6ryx29edvhvvh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263125/fkndkf16tuau7bb4bq6r.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263127/zuabn4sulk9l9huczanj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263129/m7crqhbhcqqf1ggcjh4v.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263131/cctti85nhkdtgxussuwp.webp"
+  ],
+  "quantity": 45,
   "status": true,
   "id_color": {
-    "$oid": "6784cd87a0dcf097b49a6445"
+    "$oid": "67d8d2801f79d94f72ebc85c"
   },
   "id_size": {
-    "$oid": "6784cde1a0dcf097b49a644b"
+    "$oid": "67d833f84cd471a07c33a78e"
   },
   "id_product": {
-    "$oid": "67832e6cfa9cb63c22b31da5"
+    "$oid": "67d8d34a1f79d94f72ebc88d"
   },
   "createdAt": {
-    "$date": "2025-01-24T09:35:28.518Z"
+    "$date": "2025-03-18T01:59:05.570Z"
   },
   "updatedAt": {
-    "$date": "2025-01-25T07:32:13.962Z"
+    "$date": "2025-03-18T01:59:05.570Z"
   }
 },
 {
   "_id": {
-    "$oid": "67935eeb4e9891e40194046b"
+    "$oid": "67d8d3a51f79d94f72ebc8b6"
   },
-  "image": "link pic",
-  "quantity": 100,
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263188/n23c6eorrqa0osvarcm2.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263190/sf6ffkqkdtw5juuwkq3n.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263192/c5kubtyelckgkgvrbgdi.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263192/srrw5a3m2ibkjbzr0ma9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263194/enkwgr9wy5nhhh4yfljr.webp"
+  ],
+  "quantity": 70,
   "status": true,
   "id_color": {
-    "$oid": "6784cde1a0dcf097b49a644b"
+    "$oid": "67d8d2801f79d94f72ebc85c"
   },
   "id_size": {
-    "$oid": "6784cde1a0dcf097b49a644b"
+    "$oid": "67d8d15d1f79d94f72ebc82f"
   },
   "id_product": {
-    "$oid": "6783363bfa9cb63c22b31db7"
+    "$oid": "67d8d34a1f79d94f72ebc88d"
   },
   "createdAt": {
-    "$date": "2025-01-24T09:35:39.832Z"
+    "$date": "2025-03-18T02:00:05.279Z"
   },
   "updatedAt": {
-    "$date": "2025-01-24T09:35:39.832Z"
+    "$date": "2025-03-18T02:00:05.279Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d3c71f79d94f72ebc8ca"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263222/uctvwvv6boxrl9axnixk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263224/vr4tvzh1kzusjos2d0rl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263228/nn1p0wkdiyctvqhj0uzg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263231/eyigvcmsbswzl9bz6rnz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263233/owhliwyq0s5rh9ivndue.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d2801f79d94f72ebc85c"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d34a1f79d94f72ebc88d"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:00:39.704Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:00:39.704Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d3e51f79d94f72ebc8df"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263252/nrjtirr7potbz3uvrsnt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263254/citjyn6trwtorenkcpgj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263256/fv1sjs94x5pdd3mitlvy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263258/pea5hfizl1xxsp6tyboy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263259/gm7knz9fwzhjzahftivc.webp"
+  ],
+  "quantity": 50,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d23b1f79d94f72ebc850"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d34a1f79d94f72ebc88d"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:01:09.089Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:01:09.089Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d3ff1f79d94f72ebc8f3"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263281/kzookavveodl6uwftuhl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263282/cqqusyqqa8bbdq3pbovq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263283/m5h9e5nskcy3kgww60yz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263285/lrcuzfixbxlutbouu4w6.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263287/wkytv619rziebu07gbbo.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d23b1f79d94f72ebc850"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d34a1f79d94f72ebc88d"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:01:35.816Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:01:35.816Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d4b11f79d94f72ebc9a5"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263441/by3q0nbt2jkh03cw9e4x.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263443/u3bpphuvftxgnor8tqbn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263445/axkdeyika8ec5soxnrfp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263447/fij1xkbo14slq5asippn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263449/bcydvebz65yoark9tzg7.webp"
+  ],
+  "quantity": 54,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:04:33.933Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:04:33.933Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d4cd1f79d94f72ebc9b6"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263480/cqsbxec9vi88csitz9pu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263482/m9hnzibwpulj07jag69x.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263484/gvmjiqq3a6ccdyl4f6yq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263486/uyjxkukxfjymotp1djpg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263488/ppqmvuhsiyfcjohnr1vx.webp"
+  ],
+  "quantity": 45,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:05:01.282Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:05:01.282Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d4fa1f79d94f72ebc9d3"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263521/xudbmcazrixd1fkhynjy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263522/o5ihcfshh58n194eisx7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263523/a48btyylwebyrfx9nyix.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263525/dcvdug4vggwksdevsvvu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263527/lq5rhfusplicsyipro6i.webp"
+  ],
+  "quantity": 19,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:05:46.723Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:05:46.723Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d5681f79d94f72ebca49"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263639/c78kxbermr59d901sxjz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263639/oevgnlqee4yzy7eaylhv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263642/btnf41ge44usctrn5x8d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263643/c3qg2udjfolgdyddovqx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263645/lmi3n9iet0z9giilnwmp.webp"
+  ],
+  "quantity": 40,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:07:36.739Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:07:36.739Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d5911f79d94f72ebca69"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263677/ibbgirjv7ukv76myburj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263677/vvozjuvbc0ihncwahpca.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263680/catbgl3xncbnbv96tko7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263681/j2l2dfwek1z0txp17wva.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263683/mrtp4d1mnyv37naeghtn.webp"
+  ],
+  "quantity": 50,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:08:17.049Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:08:17.049Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d5b01f79d94f72ebca7d"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263708/ygdtifhawl2soqfht2o2.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263709/pefrzgk9dkbo8mj61rdw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263711/jy3dutiga18f2shjndsg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263713/hfbxi8juzxbjlaup7lrt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263716/nrbroex7vmoih1obooeg.webp"
+  ],
+  "quantity": 10,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:08:48.628Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:08:48.628Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d5c71f79d94f72ebca92"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263734/qmkphsrhhlu7kcileg5m.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263736/g039qlgumh6avljlvkmd.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263738/bvekbobsxheek7cqxoty.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263740/ydmwuuikljg469uidk6t.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263743/ugt3zpfekrf5x3ehxqfa.webp"
+  ],
+  "quantity": 40,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:09:11.344Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:09:11.344Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d5f71f79d94f72ebcab1"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263771/ixpkt33yagvtq9wvf9yq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263773/colmeobgeiixmmotd1qb.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263778/dszm411oaoi2qakhgv6a.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263780/kwdw87jiam6a5skj2isl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742263782/kogqw92l9fwmmcqzjilu.webp"
+  ],
+  "quantity": 43,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d4b11f79d94f72ebc9a2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:09:59.298Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:09:59.298Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d74e1f79d94f72ebcb63"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264127/pgrptfjtwpksf2zbjcei.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264128/o3bz1hkpgivmgt2tnwrq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264130/hs1hknykrbq5hggf0f0j.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264131/mqeosnvstsdk14zlofoz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264135/ahwzerfxkmccfxcothot.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d74e1f79d94f72ebcb60"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:15:42.606Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:15:42.606Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d7691f79d94f72ebcb74"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264154/yiw1jpmmoq8i4rrb61ag.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264155/uworr412ragyxgo9i16r.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264157/y1znsmm99qaee7l57hdu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264158/nktllqo8inrwvfdmnzgj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264161/iae16e4ezivpueresyyq.webp"
+  ],
+  "quantity": 50,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d74e1f79d94f72ebcb60"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:16:09.061Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:16:09.061Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d77f1f79d94f72ebcb88"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264179/tlwy8bcz2zxj8hksgbzp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264179/cacuilue7ydx46tnolhn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264180/q7gulgt5bdqrgbptqznx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264182/vzmlvcnnx4ohyw8c2yte.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264184/x35sfsi6x0aiusfxxbex.webp"
+  ],
+  "quantity": 15,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d74e1f79d94f72ebcb60"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:16:31.047Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:16:31.047Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d7921f79d94f72ebcb9c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264197/inz35fxxi04hc2da8vec.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264198/vabldtcolubyk5wbjemc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264200/oooh0zk5mupmb0vcgwzx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264202/ralshgm9itpheoggxxpm.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264204/n2j2kl80mfto68qicpln.webp"
+  ],
+  "quantity": 5,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d74e1f79d94f72ebcb60"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:16:50.090Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:16:50.090Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d80e1f79d94f72ebcc53"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264313/qsdwufssyrex3aonmmvn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264316/gmvwz4qgfkobbuxn9urk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264317/iwwy68oifs2r7amcemji.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264320/uutge32smfixtdknjomk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264322/hihmny7ihkp2mpanmlys.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d2c11f79d94f72ebc86a"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d80e1f79d94f72ebcc50"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:18:54.927Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:18:54.927Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d8261f79d94f72ebcc64"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264342/qp9z0bqgbvqcvxqgv0sn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264344/taxi67qoaut6zb47rxft.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264347/gydfwonppgzt2ghkieg1.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264349/tsr44ccnimrrnjpgevsj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264351/lllzwn9uxbmfjuzwxi2k.webp"
+  ],
+  "quantity": 13,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d2c11f79d94f72ebc86a"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d80e1f79d94f72ebcc50"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:19:18.805Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:19:18.805Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d83c1f79d94f72ebcc78"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264365/ujaqykvb2yloqfkduxhu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264367/eewl1pi9pfbkflw68990.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264369/u67imewokoplp0kmxx3b.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264370/jpfxlwrb89w5e4uxdeaa.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264372/bdcvipcxxmausiyd5z5j.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d2c11f79d94f72ebc86a"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d80e1f79d94f72ebcc50"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:19:40.430Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:19:40.430Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d8571f79d94f72ebcc8d"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264388/msfxl2qsvmg7bklghotv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264389/ejfb4eqf9jymmurpshbv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264391/bsh3zz4rudt52rikzruc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264394/rffuyesuffoui9fjnukl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264395/e3xd3wykspita4dqgiji.webp"
+  ],
+  "quantity": 24,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d2c11f79d94f72ebc86a"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d80e1f79d94f72ebcc50"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:20:07.553Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:20:07.553Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d8731f79d94f72ebcca1"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264420/kgd4fvnha3yndkirtpue.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264422/olf9kfjrtzgp8vzzlcbn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264423/cwuzybwnldal71juu6cp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264426/tsckjtzgyio7bmxiwf64.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264428/w5fyqfxcgj8pi1bxaetn.webp"
+  ],
+  "quantity": 11,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d80e1f79d94f72ebcc50"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:20:35.027Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:20:35.027Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d9cf1f79d94f72ebce5b"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264770/ejdjxsaudoxtlebmtvtm.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264771/qamzkbbgl1s80xlujeor.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264772/amqo9gny0haz4xcxgsni.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264774/alykspsncw05nincf9ow.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264775/s4l2fkxuvqnrgylau3lv.webp"
+  ],
+  "quantity": 10,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:26:23.243Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:26:23.243Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8d9f71f79d94f72ebcebe"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266018/d3nwcytfbbghxlcmmf3d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266019/sqlpk3lfnlujx1t5zu9c.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266020/puqfoahcrexuaqclkpet.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266022/d4dthko1yrqcc9whx11z.jpg"
+  ],
+  "quantity": 23,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:27:03.032Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:47:04.438Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8da0d1f79d94f72ebced2"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264830/lvgxhubuud5ngbepzhph.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264831/c1xtvv7ozfsrpd2bwzcp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264832/shzhk6rroyf3rxhbckl5.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264834/fxhp45lag5y8unrciaej.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264835/vnveiueolkiwciu1dh0o.webp"
+  ],
+  "quantity": 14,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:27:25.203Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:27:25.203Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8daad1f79d94f72ebd01a"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264985/wruozhknbyaoeyxjkhtl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264986/temblrfxe9y3nmk0nsjf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264988/dbffoqfmsd3wg8ejfcaw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264989/yunploce4rrjcqj0qvgb.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742264991/q9y9r3ddhybtfx5mkvt2.webp"
+  ],
+  "quantity": 12,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:30:05.206Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:30:05.206Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dac31f79d94f72ebd033"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265014/e5n9e6uzlhwp6igdwuwf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265015/vqtqbomr8lvgdsm471iu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265017/qppz9asyyvfxtvmzjubo.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265019/wllhduie0xskqfamdd6p.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265021/e1klo81yhgwaxqctvgpx.webp"
+  ],
+  "quantity": 13,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:30:27.481Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:30:27.481Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dad91f79d94f72ebd047"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265033/ia74rebqnph9hxvxhvxp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265035/oq9dvr15ahjx5pdbse5l.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265037/hcucpltivijr1ctgum7d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265038/mhual9ypecqli4oeupd7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265040/cjgwzoge3ouhqfq4z7hi.webp"
+  ],
+  "quantity": 21,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:30:49.528Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:30:49.528Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8daf11f79d94f72ebd05c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265055/rejfurzxpz2obcz3gjph.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265056/oehqjaelewcfvbotl5uh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265058/e7eokjg5qdaextaztsn2.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265060/tnksoul9fojlovme6vru.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265061/pwm7uvkkmernhqwz4ea4.webp"
+  ],
+  "quantity": 29,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:31:13.836Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:31:13.836Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8db261f79d94f72ebd07c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265081/amaaojqwyqnvtdvr8fnz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265083/h6ke55je6aptqmka79lh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265084/j10pusxoahfwnacvrmrq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265087/dhkuxkqhge75knthbtyt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265088/a22kmodwq2ychyfp8kn7.webp"
+  ],
+  "quantity": 18,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:32:06.490Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:32:06.490Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8db4f1f79d94f72ebd0f2"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265154/epmgnwrzgltp4ii0nd6j.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265156/r6ywamd4evj8d9htz6gz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265157/ulgt7pf7ittqyfsdt4ph.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265160/r4riagzvvfciedpporwv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265162/zdt2m8koxwp6kavvzu6r.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:32:47.890Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:32:47.890Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8db681f79d94f72ebd107"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265172/bj5ixnidvds5ru0cetvx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265174/ivz5zl6hprgidceswthn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265175/mcpl3jsgedgnrbgt7pco.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265178/juyutoynutucreemxsyz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265179/hs87xrckez1w3zq9h4o0.webp"
+  ],
+  "quantity": 27,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:33:12.162Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:44:07.075Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8db8e1f79d94f72ebd142"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265212/uxqn2p2yrlinytm7w01y.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265214/mv1dzweukxjqvjukwoxo.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265216/wpb39nzgsiqsjdpctteo.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265220/s0gdcxeozxkdztkrsccx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265250/edpuwkql8w6aayxvkd50.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8daad1f79d94f72ebd017"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:33:50.175Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:34:12.667Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dcaa1f79d94f72ebd316"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265498/phwmp0klwiidz3iesmp9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265498/oepcr1bad4ixkpvri1xr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265500/hx46gxxxvkkt0bxbe9rn.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265500/zzcmalvqeneuexc1vxpq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265502/ie1gojpqifzlmkqjp9zo.webp"
+  ],
+  "quantity": 16,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:38:34.943Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:38:34.943Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dcc51f79d94f72ebd32b"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265524/ygai467hluxoka8dcett.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265526/ckrcljhiz9ilx6kjadpz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265528/xydbbwx1sg3m3tz2etna.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265529/rzys7qbkjashs3svc3xn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265531/il5foaq2thys1axb4svw.webp"
+  ],
+  "quantity": 11,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:39:01.318Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:39:01.318Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dcd81f79d94f72ebd33f"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266062/jpl3uorf0iik01md03ss.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266063/znkgieuozf0apw398kz8.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266066/mqbw1a1yh0uw9nrekaix.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266068/dm9uek7v6waoi0smgwqs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266070/mkfaems3ma5gffnh6kq6.webp"
+  ],
+  "quantity": 9,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:39:20.264Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:47:51.251Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dcec1f79d94f72ebd353"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265565/sojb734y3i0gjpybcljs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265567/pqy6cecmwaukbiw6avqo.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265568/zwcskoy5isamff8nlfro.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265570/qphqyiqzrbjn8cvg4glf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265573/khjq3ryfijsl6uydkycb.webp"
+  ],
+  "quantity": 17,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:39:40.704Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:39:40.704Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dd0a1f79d94f72ebd368"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266130/wzlszrf1zyhwvxxtiuns.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266132/a99gjzrprqbnnhiamuci.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266134/rz5irgy63bw79zlgrdfy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266136/dgamxcqtv1hqjkxzk9mx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266138/pwhfqexzlfxdwuxl5rlw.webp"
+  ],
+  "quantity": 27,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:40:10.507Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:48:58.935Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dd1d1f79d94f72ebd37c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265616/yan4ax5jjvfixliecop2.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265617/okxbzb9l1qbxeothos8c.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265619/n369vkl1lqjta8iungwe.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265621/qgbgowxbrwgue661rawp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265622/um2bkeuafappyvvwjc9o.webp"
+  ],
+  "quantity": 17,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:40:29.830Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:40:29.830Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dd361f79d94f72ebd390"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266101/ce3httkjgw60cdkv7x5p.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266102/oura8nzu8unlncvkd1zj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266104/igppmlwcmylbipff5ota.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266106/ovaoio9fr7hqje50v4jm.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266108/pqye1ilukvfgauw9xjwc.webp"
+  ],
+  "quantity": 21,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:40:54.067Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:48:29.175Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8dddf1f79d94f72ebd4e6"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265796/gzoyuafhjqhshbmnergt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265797/rmxigwab8aq64my8gipi.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265799/roanf6ztsacakn46we7k.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265800/xzuhfigjdfcufjez8xef.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742265802/q2i5xfwfwxfzfqfcyh0q.webp"
+  ],
+  "quantity": 12,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8d9ba1f79d94f72ebce48"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:43:43.870Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:43:43.870Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e0871f79d94f72ebdbf3"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266484/umwdewcnvjjk2hifuxnt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266484/v09lwuhn47t72hbcnqp3.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266487/tjji4pzesaphtexfglbp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266489/vg2r7dxvcugytk7xryh7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266491/ef1vpcmt1rm7yw30amoz.webp"
+  ],
+  "quantity": 24,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:55:03.120Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:55:03.120Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e0a31f79d94f72ebdc08"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266511/kh38myrds4koz1weu71y.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266559/rx0fek6djs4h1mvu6zuv.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266562/u2iu5aerafqet1n3pmvy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266564/u5euq7ra412lvq5meyoy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266567/vqzmwgfkgfv4xsywyquz.webp"
+  ],
+  "quantity": 13,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:55:31.851Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:56:08.648Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e0e61f79d94f72ebdcd3"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266577/smxxppiqamufvbfqskpx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266579/y9mlkrfqomgs9ofohegz.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266582/vi7ydifhthstesbjffrw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266585/inpbkprkk8bkin86xssn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266587/tzdts3hurbeas9yzlb3f.webp"
+  ],
+  "quantity": 26,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:56:38.647Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:56:38.647Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e1001f79d94f72ebdce8"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266605/e00lsrfh3xyjf4e4pxoh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266607/hkamvkwr47dytonbyjww.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266610/mfhdvkxpdavjblfwquso.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266612/ew2rbdjmnuld57id7xqp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266615/byxk1fcc2ut4eupomnsk.webp"
+  ],
+  "quantity": 32,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:57:04.974Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:57:04.974Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e11e1f79d94f72ebdcfc"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266631/z4153xb4mky6g6keugem.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266637/ar7ste6ci4mhbxagi1j3.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266641/cqzoghxzm86tvhzt0ckc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266644/wlsppmm0kfiebnpwp8cl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266679/xpf4fes4h78pcighve0g.webp"
+  ],
+  "quantity": 11,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T02:57:34.499Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T02:58:02.525Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e4671f79d94f72ebddd9"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742266695/x0vkvk70scflb0vspryv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267477/foke5vwp7fe3oggewz1k.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267480/xw6hppwevjn1ouimgnwn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267483/vawhjiaahimufjo3slbs.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267486/b5ekmxlzyn1rg3g5b4kh.webp"
+  ],
+  "quantity": 23,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:11:35.390Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:11:35.390Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e4a11f79d94f72ebddee"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267529/jn4vhuikaqe4bxkgndyu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267531/r1uwnz26fbu0zmtqatof.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267534/ogshhyspvrelasddn7e5.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267537/wbhhcolap2hpwxtokthv.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267539/gnjxaxbiuhrs4qg5cwk5.webp"
+  ],
+  "quantity": 22,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:12:33.997Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:12:33.997Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e4b81f79d94f72ebde02"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267558/eam1vdvsveuvim9lzbla.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267561/xexyufismnsppbm0tupy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267564/emcudugdrt3fasbtyeqg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267566/kbci7i81shgtroaw8qxl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267569/l3ckue0cxvruw0uguzck.webp"
+  ],
+  "quantity": 7,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:12:56.424Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:12:56.424Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e4e81f79d94f72ebde4e"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267600/fm8idbdmx15xhbbkkddm.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267603/w1b9qbg1dmnzeuppo06b.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267606/fctydng7p09uexz9wcv3.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267608/p67rfiv1lxijfnbikfaw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267612/nylxkqrmfotwfkoamdy5.jpg"
+  ],
+  "quantity": 23,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d8d15d1f79d94f72ebc82f"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:13:44.445Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:13:44.445Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e5051f79d94f72ebde63"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267630/rcjj70avb9ivtwn9yxah.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267633/qzukdnrxmludnesv8gda.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267637/imtrgtkdnwd4kk4ouatl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267640/hlmdbuyjbvk3jul9gdpx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267643/rydvnroov9drq5san85f.jpg"
+  ],
+  "quantity": 30,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:14:13.773Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:14:13.773Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e5231f79d94f72ebde77"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267658/xi636leh4pgqf8nzul7d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267661/nnat5dkwgswldj9xv6ch.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267664/wldje7ldwdwq4bfxy76l.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267667/dpxjcvu7lpvyyaean01n.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267670/qp2plswd3pzvnvko6p9v.jpg"
+  ],
+  "quantity": 29,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833f84cd471a07c33a78e"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:14:43.231Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:14:43.231Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e54a1f79d94f72ebdeb6"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267696/ls0kvv4lhdvcz7vsduvq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267699/id7zd2vbax0hb3i3opdk.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267701/k8q48yysucvocifs8khg.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267706/xtmrm40lblmfuhifdpnf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267708/hincxtwffhnv6msf1km6.jpg"
+  ],
+  "quantity": 12,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d71b1f79d94f72ebcb46"
+  },
+  "id_size": {
+    "$oid": "67d833fb4cd471a07c33a792"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:15:22.294Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:15:22.294Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d8e5771f79d94f72ebdf28"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267748/vllig1otvwrdymz8f90a.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267751/nk7jack95gp686ccttln.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267753/u1mhthv2pgmymiq7cuil.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267756/ccevkuwopjz9smkteztw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742267759/on657jj19rh6uywvjdeb.webp"
+  ],
+  "quantity": 21,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "id_size": {
+    "$oid": "67d833f14cd471a07c33a78a"
+  },
+  "id_product": {
+    "$oid": "67d8e0871f79d94f72ebdbf0"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T03:16:07.380Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T03:16:07.380Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d91f470f1b4d7c6337ddd5"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282509/tkgmdbgv1ueoiwgk6uyv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282517/espcg1x8kjsbq3bqa7ll.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282535/xaawxprze7lmmdsyd8hy.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282548/dckwpgelqrzlx84hvcvr.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282563/t9uwdrrlrau0zgbrtzia.webp"
+  ],
+  "quantity": 9,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67d91f470f1b4d7c6337ddd2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:22:47.437Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:22:47.437Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d91fcb0f1b4d7c6337e00c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282639/yobj9utmnedasmgbouay.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282648/vpailddy7gembofxfnjl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282665/worbvqheif28fba8eaql.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282683/tmlgyqh0jckxevmxwgmw.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282694/ccxt5j4g8i4mqdqyuwis.webp"
+  ],
+  "quantity": 18,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67d91f470f1b4d7c6337ddd2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:24:59.790Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:24:59.790Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d91ffa0f1b4d7c6337e07f"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282718/njd1q0cz4u1dmxx0bxfu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282722/ew4qpyjuaqg8u4l6d9ti.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282724/ztzav1becv4dolemgug9.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282730/aebymnqg0ghytao3xmo3.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282732/fbcy1hkooxrypj7sldpb.webp"
+  ],
+  "quantity": 28,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67d91f470f1b4d7c6337ddd2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:25:46.325Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:25:46.325Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d9204b0f1b4d7c6337e095"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282760/ncwt6pnmpft4cnbdh39s.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282762/r9v9jt1lll9kttu5vezs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282782/ajsqrz7z4pfqhzixiziw.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282803/knmfd1xda9ezj5dwqdqj.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742282825/nqozaixvffrzm0ni5pqc.webp"
+  ],
+  "quantity": 16,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67d91f470f1b4d7c6337ddd2"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:27:07.844Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:27:07.844Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d921470f1b4d7c6337e122"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283044/ofb0xxaplhzpfpoelao9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283049/zdtx8tdw8owtzfdbjlv3.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283051/sg6h6lh1lednbmiwoxia.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283055/gknxll8qdtuenyymkkmx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283062/jgnsevfekdxbiudjcgcn.webp"
+  ],
+  "quantity": 18,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67d921470f1b4d7c6337e11f"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:31:19.670Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:31:19.670Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d9218c0f1b4d7c6337e133"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283087/doza8fvj1s7ypymurdhr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283103/vb0dbslnkvrx0bk7rfys.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283122/kdcvrgltewfkcffdws7y.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283133/xdfh9ghwstzyatoh1se0.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283143/h9f506xznslbqbobvrfi.webp"
+  ],
+  "quantity": 9,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67d921470f1b4d7c6337e11f"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:32:28.687Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:32:28.687Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d921e30f1b4d7c6337e22d"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283183/mxplqyzsr64gwtgncdab.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283197/jptwjn2o8myztcobpqjj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283209/cvgczoxrhqdwqy94w4cn.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283225/gfmgzw6bjqkqhd4bw4es.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742283234/bterlmffc36jneodbobc.webp"
+  ],
+  "quantity": 21,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67d921470f1b4d7c6337e11f"
+  },
+  "createdAt": {
+    "$date": "2025-03-18T07:33:55.828Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-18T07:33:55.828Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7570bbac56802f3d47ee"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370139/pe8gauyqtalwb4ln5bqd.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370142/ge6h9aym7kife8pkp418.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370145/ayj7qk2uwozncuvyeevk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370147/m3e85zeycilxfdom7ija.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370150/ebkjzdhp290myustzt6d.webp"
+  ],
+  "quantity": 6,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8e0481f79d94f72ebdbae"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67d921470f1b4d7c6337e11f"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:42:40.356Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:42:40.356Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da765dbbac56802f3d48b6"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370372/cply1peghicrdtbapo0q.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370376/p3wzzolhi5wken8qprz6.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370379/qffi5xpdx6ketmchdfa6.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370382/nqgcnkkjdipdwkyifqwr.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370385/pq7ausa9jw714k0vzlvx.webp"
+  ],
+  "quantity": 17,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da765dbbac56802f3d48b3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:46:37.683Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:46:37.683Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da767ebbac56802f3d48cc"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370406/b69vndgad3c9xa8rlmmw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370410/dyh82wbnygpzoi8jwh9i.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370412/vrlb31khtrjazwll0zyi.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370414/a9ycntuufvca32ex3qic.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370417/bt1dw3kgixhccg5nr9vw.webp"
+  ],
+  "quantity": 18,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da765dbbac56802f3d48b3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:47:10.593Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:47:10.593Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7697bbac56802f3d48e0"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370437/lzaeu38xu0q3v1mbt20d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370439/kjut4sujfpdhs00wd7xg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370440/s1h7y95fv11bjqga6sfp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370442/x7o4or2ws4phv4ck6bg9.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370445/dbjnnhbtud3fm4mbmf9o.webp"
+  ],
+  "quantity": 24,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da765dbbac56802f3d48b3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:47:35.276Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:47:35.276Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da76bebbac56802f3d4900"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370461/jlo9uip0kjiupfxhvjil.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370465/bjzo60cjjjiccpqggafy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370477/wkxhu4qi699c2q7tfzfj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370478/emzy0xvptflklixufbdi.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370482/mrlflinhybqxylom54w2.webp"
+  ],
+  "quantity": 27,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da765dbbac56802f3d48b3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:48:14.993Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:48:14.993Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da77e3bbac56802f3d4ada"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370763/wblu3qsfjkwamzscosz9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370766/cl3wqhnabffbijzsbbtc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370770/urxzvkaby6s9jgyt7jln.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370772/uv4q98oea5g9jvxnyal4.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370775/q20qvbkm2zngqs723u7n.webp"
+  ],
+  "quantity": 11,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:53:07.392Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:53:07.392Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7805bbac56802f3d4aef"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370796/rwueigpoqah4wijj0irt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370798/zaki5usaqihyn1kndoln.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370800/d3vl70ihrjefw7y08stq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370803/sfo3e2nqi27wpktfwyex.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370805/iqwpfu7z9cs5fsrdrf0u.webp"
+  ],
+  "quantity": 15,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:53:41.407Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:53:41.407Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7822bbac56802f3d4b04"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370831/gebnmlqisq2bfofibi6c.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370833/cmaazwkev58ocxafg2be.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370834/fbxaagpz7iojbcrv1mhd.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370837/cyuydvne0fhkdnz2or1w.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370841/gxhcspalabarutobbf3p.webp"
+  ],
+  "quantity": 14,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:54:10.163Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:54:10.163Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7854bbac56802f3d4b21"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370879/u1blhvnmneqfp3mpxqq8.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370881/tfezgmwuakj8ubujdzwe.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370883/enspmqs5ecvujnglszng.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370886/fgebgudncqaroujb3tc0.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370888/lmpozhrq41vcvpc11ccr.webp"
+  ],
+  "quantity": 23,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:55:00.008Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:55:00.008Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da786ebbac56802f3d4b36"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370907/nrcngehwclp0dmuxtlvr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370908/fwn3oolajkywwnlg8b0w.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370910/eddaamgduf1wbszrpldi.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370913/rz5ecxfdsjhblngn54tl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370915/zmeawzvf9fhurifp5nla.webp"
+  ],
+  "quantity": 32,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:55:26.798Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:55:26.798Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da78b0bbac56802f3d4b66"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370975/iellhhxx13pcv7ty0h2d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370977/rhqcuoekdm0dmz12cfqh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370978/tbsozkvihbghallyanen.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370981/cjpebsdmeoupulmjkryj.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370983/ownvmoxpzvkxfpdpxgxt.webp"
+  ],
+  "quantity": 14,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:56:32.615Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:56:32.615Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da78cabbac56802f3d4b7a"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742370997/aqlzesl9mpfiuscgzuaj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371000/i1etjpojjbqn0jdgl0f0.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371003/k834yhey4t7sdggcm7oc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371005/jv53wdf7unwqbtxzhufb.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371008/di15njbblf2crprmfpfo.webp"
+  ],
+  "quantity": 32,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da77e3bbac56802f3d4ad7"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:56:58.970Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T07:56:58.970Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da79bdbbac56802f3d4cad"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371234/fteubyeijqgfuonlwqwt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371237/sxvbk8zl9kgjogfxc2yx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371240/ytajutd0fo1zhtmyx9nv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371247/jiphqmkavnv5rze6sze6.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371250/zxsq56qpivtpwlwyvdkb.webp"
+  ],
+  "quantity": 11,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da79bdbbac56802f3d4caa"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:01:01.584Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:01:01.584Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da79dabbac56802f3d4cbd"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371268/t9ge8r1mszxnnqscnuyz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371271/vsvhrhj0zarbhosbgqhh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371273/ehjsluwnssjmxdd4ldir.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371275/xsttj0s4x6dvw1xxww7u.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371277/rnvpggvyoshhfukumfta.webp"
+  ],
+  "quantity": 27,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da79bdbbac56802f3d4caa"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:01:30.901Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:01:30.901Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da79f6bbac56802f3d4cd1"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371297/pq6diufzdrhjxf1tfl66.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371298/qkzctq1onw1ihkqr1bi3.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371301/uwdwjn9zmap0ohhnzbgb.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371303/vjobmucprctazwrxl9dl.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371306/byfydxafpcraovpcecru.webp"
+  ],
+  "quantity": 24,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da79bdbbac56802f3d4caa"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:01:58.641Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:01:58.641Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7a12bbac56802f3d4ce6"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371323/gbkimxpcerwu8hxhiojs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371325/g243toskbykidi42zlhk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371327/xrkanxve6ls7c916esbc.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371330/yg6fvyafbtasm5xijfjp.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371332/fcftk6qrlc9ii5xznlmz.webp"
+  ],
+  "quantity": 32,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da79bdbbac56802f3d4caa"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:02:26.285Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:02:26.285Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7ac2bbac56802f3d4eb7"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371502/vcvglmt42fknn3m4hpct.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371504/bardxdlkswesuglfqldo.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371508/oankfnxjuqn9vg7ud0dg.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371511/uex3aulij7h7xzjgbsgu.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371513/ab5mwfm1ktsmzqft9grc.webp"
+  ],
+  "quantity": 46,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da7ac2bbac56802f3d4eb4"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:05:22.303Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:05:22.303Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7addbbac56802f3d4ecc"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371533/uxwsbcnumavjbgpxuogf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371535/hcei5rilipj0t6cvwytv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371538/jaebwhndy9aneahl3fr7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371541/gucmpmiw4rvfhdbf1hpa.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371542/ozjsvf2t5hdwpqteyruk.webp"
+  ],
+  "quantity": 24,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da7ac2bbac56802f3d4eb4"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:05:49.802Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:05:49.802Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7b0cbbac56802f3d4eec"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371578/bpcjkxw3tmcoxjtnegjr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371579/pstqxwl8cnho4i4zvnum.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371581/rfq04pwbhoajal8eftyw.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371583/xarnyqdcgsyp0blrum9s.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371585/qsmy7mbtbt8pqn0dlyv8.webp"
+  ],
+  "quantity": 20,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da7ac2bbac56802f3d4eb4"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:06:36.265Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:06:36.265Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7b24bbac56802f3d4f00"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371603/itcvuiskplj1yhlbkhrj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371605/nu2epidx5bdug6f71did.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371607/wik21qsqq2rtkrqtfmku.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371610/lckd7funv3yfbdtqymhq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371612/oqfrlepghjz6dcrvg08f.webp"
+  ],
+  "quantity": 46,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d1aa1f79d94f72ebc83d"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da7ac2bbac56802f3d4eb4"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:07:00.080Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:07:00.080Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7c1bbbac56802f3d50e1"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371845/edap8qs8ryndqkvlypif.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371848/edu6goz9rzjhazqusiiy.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371851/sphvvjceus7pf524dnjv.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371853/n8sg1mgnncpi2nvnnts0.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371857/idopwmeo8miy5ry49nw3.webp"
+  ],
+  "quantity": 23,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da7c1bbbac56802f3d50de"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:11:07.878Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:11:07.878Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7c37bbac56802f3d50fa"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371878/tonlzpv4p0glid1surkx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371880/mk5klqwdzd2srnvbmtia.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371883/urun8lvll0dyxzgbrjji.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371887/hyhfljum9wxrwrl3v826.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371890/vbbmimyffneeds3laddj.webp"
+  ],
+  "quantity": 33,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da7c1bbbac56802f3d50de"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:11:35.702Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:11:35.702Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7c64bbac56802f3d51aa"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371920/dqpnkdrecq9l3y5jiehf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371922/kvkrydsjobymfqztmojf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371923/lya8c1e9yuqjol2v3inf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371926/ke7y6kgmjld6qp2ytnzf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742371931/zr8hj5fgitpsh9sk2usb.webp"
+  ],
+  "quantity": 54,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da7c1bbbac56802f3d50de"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:12:20.123Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:12:20.123Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7cd4bbac56802f3d51c9"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372030/qwaaoy6ydhpjradmmz7h.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372032/ps9xcnwpiizejtihbwsz.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372035/eomnqlgj8c8azwvqjfk9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372041/axzzvcjcqr7lkl9t5cdk.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372046/puuhkjshbix2kyhmus2h.webp"
+  ],
+  "quantity": 70,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da7c1bbbac56802f3d50de"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:14:12.339Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:14:12.339Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7d4dbbac56802f3d5272"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372154/sbf4lhpciet7fuyfdow8.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372156/vkapguzu7ygjdlkpqdav.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372158/bbyefjmrui83awelxn2x.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372160/h2tm7egrt53neremjyne.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372163/dniljld0q800wqnndes0.webp"
+  ],
+  "quantity": 43,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da7d4dbbac56802f3d526f"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:16:13.037Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:16:13.037Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7d70bbac56802f3d5287"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372184/x6dbkfr5din3abtbveux.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372188/bf4o1da5re02mnk58jwr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372192/vdcqdxwqt33bwgbwzjno.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372196/ougw44k8kox2th3orvpt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372198/lkno19zcsfcfixqmnexf.webp"
+  ],
+  "quantity": 44,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da7d4dbbac56802f3d526f"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:16:48.828Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:16:48.828Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7d8dbbac56802f3d529c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372217/knpwvzwjyz3umonezn3m.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372218/q0ugynp2t9n3lhjgjjb7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372220/zwunqgfbwjay51ufulsj.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372222/jmimr9mrmwp1cxqooryt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372227/v5il1ehqwjbkcxwd4mus.webp"
+  ],
+  "quantity": 58,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da7d4dbbac56802f3d526f"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:17:17.449Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:17:17.449Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7db5bbac56802f3d536d"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372258/qwwcnjkjgwxgrtfo9edf.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372262/k9hdrjjyssqkyim6bc98.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372263/hk6vngfpgq5py7e4nmaq.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372266/gotel0qso8jdaqryatwt.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372268/f2hheohr28ufwiktt62d.webp"
+  ],
+  "quantity": 13,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8dc831f79d94f72ebd2da"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da7d4dbbac56802f3d526f"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:17:57.163Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:17:57.163Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7e4fbbac56802f3d5447"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372411/m0drhqmlrqqdiqlzvhd1.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372413/ctoowm5smgpf20yiw07d.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372415/zza26lxixc0awa503ayb.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372417/chlthdjclqhj9uzmawo3.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372444/ztfijidmnghk8fwvm05n.webp"
+  ],
+  "quantity": 17,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da7e4fbbac56802f3d5444"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:20:31.313Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:20:46.349Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7e91bbac56802f3d5576"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372481/cc8ugdoxqujdp1zrgldh.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372483/gvoh0hjwpltawege43mi.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372485/e3bsckfbaoddivelkqbs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372487/onjcwgaialrcojy25gim.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372489/po7vas3q4jbslttdejtb.webp"
+  ],
+  "quantity": 22,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da7e4fbbac56802f3d5444"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:21:37.237Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:21:37.237Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7eb4bbac56802f3d562b"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372514/udkfak0e4x0zikqlkdv9.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372517/cwqkahwjgvfabo32xig7.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372519/g96kryoviaqng7s1vsfr.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372522/qacvkblyi7rjhmdpavfs.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372524/xcsi5yhm8znh4qlwt8su.webp"
+  ],
+  "quantity": 43,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da7e4fbbac56802f3d5444"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:22:12.265Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:22:12.265Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7ecfbbac56802f3d563f"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372538/xw5oro3w2y94dyt9lzpx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372541/xbnel4zwpu8vgi8csenx.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372545/ob96flbgl3e72jgwlx4y.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372547/sfauopnjiptccox4gh8j.webp",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372549/jtawhk6ariod1decfvgr.webp"
+  ],
+  "quantity": 86,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da7e4fbbac56802f3d5444"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:22:39.513Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:22:39.513Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7f93bbac56802f3d56f2"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372729/qb6uspir48fjl3vpniii.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372730/qgubmpddusieqa4iztkh.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372733/dztcz18pn3qjirc6zkv2.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372735/bpoitmqyncd8bf4lrds3.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372737/ybdfnd4qbtvkusjizeto.jpg"
+  ],
+  "quantity": 32,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91ed80f1b4d7c6337ddab"
+  },
+  "id_product": {
+    "$oid": "67da7f93bbac56802f3d56ef"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:25:55.665Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:25:55.665Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7fadbbac56802f3d5708"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372766/lqw54ido9fzbid2675jb.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372767/vtkq0wifbpydftzgl2ie.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372770/x4dx1tlsvsflq5ayerds.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372772/totkjs2ewgbufx4c4phw.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372774/s4ecmmoxrbix3k3oy0mm.jpg"
+  ],
+  "quantity": 53,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8355b4cd471a07c33a7c4"
+  },
+  "id_size": {
+    "$oid": "67d91f6a0f1b4d7c6337de54"
+  },
+  "id_product": {
+    "$oid": "67da7f93bbac56802f3d56ef"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:26:21.967Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:26:21.967Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7fccbbac56802f3d571c"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372790/ytpd2qwi4zb0vto9falv.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372791/zfrv7tlypro836xwbzzl.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372792/qfnzibtaqqng5l0zg0xg.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372797/cg4imia1ah0yvfcfgkc3.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372798/izxor0anx3gtmzjvgglc.jpg"
+  ],
+  "quantity": 70,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91ed30f1b4d7c6337dda7"
+  },
+  "id_product": {
+    "$oid": "67da7f93bbac56802f3d56ef"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:26:52.428Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:26:52.428Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67da7fe8bbac56802f3d5731"
+  },
+  "image": [
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372820/zb9oyi6t5iujlzmzm83d.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372821/hkswhfauu4ptnplrqmxb.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372824/oghefgxikjgol0oi1q24.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372827/efoatcylrxqldqhsougn.jpg",
+    "https://res.cloudinary.com/ddjylufrj/image/upload/v1742372829/z7pdbzhph0mfsojqk5nc.jpg"
+  ],
+  "quantity": 51,
+  "status": true,
+  "id_color": {
+    "$oid": "67d8d5491f79d94f72ebca34"
+  },
+  "id_size": {
+    "$oid": "67d91edc0f1b4d7c6337ddaf"
+  },
+  "id_product": {
+    "$oid": "67da7f93bbac56802f3d56ef"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T08:27:20.535Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-19T08:27:20.535Z"
   }
 }]

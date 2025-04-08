@@ -9,6 +9,10 @@ import variantRouter from "./variants/variant.js";
 import voucherApiRouter from "./vouchers/voucherApi.js";
 import orderApiRouter from "./orders/orderApi.js";
 import itemOrderRouter from "./itemOrder/itemOrder.js";
+import { commentRouter } from "./comments/comment.js";
+import { receiverRouter } from "./receiverInfor/receiverInfor.js";
+import { bannerRouter } from "./banners/bannerRouters.js";
+import vnpayRouter from "./vnpay/vnpay.js";
 
 const router = Router();
 
@@ -22,5 +26,9 @@ router.use(`/api`, variantRouter);
 router.use(`/api`, voucherApiRouter);
 router.use(`/api`, orderApiRouter);
 router.use(`/api`, itemOrderRouter);
+router.use(`/api`, commentRouter);
+router.use(`/api`, receiverRouter);
+router.use(`/api`, bannerRouter);
+router.use(`/vnpay`, vnpayRouter)
 
 export default router;

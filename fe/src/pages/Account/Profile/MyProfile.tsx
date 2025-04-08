@@ -1,31 +1,66 @@
-import { ConfigProvider, Form, FormProps, Input, message, Skeleton } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  ConfigProvider,
+  Form,
+  FormProps,
+  Input,
+  message,
+  Skeleton,
+  Modal,
+} from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import axios from "axios";
+import ChangePasswordModal from "./_components/ChangePasswordModal";
+import { RuleObject } from "antd/es/form";
+
 type FieldType = {
   name?: string;
   email?: string;
   tel?: string;
   address?: string;
 };
+
 const rules = {
   name: [
     { required: true, message: "Họ & Tên không được để trống" },
     { min: 3, message: "Họ & Tên phải có ít nhất 3 ký tự" },
+    {
+      pattern: /^[A-Za-zÀ-ỹ\s]+$/,
+      message: "Họ & Tên không được chứa số hoặc ký tự đặc biệt",
+    },
   ],
   tel: [
     { required: true, message: "Số điện thoại không được để trống" },
-    { min: 8, message: "Số điện thoại phải có ít nhất 8 ký tự" },
+    {
+      pattern: /^(0|\+84)(\d{9})$/,
+      message:
+        "Số điện thoại không hợp lệ (bắt đầu bằng 0 hoặc +84, gồm 10 số)",
+    },
+  ],
+  address: [
+    { required: true, message: "Địa chỉ không được để trống" },
+    {
+      validator: (_: RuleObject, value: string) => {
+        if (!value || value.trim() === "") {
+          return Promise.reject("Địa chỉ không được chỉ chứa khoảng trắng");
+        }
+        if (value.trim().length < 5) {
+          return Promise.reject("Địa chỉ phải có ít nhất 5 ký tự");
+        }
+        return Promise.resolve();
+      },
+    },
   ],
 };
-export default function MyProfile() {
 
+export default function MyProfile() {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
 
   const id = localStorage.getItem("idUser");
 
-  // Fetch user data từ API
   const { data: userDataApi, isLoading } = useQuery({
     queryKey: ["USER_INFO", id],
     queryFn: async () => {
@@ -34,27 +69,24 @@ export default function MyProfile() {
       );
       return data.data;
     },
-    enabled: !!id, // Chỉ chạy khi có ID
+    enabled: !!id,
   });
 
-  // Cập nhật form khi có dữ liệu từ API
   useEffect(() => {
     if (userDataApi) {
       form.setFieldsValue({
         name: userDataApi.name,
         tel: userDataApi.tel,
         email: userDataApi.email,
-        address: userDataApi.address
+        address: userDataApi.address,
       });
     }
   }, [userDataApi, form]);
 
-  // Mutation để cập nhật thông tin
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (values: FieldType) => {
-      // Loại bỏ email khỏi dữ liệu cập nhật
       const { email, ...updateData } = values;
-
+      void email;
       const { data } = await axios.put(
         `http://localhost:3000/api/update_user_account/${id}`,
         updateData
@@ -63,22 +95,22 @@ export default function MyProfile() {
     },
     onSuccess: (data) => {
       message.success("Cập nhật thành công");
-
-      // Đảm bảo dữ liệu cache vẫn giữ nguyên email
       const updatedData = {
         ...data.data,
-        email: userDataApi?.email || form.getFieldValue('email')
+        email: userDataApi?.email || form.getFieldValue("email"),
       };
-
-      queryClient.setQueryData(["USER_INFO", id], { ...data, data: updatedData });
-      localStorage.setItem('nameUser', data.data.name);
-
+      queryClient.setQueryData(["USER_INFO", id], {
+        ...data,
+        data: updatedData,
+      });
+      localStorage.setItem("nameUser", data.data.name);
       queryClient.invalidateQueries({ queryKey: ["USER_INFO", id] });
+      setTimeout(() => {
+        setIsEditing(false);
+      }, 1000);
     },
-    onError: (error: any) => {
-      message.error(
-        error.response?.data?.message || "Cập nhật thất bại"
-      );
+    onError: (error: AxiosError<{ message: string }>) => {
+      message.error(error.response?.data?.message || "Cập nhật thất bại");
     },
   });
 
@@ -86,89 +118,189 @@ export default function MyProfile() {
     mutate(values);
   };
 
-  if (isLoading) return <Skeleton />;
+  const handleEditClick = () => setIsEditing(true);
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    form.resetFields();
+    if (userDataApi) {
+      form.setFieldsValue({
+        name: userDataApi.name,
+        tel: userDataApi.tel,
+        address: userDataApi.address,
+      });
+    }
+  };
+
+  if (!id) {
+    return (
+      <div className="text-center text-red-500 mt-10">
+        Không tìm thấy thông tin người dùng.
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-10 max-w-3xl mx-auto">
+        <Skeleton active paragraph={{ rows: 6 }} />
+      </div>
+    );
+  }
 
   return (
-    <div className="border border-gray-200 py-8 px-6">
-      <h1 className="uppercase font-bold text-2xl select-none">
-        Thông tin cá nhân
-      </h1>
-      <div className="mt-8">
-        <Form
-          form={form}
-          name="information"
-          onFinish={onFinish}
-          autoComplete="off"
-          layout="vertical"
-        >
-          <ConfigProvider
-            theme={{
-              components: {
-                Input: {
-                  hoverBorderColor: "#2e2e2e",
-                  activeBorderColor: "#2e2e2e",
-                  activeShadow: "none",
-                  paddingInline: 18,
-                },
-              },
-              token: {
-                colorBorder: "#2e2e2e",
-                borderRadius: 3,
-                fontSize: 14,
-                colorText: "black",
-              },
-            }}
+    <div className="bg-gray-50 min-h-screen py-10 px-4">
+      <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-white/30 flex items-center justify-center text-white text-2xl font-bold">
+              {userDataApi?.name?.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                {userDataApi?.name || "Tên người dùng"}
+              </h1>
+              <p className="text-white/80 text-sm">{userDataApi?.email}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleEditClick}
+            className="mt-4 sm:mt-0 bg-white/20 hover:bg-white/30 text-white px-5 py-2 rounded-lg transition-all font-medium"
           >
-            <Form.Item<FieldType>
-              label={<span className="font-medium text-sm">Email</span>}
-              name="email"
-              style={{ maxWidth: 600 }}
-            >
-              <Input placeholder="Nhập Email của bạn" className="h-[42px]" disabled />
-            </Form.Item>
+            ✏️ Chỉnh sửa
+          </button>
+        </div>
 
-            <Form.Item<FieldType>
-              label={<span className="font-medium text-sm">Họ & Tên</span>}
-              name="name"
-              rules={rules.name}
-            >
-              <Input placeholder="Nhập Họ & Tên" className="h-[42px]" />
-            </Form.Item>
+        {/* Thông tin chi tiết */}
+        <div className="p-8 space-y-6">
+          <ProfileField label="Họ & Tên" value={userDataApi?.name} />
+          <ProfileField label="Số điện thoại" value={userDataApi?.tel} />
+          <ProfileField
+            label="Địa chỉ"
+            value={userDataApi?.address || "Chưa cập nhật"}
+          />
+        </div>
+      </div>
 
-            <Form.Item<FieldType>
-              label={<span className="font-medium text-sm">Số điện thoại</span>}
-              name="tel"
-              rules={rules.tel}
-            >
-              <Input placeholder="Nhập số điện thoại" className="h-[42px]" />
-            </Form.Item>
+      {/* Modal chỉnh sửa */}
+      <Modal
+        open={isEditing}
+        onCancel={handleCancelEdit}
+        footer={null}
+        maskClosable={false}
+        destroyOnClose
+        centered
+        title={null}
+        className="rounded-xl"
+      >
+        <div className="px-6 pt-6 pb-2">
+          <h2 className="text-center text-2xl font-semibold text-gray-800 mb-6">
+            ✏️ Chỉnh sửa thông tin
+          </h2>
 
-            <Form.Item<FieldType>
-              label={<span className="font-medium text-sm">Địa chỉ</span>}
-              name="address"
+          <Form
+            form={form}
+            name="information"
+            onFinish={onFinish}
+            layout="vertical"
+            className="space-y-4"
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    hoverBorderColor: "#7c3aed",
+                    activeBorderColor: "#7c3aed",
+                    activeShadow: "none",
+                    paddingInline: 16,
+                  },
+                },
+                token: {
+                  colorBorder: "#d1d5db",
+                  borderRadius: 10,
+                  fontSize: 14,
+                  colorText: "#1f1f1f",
+                },
+              }}
             >
-              <Input placeholder="Nhập địa chỉ" className="h-[42px]" />
-            </Form.Item>
-          </ConfigProvider>
+              <Form.Item<FieldType>
+                label={<span className="font-medium text-sm">Email</span>}
+                name="email"
+              >
+                <Input
+                  disabled
+                  className="h-[44px] rounded-xl text-gray-500 bg-gray-100 cursor-not-allowed"
+                />
+              </Form.Item>
 
-          <div className="mt-10 flex items-center gap-5">
-            <button
-              type="submit"
-              className="bg-[#110e11] hover:opacity-80 duration-300 cursor-pointer font-semibold uppercase text-lg py-2 px-12 text-white"
-            >
-              LƯU THAY ĐỔI
-            </button>
-            {/* <ChangePasswordModal>
+              <Form.Item<FieldType>
+                label={<span className="font-medium text-sm">Họ & Tên</span>}
+                name="name"
+                rules={rules.name}
+                getValueFromEvent={(e) => e.target.value.replace(/^\s+/, "")}
+              >
+                <Input className="h-[44px] rounded-xl" />
+              </Form.Item>
+
+              <Form.Item<FieldType>
+                label={
+                  <span className="font-medium text-sm">Số điện thoại</span>
+                }
+                name="tel"
+                rules={rules.tel}
+              >
+                <Input className="h-[44px] rounded-xl" />
+              </Form.Item>
+
+              <Form.Item<FieldType>
+                label={
+                  <span className="font-medium text-sm">Địa chỉ cụ thể</span>
+                }
+                name="address"
+                rules={rules.address}
+                getValueFromEvent={(e) => e.target.value.replace(/^\s+/, "")}
+              >
+                <Input className="h-[44px] rounded-xl" />
+              </Form.Item>
+            </ConfigProvider>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
               <button
                 type="button"
-                className="bg-[#110e11] cursor-pointer font-semibold uppercase text-lg py-2 px-12 text-white"
+                onClick={handleCancelEdit}
+                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-semibold py-2.5 rounded-xl"
               >
-                Đổi mật khẩu
+                Hủy
               </button>
-            </ChangePasswordModal> */}
-          </div>
-        </Form>
-      </div>
+              <button
+                type="submit"
+                disabled={isPending}
+                className="w-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-semibold hover:opacity-90 transition py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isPending ? (
+                  <>
+                    <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                  </>
+                ) : (
+                  "Lưu thay đổi"
+                )}
+              </button>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
+function ProfileField({ label, value }: { label: string; value?: string }) {
+  return (
+    <div className="bg-gray-100 px-5 py-3 rounded-lg">
+      <p className="text-sm text-gray-500 font-medium mb-1">{label}</p>
+      <p className="text-base font-semibold text-gray-800">
+        {value || "Chưa cập nhật"}
+      </p>
     </div>
   );
 }

@@ -1,42 +1,56 @@
 import React from "react";
-import { Form, Input, Button, message, Flex } from "antd"; // Import các component từ Ant Design
-import axios from "axios"; // Import axios để gọi API
-import { useNavigate } from "react-router-dom"; // Hook để điều hướng trang
-import { useMutation, useQuery } from "@tanstack/react-query"; // Import các hooks để quản lý truy vấn dữ liệu
+import {
+  Form,
+  Input,
+  Button,
+  message,
+  Flex,
+  Card,
+  Typography,
+  Divider,
+  ColorPicker,
+} from "antd";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { PlusOutlined } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 // Định nghĩa interface cho dữ liệu màu sắc
 interface ColorData {
-  name: string; // Tên màu
-  hexcode: string; // Mã màu (hex)
+  name: string;
+  hexcode: string;
 }
 
 const AdminColorAdd: React.FC = () => {
-  const navigate = useNavigate(); // Hook điều hướng trang
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
 
   // Fetch danh sách màu để kiểm tra trùng lặp trước khi thêm mới
   const { data: colors } = useQuery<ColorData[]>({
-    queryKey: ["colors"], // Khóa truy vấn, dùng để quản lý caching
+    queryKey: ["colors"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/api/colors"); // Gọi API để lấy danh sách màu
-      return res.data.data; // Trả về dữ liệu danh sách màu
+      const res = await axios.get("http://localhost:3000/api/colors");
+      return res.data.data;
     },
   });
 
   // Sử dụng useMutation để xử lý việc thêm màu mới vào API
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (newColor: ColorData) => {
       const color = await axios.post(
-        `http://localhost:3000/api/colors/`, // Gửi yêu cầu POST để thêm màu mới
+        `http://localhost:3000/api/colors/`,
         newColor
       );
-      return color.data; // Trả về dữ liệu phản hồi từ API
+      return color.data;
     },
     onSuccess() {
-      message.success("Thêm mới màu sắc thành công"); // Hiển thị thông báo thành công
-      navigate("/admin/color"); // Điều hướng về trang danh sách màu
+      message.success("Thêm mới màu sắc thành công");
+      navigate("/admin/color");
     },
     onError() {
-      message.error("Thêm mới màu sắc thất bại!!"); // Hiển thị thông báo lỗi nếu thất bại
+      message.error("Thêm mới màu sắc thất bại!!");
     },
   });
 
@@ -64,60 +78,94 @@ const AdminColorAdd: React.FC = () => {
     }
   };
 
+  // Hàm xử lý khi người dùng thay đổi mã màu từ color picker
+  const handleColorChange = (color: { toHexString: () => string }) => {
+    form.setFieldsValue({ hexcode: color.toHexString().toUpperCase() });
+  };
   return (
-    <div>
-      <h2>THÊM MỚI MÀU SẮC</h2> {/* Tiêu đề của trang */}
-      <Form
-        onFinish={checkDuplicate} // Gọi hàm kiểm tra trùng lặp khi submit form
-        layout="vertical" // Căn dọc các label của form
-        style={{ width: "400px" }} // Định dạng kích thước form
+    <div className="max-w-4xl mx-auto">
+      <Card
+        bordered={false}
+        className="shadow-md"
+        style={{ borderRadius: "8px" }}
       >
-        {/* Input nhập tên màu */}
-        <Form.Item
-          label="Tên màu sắc"
-          name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên màu sắc!" }]} // Bắt buộc nhập
-        >
-          <Input placeholder="Nhập tên màu" />
-        </Form.Item>
+        {/* Header with title and back button */}
+        <Flex align="center" justify="center" className="mb-6">
+          <Title level={3} style={{ margin: 0 }}>
+            THÊM MỚI MÀU SẮC
+          </Title>
+        </Flex>
 
-        {/* Input nhập mã màu */}
-        <Form.Item
-          label="Mã màu sắc"
-          name="hexcode"
-          rules={[
-            { required: true, message: "Vui lòng nhập mã màu sắc!" }, // Bắt buộc nhập
-            {
-              pattern: /^#[0-9A-Fa-f]{6}$/, // Ràng buộc định dạng mã màu hex
-              message: "Mã màu không hợp lệ (ví dụ: #FFFFFF).",
-            },
-          ]}
-        >
-          <Input placeholder="Nhập mã màu" />
-        </Form.Item>
+        <Divider />
 
-        {/* Các nút bấm: Hủy và Thêm mới */}
-        <Form.Item>
-          <Flex justify="right" gap={10}>
-            <Button
-              type="default"
-              onClick={() => navigate("/admin/color")} // Điều hướng về trang danh sách màu khi nhấn "Hủy bỏ"
-              style={{ marginBottom: 20 }}
-            >
-              Hủy bỏ
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit" // Kích hoạt onFinish của form khi bấm "Thêm mới"
-              style={{ marginRight: 10 }}
-            >
-              Thêm mới
-            </Button>
-          </Flex>
-        </Form.Item>
-      </Form>
+        {/* Main form */}
+        <Form
+          form={form}
+          onFinish={checkDuplicate}
+          layout="vertical"
+          style={{ maxWidth: "600px", margin: "0 auto" }}
+          size="large"
+        >
+          {/* Input nhập tên màu */}
+          <Form.Item
+            label="Tên màu sắc"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên màu sắc!" }]}
+          >
+            <Input placeholder="Nhập tên màu (VD: Đỏ đậm, Xanh biển...)" />
+          </Form.Item>
+
+          {/* Input nhập mã màu với color picker */}
+          <Form.Item
+            label="Mã màu sắc"
+            name="hexcode"
+            rules={[
+              { required: true, message: "Vui lòng nhập mã màu sắc!" },
+              {
+                pattern: /^#[0-9A-Fa-f]{6}$/,
+                message: "Mã màu không hợp lệ (ví dụ: #FFFFFF).",
+              },
+            ]}
+          >
+            <Input
+              placeholder="Nhập mã màu (VD: #FF0000)"
+              addonAfter={
+                <ColorPicker
+                  value={form.getFieldValue("hexcode")}
+                  onChange={handleColorChange}
+                  size="middle"
+                />
+              }
+            />
+          </Form.Item>
+
+          <Divider />
+
+          {/* Các nút bấm: Hủy và Thêm mới */}
+          <Form.Item>
+            <Flex justify="end" gap={12}>
+              <Button
+                danger
+                onClick={() => navigate("/admin/color")}
+                size="large"
+              >
+                Hủy bỏ
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<PlusOutlined />}
+                loading={isPending}
+                size="large"
+              >
+                Thêm mới
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };
 
-export default AdminColorAdd; // Xuất component để sử dụng trong ứng dụng
+export default AdminColorAdd;
