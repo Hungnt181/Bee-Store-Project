@@ -2,7 +2,7 @@ import { Router } from "express";
 import UserController from "../../controllers/users/userController.js";
 import verifyEmailRouter from "./verifyEmailRouter.js";
 import forgotPasswordRouter from "./forgotPasswordRouter.js";
-// import resetPassword from "./resetPassword.js";
+import resetPassword from "./reset-password.js";
 const userRouter = Router();
 
 const usercontroller = new UserController();
@@ -26,9 +26,12 @@ userRouter.put(
   usercontroller.updateStatusUserAccount
 );
 userRouter.use("/verify-email", verifyEmailRouter);
-userRouter.use("/forgot_password", forgotPasswordRouter);
+// userRouter.use("/forgot_password", forgotPasswordRouter);
 // userRouter.use("/reset_password", resetPassword);
+userRouter.use("/forgot-password", forgotPasswordRouter);
+userRouter.use("/reset-password", resetPassword);
 userRouter.put("/update_password/:id", usercontroller.updatePasswordUser);
+userRouter.put("/reset_password", usercontroller.updatePasswordUser);
 userRouter.post("/login_google", usercontroller.loginGoogle);
 
 export default userRouter;
