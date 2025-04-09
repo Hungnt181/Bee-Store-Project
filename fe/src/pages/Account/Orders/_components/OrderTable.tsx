@@ -32,7 +32,7 @@ export default function OrderTable() {
       setTotalPages(data_Order.totalPages);
       setCurentPages(data_Order.page);
       setDataTable(data_Order.orders);
-      console.log(dataTable);
+      // console.log(dataTable);
 
     }
   }, [data_Order]);

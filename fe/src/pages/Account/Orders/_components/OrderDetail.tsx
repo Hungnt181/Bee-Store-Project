@@ -243,7 +243,7 @@ const OrderDetail = () => {
               CHI TIẾT ĐƠN HÀNG - {dataOrder?._id.toString().slice(-6)}
             </Title>
             <Space>
-              {!dataOrder?.isPaid && (
+              {(!dataOrder?.isPaid && dataOrder?.payment?.name != 'Thanh toán khi nhận hàng') && (
                 <Button
                   type="primary"
                   disabled={dataOrder?.status == "Giao hàng thất bại"}

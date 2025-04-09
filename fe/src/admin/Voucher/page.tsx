@@ -1,7 +1,8 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Table, TableProps } from "antd";
+import { Button, Flex, Table, TableProps, Tag } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { formatCurrency } from "../../helpers/utils";
 
 interface Voucher {
   _id: String;
@@ -18,11 +19,6 @@ interface Voucher {
   status: Boolean;
 }
 const columns: TableProps<Voucher>["columns"] = [
-  // {
-  //     title: 'ID',
-  //     dataIndex: '_id',
-  //     key: '_id',
-  // },
   {
     title: "#",
     dataIndex: "index",
@@ -32,27 +28,28 @@ const columns: TableProps<Voucher>["columns"] = [
     title: "Tên voucher",
     dataIndex: "title",
     key: "title",
-    render: (text: string) => <a>{text}</a>,
+    render: (text: string) => <a className="pointer-events-none">{text}</a>,
+    width: 150
   },
   {
     title: "Mã voucher",
     dataIndex: "codeName",
     key: "codeName",
+    width: 100
   },
   {
-    title: "Giá trị giảm (%)",
+    title:<div className="text-wrap">Giảm (%)</div>,
     dataIndex: "value",
     key: "value",
+    render: (text:number)=>(<span>{text}%</span>),
+    width: 100
   },
   {
-    title: "Giá trị giảm tối đa (vnđ)",
+    title:<div className="text-wrap">Giảm tối đa (vnđ)</div>,
     dataIndex: "maxValue",
     key: "maxValue",
-  },
-  {
-    title: "Giá trị giảm tối đa (vnđ)",
-    dataIndex: "maxValue",
-    key: "maxValue",
+    render: (text:number)=>(<span>{formatCurrency(text, 'vnd')}</span>),
+    width: 100
   },
   {
     title: "Số lượng",
@@ -63,6 +60,7 @@ const columns: TableProps<Voucher>["columns"] = [
     title: "Mô tả",
     dataIndex: "description",
     key: "description",
+    width: 300
   },
   {
     title: "Ngày bắt đầu",
@@ -87,12 +85,33 @@ const columns: TableProps<Voucher>["columns"] = [
     dataIndex: "updatedAt",
     key: "updatedAt",
     render: (text: Date) => (text ? new Date(text).toLocaleString() : ""),
+    width: 150
   },
   {
     title: "Trạng thái",
     dataIndex: "status",
     key: "status",
-    render: (text: boolean) => (text ? "Hoạt động" : "Không hoạt động"),
+    render: (text: boolean, record: Voucher) => {
+      let textStatusVoucher= "";
+      let color = 'blue'
+      const currentTime = new Date();
+      const startTime = new Date(record.startTime);
+      const endTime = new Date(record.endTime);
+      if (currentTime >= startTime && currentTime <= endTime) {
+        text ? (textStatusVoucher="Đang hoạt động",color ='green') : (textStatusVoucher="Không hoạt động", color ='red');
+      }
+      else if (currentTime < startTime) {
+        textStatusVoucher = "Chưa bắt đầu",
+        color ='yellow'
+      }
+      else if (currentTime > endTime) {
+        textStatusVoucher = "Đã kết thúc"
+        color = 'grey'
+      }
+      return (
+        <Tag color={color}>{textStatusVoucher}</Tag>
+      )
+    }
   },
   {
     title: "#",

@@ -34,9 +34,9 @@ const CartModalbox: React.FC<CartModalData> = ({
     []
   );
 
-  if (cartItems && cartItems[0]) {
-    console.log(cartItems[0]);
-  }
+  // if (cartItems && cartItems[0]) {
+  //   console.log(cartItems[0]);
+  // }
   const getPdts = async (idProduct: string) => {
     try {
       const { data } = await axios.get(
@@ -66,7 +66,7 @@ const CartModalbox: React.FC<CartModalData> = ({
       }
     }
     setCartModalItems(updatedCartModalItems);
-    console.log(cartModalItems);
+    // console.log(cartModalItems);
   };
   useEffect(() => {
     if (isOpen) {
@@ -85,10 +85,6 @@ const CartModalbox: React.FC<CartModalData> = ({
       (_cartItem, cartItemIndex) => cartItemIndex !== index
     );
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-  };
-
-  const onCheckout = () => {
-    console.log("checkout clicked");
   };
 
   const columns = [
@@ -132,7 +128,7 @@ const CartModalbox: React.FC<CartModalData> = ({
     {
       title: "#",
       key: "action",
-      render: (text, record: CartModalItemDetail, index: number) => (
+      render: (_text:string, record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
@@ -152,7 +148,7 @@ const CartModalbox: React.FC<CartModalData> = ({
               Đóng
             </Button>
             <Link to="/cart">
-              <Button key="checkout" onClick={onCheckout}>
+              <Button key="checkout">
                 Thanh toán
               </Button>
             </Link>

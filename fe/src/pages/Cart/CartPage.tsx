@@ -153,8 +153,6 @@ const CartPage: React.FC = () => {
 
   const onCheckout = () => {
     if ((selectedItemArray) && (selectedItemArray.length > 0)) {
-      console.log("checkout clicked");
-
       navigate("/payment");
     }
     else {
@@ -242,7 +240,6 @@ const CartPage: React.FC = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys)
   };
   const rowSelection: TableRowSelection<any> = {
