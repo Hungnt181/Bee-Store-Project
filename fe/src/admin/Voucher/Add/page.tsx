@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     DatePicker,
+    Divider,
     Form,
     Input,
     InputNumber,
@@ -72,35 +73,128 @@ const VoucherAddPage = () => {
                     mutate(formData);
                 }}
                 onValuesChange={onValuesChange}
-                layout="horizontal"
+                layout="vertical"
                 // disabled={componentDisabled}
                 style={{ maxWidth: 600 }}
-            >
-                <Title level={2}>Thêm voucher</Title>
 
-                <Form.Item label="Tên voucher" name={"title"} labelCol={{ className: 'w-auto text-left' }}>
+            >
+                <Title level={3} style={{ margin: 0 }}>THÊM MỚI VOUCHER</Title>
+                <Divider className='border-transparent' />
+                <Form.Item
+                    label="Tên voucher"
+                    name={"title"}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
                     <Input />
                 </Form.Item>
-                <Form.Item label="Mã voucher" name={"codeName"} labelCol={{ className: 'w-auto text-left' }}>
+                <Form.Item
+                    label="Mã voucher"
+                    name={"codeName"}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
                     <Input className='uppercase' />
                 </Form.Item>
-                <Form.Item label="Giá trị phần trăm giảm (%)" name={"value"} labelCol={{ className: 'w-auto text-left' }}>
-                    <InputNumber />
+                <Form.Item
+                    label="Giá trị phần trăm giảm (%)"
+                    name={"value"}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                        {
+                            type: 'number',
+                            min: 0,
+                            max: 100,
+                            message: 'Giá trị phải nằm trong khoảng từ 0 đến 100!',
+                        },
+                    ]}
+
+                >
+                    <InputNumber style={{ width: '100%' }} />
                 </Form.Item>
-                <Form.Item label="Giá trị tối đa giảm (vnđ)" name={"maxValue"} labelCol={{ className: 'w-auto text-left' }}>
-                    <InputNumber />
+                <Form.Item
+                    label="Giá trị tối đa giảm (vnđ)"
+                    name={"maxValue"}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
+                    <InputNumber style={{ width: '100%' }}/>
                 </Form.Item>
-                <Form.Item label="Số lượng" name={'quantity'} labelCol={{ className: 'w-auto text-left' }}>
-                    <InputNumber min="0" />
+                <Form.Item
+                    label="Số lượng"
+                    name={'quantity'}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                        {
+                            type: 'number',
+                            min: 0,
+                            message: 'Giá trị phải từ 0',
+                        },
+                    ]}
+                >
+                    <InputNumber min="0" style={{ width: '100%' }}/>
                 </Form.Item>
-                <Form.Item label="Mô tả" name={'description'} labelCol={{ className: 'w-auto text-left' }}>
+                <Form.Item
+                    label="Mô tả"
+                    name={'description'}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
                     <TextArea rows={4} />
                 </Form.Item>
-                <Form.Item label="Thời gian bắt đầu" name={'startTime'} labelCol={{ className: 'w-auto text-left' }}>
-                    <DatePicker  showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
+                <Form.Item
+                    label="Thời gian bắt đầu"
+                    name={'startTime'}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
+                    <DatePicker showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' style={{ width: '100%' }} />
                 </Form.Item>
-                <Form.Item label="Thời gian kết thúc" name={'endTime'} labelCol={{ className: 'w-auto text-left' }}>
-                    <DatePicker  showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' />
+                <Form.Item
+                    label="Thời gian kết thúc"
+                    name={'endTime'}
+                    labelCol={{ className: 'w-auto text-left' }}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Không để trống',
+                        },
+                    ]}
+                >
+                    <DatePicker showTime format="DD-MM-YYYY HH:mm" placeholder='' className='w-auto' style={{ width: '100%' }}/>
                 </Form.Item>
                 {/* <Form.Item label="Trạng thái (bật/tắt)"
                     name={'status'}
@@ -108,7 +202,7 @@ const VoucherAddPage = () => {
                     <Switch />
                 </Form.Item> */}
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" disabled={!isFormValid}>Submit</Button>
+                    <Button type="primary" htmlType="submit">Tạo voucher mới</Button>
                 </Form.Item>
             </Form>
         </>
