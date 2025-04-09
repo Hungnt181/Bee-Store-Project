@@ -64,6 +64,8 @@ interface VoucherItem {
   maxValue: number;
   quantity: number;
   status: boolean;
+  startTime: Date;
+  endTime: Date;
 }
 
 interface PayMethodsFetch {
@@ -149,8 +151,16 @@ const PaymentPage = () => {
     // Lấy list voucher
     (async () => {
       try {
+        let currentTime = new Date();
         const { data } = await axios.get("http://localhost:3000/api/vouchersList");
-        const activeVouchers = data.data.filter((item: VoucherItem) => item.status);
+        console.log(data.data);
+        const activeVouchers = data.data.filter((item: VoucherItem) => {
+          let isStatusActive = item.status == true;
+          let isEmpty = item.quantity > 0;
+          let isStart = currentTime >= new Date(item.startTime);
+          let isEnd = currentTime <= new Date(item.endTime);
+          return isStatusActive && isEmpty && isStart && isEnd ;
+        });
         setVoucherList(activeVouchers);
       } catch (error) {
         console.log("Không lấy được danh sách voucher: " + error);
@@ -437,7 +447,7 @@ const PaymentPage = () => {
             console.log('cod');
             nav("/notify2");
           }
-          if (selectedPayment == "67bfcec4db17315614fced70"){
+          if (selectedPayment == "67bfcec4db17315614fced70") {
             console.log('vnpay');
             handleOnlinePayment()
           }
