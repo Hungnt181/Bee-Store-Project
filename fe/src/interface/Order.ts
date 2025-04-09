@@ -25,6 +25,7 @@ export interface Order {
     | "Đang giao"
     | "Hoàn thành"
     | "Hoàn đơn"
+    | "Giao hàng thất bại"
     | "Đã hủy";
 }
 

@@ -211,12 +211,17 @@ const OrderDetail = () => {
   // Thanh toán VNPay
   const handleOnlinePayment = async () => {
     try {
-      console.log(dataOrder?.total);
-      (dataOrder)?(localStorage.setItem('createdOrderId', dataOrder._id.toString())):'';
-      const response = await axios.post("http://localhost:3000/vnpay/create_payment_url", {
-        amount: dataOrder?.total,
-        orderId: dataItemOrder[0].id_variant._id + "_" + Date.now(),
-      });
+      // console.log(dataOrder?.total);
+      if (dataOrder) {
+        localStorage.setItem("createdOrderId", dataOrder._id.toString());
+      }
+      const response = await axios.post(
+        "http://localhost:3000/vnpay/create_payment_url",
+        {
+          amount: dataOrder?.total,
+          orderId: dataItemOrder[0].id_variant._id + "_" + Date.now(),
+        }
+      );
       window.location.href = response.data.paymentUrl;
     } catch (error) {
       if (error instanceof Error) {
@@ -228,7 +233,6 @@ const OrderDetail = () => {
       }
     }
   };
-
 
   return (
     <div className="bg-gray-50 p-6 min-h-screen">
@@ -242,7 +246,8 @@ const OrderDetail = () => {
               {!dataOrder?.isPaid && (
                 <Button
                   type="primary"
-                onClick={() => handleOnlinePayment()}
+                  disabled={dataOrder?.status == "Giao hàng thất bại"}
+                  onClick={() => handleOnlinePayment()}
                 >
                   Thanh toán đơn hàng
                 </Button>
@@ -258,7 +263,12 @@ const OrderDetail = () => {
                     cancelText="Không"
                     okButtonProps={{ danger: true }}
                   >
-                    <Button danger type="primary" icon={<StopOutlined />}>
+                    <Button
+                      danger
+                      type="primary"
+                      icon={<StopOutlined />}
+                      disabled={dataOrder?.status == "Giao hàng thất bại"}
+                    >
                       Hủy đơn hàng
                     </Button>
                   </Popconfirm>
@@ -275,7 +285,8 @@ const OrderDetail = () => {
             </Space>
           </div>
 
-          {dataOrder?.status !== "Đã hủy" ? (
+          {dataOrder?.status !== "Đã hủy" &&
+          dataOrder?.status !== "Giao hàng thất bại" ? (
             <Steps
               current={getOrderStatusStep()}
               className="mb-6"
@@ -298,7 +309,7 @@ const OrderDetail = () => {
                 },
               ]}
             />
-          ) : (
+          ) : dataOrder?.status === "Đã hủy" ? (
             <Card className="bg-red-50 mb-6">
               <div className="flex items-center text-red-500">
                 <StopOutlined
@@ -306,6 +317,17 @@ const OrderDetail = () => {
                 />
                 <Text strong style={{ color: "red" }}>
                   Đơn hàng đã bị hủy
+                </Text>
+              </div>
+            </Card>
+          ) : (
+            <Card className="bg-red-50 mb-6">
+              <div className="flex items-center text-red-500">
+                <StopOutlined
+                  style={{ fontSize: "24px", marginRight: "8px" }}
+                />
+                <Text strong style={{ color: "red" }}>
+                  Giao hàng thất bại
                 </Text>
               </div>
             </Card>
@@ -336,12 +358,12 @@ const OrderDetail = () => {
                         dataOrder?.status === "Hoàn thành"
                           ? "success"
                           : dataOrder?.status === "Chưa xác nhận"
-                            ? "warning"
-                            : dataOrder?.status === "Đang giao"
-                              ? "processing"
-                              : dataOrder?.status === "Đã hủy"
-                                ? "error"
-                                : "blue"
+                          ? "warning"
+                          : dataOrder?.status === "Đang giao"
+                          ? "processing"
+                          : dataOrder?.status === "Đã hủy"
+                          ? "error"
+                          : "blue"
                       }
                     >
                       {dataOrder?.status}
@@ -419,7 +441,7 @@ const OrderDetail = () => {
                           (sum, item) =>
                             sum +
                             Number(item?.id_variant?.id_product?.price ?? 0) *
-                            Number(item?.quantity ?? 0),
+                              Number(item?.quantity ?? 0),
                           0
                         )
                       )}{" "}
