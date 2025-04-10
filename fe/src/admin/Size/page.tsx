@@ -181,7 +181,7 @@ const AdminSizeList = () => {
 
   return (
     <div>
-      <h2 className="text-3xl mb-5 font-semibold">DANH SÁCH KÍCH THƯỚC</h2>
+      <h2 className="text-3xl mb-5 font-semibold">DANH SÁCH KÍCH CỠ</h2>
       <Button
         type="primary"
         onClick={() => navigate("/admin/size/add")}

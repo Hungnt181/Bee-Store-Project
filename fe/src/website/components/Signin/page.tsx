@@ -48,6 +48,8 @@ const Signin = () => {
           `http://localhost:3000/api/signin_user`,
           formData
         );
+        localStorage.removeItem("cartItems");
+
         localStorage.setItem("userRole", response.data.data.role);
         localStorage.setItem("nameUser", response.data.data.name);
         localStorage.setItem("idUser", response.data.data._id);
@@ -92,6 +94,8 @@ const Signin = () => {
 
     try {
       const res = await requestLoginGoogle(credential);
+      localStorage.removeItem("cartItems");
+
       localStorage.setItem("idUser", res.user._id);
       localStorage.setItem("userRole", res.user.role);
       localStorage.setItem("user", JSON.stringify(res.user));
