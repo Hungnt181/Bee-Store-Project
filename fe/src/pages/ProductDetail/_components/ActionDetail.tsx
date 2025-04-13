@@ -23,6 +23,7 @@ interface CartItemDetail {
   idVariant: string;
   color: string;
   size: string;
+  nameColor: string;
   quantity: number;
 }
 const SizeChart = ({ isVisible, onClose }: SizeChartProps) => {
@@ -638,12 +639,14 @@ ActionDetail) {
       selectedVariant._id &&
       id &&
       selectedVariant.id_color.hexcode &&
+      selectedVariant.id_color.name &&
       selectedVariant?.id_size.name
     ) {
       const newItem = {
         idProduct: id,
         idVariant: selectedVariant._id.toString(),
         color: selectedVariant.id_color.hexcode,
+        nameColor: selectedVariant.id_color.name,
         size: selectedVariant?.id_size.name,
         quantity: quantity,
       };
@@ -653,6 +656,7 @@ ActionDetail) {
           item.idProduct === newItem.idProduct &&
           item.idVariant === newItem.idVariant &&
           item.color === newItem.color &&
+          item.nameColor === newItem.nameColor &&
           item.size === newItem.size
       );
 

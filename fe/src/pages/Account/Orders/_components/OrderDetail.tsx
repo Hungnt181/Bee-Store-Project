@@ -4,7 +4,6 @@ import {
   Button,
   Image,
   message,
-  Popconfirm,
   Skeleton,
   Table,
   TableProps,
@@ -16,6 +15,9 @@ import {
   Space,
   Row,
   Col,
+  Modal,
+  Input,
+  Form,
 } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
@@ -29,6 +31,7 @@ import {
   StopOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
+import { useForm } from "antd/es/form/Form";
 
 const { Title, Text } = Typography;
 
@@ -172,24 +175,6 @@ const OrderDetail = () => {
     threeMinutesLater.setMinutes(completedTime.getMinutes() + 3);
   }, [orderDetail?.completedAt]);
 
-  const handleCancel = useMutation({
-    mutationFn: async () => {
-      await axios.patch(`http://localhost:3000/api/orders/client/${id}`);
-    },
-    onSuccess: () => {
-      message.success("Cập nhật trạng thái đơn hàng thành công");
-      queryClient.invalidateQueries({ queryKey: [key] });
-    },
-    onError: (error) => {
-      console.error("Lỗi từ API:", error);
-      if (axios.isAxiosError(error) && error.response) {
-        message.error(error.response.data.message || "Có lỗi xảy ra!");
-      } else {
-        message.error("Lỗi không xác định!");
-      }
-    },
-  });
-
   // Get current status step
   const getOrderStatusStep = () => {
     switch (dataOrder?.status) {
@@ -234,6 +219,44 @@ const OrderDetail = () => {
     }
   };
 
+  // Modal
+  const [form] = useForm();
+  const user = localStorage.getItem("user");
+  const userName = user ? JSON.parse(user).name : "Khách hàng";
+  console.log("userName", userName);
+  useEffect(() => {
+    form.setFieldsValue({
+      updatedStatusByClient: userName, // Thiết lập giá trị cho trường "Người hủy"
+    });
+  }, [form, userName]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const { mutate } = useMutation({
+    mutationFn: async (formData) => {
+      await axios.patch(
+        `http://localhost:3000/api/orders/client/${id}`,
+        formData
+      );
+    },
+    onSuccess: () => {
+      message.success("Hủy đơn hàng thành công");
+      setIsModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: [key] });
+    },
+  });
+
   return (
     <div className="bg-gray-50 p-6 min-h-screen">
       <Skeleton loading={isLoading} active>
@@ -243,36 +266,30 @@ const OrderDetail = () => {
               CHI TIẾT ĐƠN HÀNG - {dataOrder?._id.toString().slice(-6)}
             </Title>
             <Space>
-              {(!dataOrder?.isPaid && dataOrder?.payment?.name != 'Thanh toán khi nhận hàng') && (
-                <Button
-                  type="primary"
-                  disabled={dataOrder?.status == "Giao hàng thất bại"}
-                  onClick={() => handleOnlinePayment()}
-                >
-                  Thanh toán đơn hàng
-                </Button>
-              )}
+              {!dataOrder?.isPaid &&
+                dataOrder?.payment?.name != "Thanh toán khi nhận hàng" && (
+                  <Button
+                    type="primary"
+                    disabled={dataOrder?.status == "Giao hàng thất bại"}
+                    onClick={() => handleOnlinePayment()}
+                  >
+                    Thanh toán đơn hàng
+                  </Button>
+                )}
               {dataOrder?.status !== "Đã hủy" &&
                 dataOrder?.status !== "Hoàn thành" &&
                 dataOrder?.status !== "Đang giao" && (
-                  <Popconfirm
-                    title="Hủy đơn hàng"
-                    description="Bạn chắc chắn muốn hủy đơn hàng này không?"
-                    onConfirm={() => handleCancel.mutate()}
-                    okText="Hủy"
-                    cancelText="Không"
-                    okButtonProps={{ danger: true }}
+                  <Button
+                    danger
+                    onClick={showModal}
+                    type="primary"
+                    icon={<StopOutlined />}
+                    disabled={dataOrder?.status == "Giao hàng thất bại"}
                   >
-                    <Button
-                      danger
-                      type="primary"
-                      icon={<StopOutlined />}
-                      disabled={dataOrder?.status == "Giao hàng thất bại"}
-                    >
-                      Hủy đơn hàng
-                    </Button>
-                  </Popconfirm>
+                    Hủy đơn hàng
+                  </Button>
                 )}
+
               {dataOrder?.status === "Hoàn thành" && !dataOrder?.isConfirm && (
                 <Button
                   type="primary"
@@ -283,6 +300,77 @@ const OrderDetail = () => {
                 </Button>
               )}
             </Space>
+
+            {/* Modal */}
+            <Modal
+              title="Lý do hủy đơn hàng"
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={null}
+              destroyOnClose
+              maskClosable={false}
+            >
+              <Divider />
+              <Card bordered={false} style={{ backgroundColor: "#f5f5f5" }}>
+                <Space
+                  direction="vertical"
+                  size="small"
+                  style={{ width: "100%" }}
+                >
+                  <Space>
+                    <Text strong>Mã đơn hàng:</Text>
+                    <Text copyable>{dataOrder?._id.toString()}</Text>
+                  </Space>
+                </Space>
+              </Card>
+              <Divider />
+              <Form
+                form={form}
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                layout="horizontal"
+                style={{
+                  maxWidth: 600,
+                  margin: "0 auto",
+                }}
+                onFinish={(values) => {
+                  values.cancel_by = userName;
+                  mutate(values);
+                }}
+              >
+                <Form.Item name="updatedStatusByClient" label="Người hủy">
+                  <Input value={userName || ""} readOnly />
+                </Form.Item>
+                <Form.Item
+                  label="Lý do hủy"
+                  name="cancel_reason"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập lý do hủy đơn hàng",
+                    },
+                  ]}
+                >
+                  <Input.TextArea
+                    rows={3}
+                    placeholder="Nhập lý do hủy đơn hàng..."
+                  />
+                </Form.Item>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Space>
+                    <Button onClick={handleCancel}>Hủy</Button>
+                    <Button type="primary" htmlType="submit">
+                      Hủy đơn hàng
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
+            </Modal>
           </div>
 
           {dataOrder?.status !== "Đã hủy" &&

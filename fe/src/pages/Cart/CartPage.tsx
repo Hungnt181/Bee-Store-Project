@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Button, message, Modal, Table } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import type { TableRowSelection } from 'antd/es/table/interface';
+import type { TableRowSelection } from "antd/es/table/interface";
 import { formatCurrency } from "../../helpers/utils";
-
 
 interface CartItemDetail {
   idProduct: string;
   idVariant: string;
   color: string;
+  nameColor: string;
   size: string;
   quantity: number;
 }
@@ -19,6 +19,7 @@ interface CartModalItemDetail {
   nameProduct: string;
   price: number;
   color: string;
+  nameColor: string;
   size: string;
   quantity: number;
   totalPrice: number;
@@ -87,6 +88,7 @@ const CartPage: React.FC = () => {
           nameProduct: productData.name,
           price: productData.price,
           color: cartItem.color,
+          nameColor: cartItem.nameColor,
           size: cartItem.size,
           quantity: cartItem.quantity,
           totalPrice: productData.price * cartItem.quantity,
@@ -152,14 +154,12 @@ const CartPage: React.FC = () => {
   };
 
   const onCheckout = () => {
-    if ((selectedItemArray) && (selectedItemArray.length > 0)) {
+    if (selectedItemArray && selectedItemArray.length > 0) {
       navigate("/payment");
-    }
-    else {
-      if (cartItems && cartItems.length > 0){
+    } else {
+      if (cartItems && cartItems.length > 0) {
         message.error("Cần chọn sản phẩm để thanh toán", 3);
-      }
-      else{
+      } else {
         message.error("Không có sản phẩm để thanh toán", 3);
       }
       return;
@@ -172,15 +172,17 @@ const CartPage: React.FC = () => {
       dataIndex: "nameProduct",
       key: "nameProduct",
       render: (nameProduct: string, record: CartModalItemDetail) => (
-        <Link to={`/products/${record.idProduct}`} ><span className="text-black">{nameProduct}</span></Link>
+        <Link to={`/products/${record.idProduct}`}>
+          <span className="text-black">{nameProduct}</span>
+        </Link>
       ),
     },
     {
       title: "Giá",
       dataIndex: "price",
       key: "price",
-      render: (_text:string, record: CartModalItemDetail) => (
-        <span>{formatCurrency(record.price, 'vnd')}</span>
+      render: (_text: string, record: CartModalItemDetail) => (
+        <span>{formatCurrency(record.price, "vnd")}</span>
       ),
     },
     {
@@ -213,11 +215,15 @@ const CartPage: React.FC = () => {
           >
             -
           </Button>
-          <div className="quantity mx-2 w-[20px] text-center">{record.quantity}</div>
+          <div className="quantity mx-2 w-[20px] text-center">
+            {record.quantity}
+          </div>
           <Button
             onClick={() => handleQuantityChange(index, 1)}
             style={{ height: "30px", width: "30px" }}
-          >+</Button>
+          >
+            +
+          </Button>
         </div>
       ),
     },
@@ -226,13 +232,15 @@ const CartPage: React.FC = () => {
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (_text: string, record: CartModalItemDetail) => (
-        <span className="font-bold">{formatCurrency(record.price * record.quantity, 'vnd')}</span>
+        <span className="font-bold">
+          {formatCurrency(record.price * record.quantity, "vnd")}
+        </span>
       ),
     },
     {
       title: "#",
       key: "action",
-      render: (_text:string, _record: CartModalItemDetail, index: number) => (
+      render: (_text: string, _record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
@@ -240,23 +248,22 @@ const CartPage: React.FC = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
 
-  const [selectedItemArray, setSelectedItemArray] = useState<any>([])
+  const [selectedItemArray, setSelectedItemArray] = useState<any>([]);
   useEffect(() => {
     if (selectedRowKeys.length > 0) {
-      const newSelectedItemArray = selectedRowKeys.map((index) =>
-        cartModalItems[Number(index)]
+      const newSelectedItemArray = selectedRowKeys.map(
+        (index) => cartModalItems[Number(index)]
       );
       //cartModalItems.map(index => selectedRowKeys[Number(index)])
-      setSelectedItemArray(newSelectedItemArray)
-    }
-    else {
+      setSelectedItemArray(newSelectedItemArray);
+    } else {
       setSelectedItemArray([]);
     }
   }, [selectedRowKeys, cartModalItems]);
@@ -264,7 +271,10 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     // console.log("selectedItemArray updated:", selectedItemArray);
     if (selectedItemArray.length > 0) {
-      localStorage.setItem("selectedItemArray", JSON.stringify(selectedItemArray));
+      localStorage.setItem(
+        "selectedItemArray",
+        JSON.stringify(selectedItemArray)
+      );
     } else {
       localStorage.removeItem("selectedItemArray");
     }
@@ -278,11 +288,14 @@ const CartPage: React.FC = () => {
             rowSelection={rowSelection}
             dataSource={cartModalItems}
             columns={columns}
-            rowKey={(_record, index) => (index)?(index.toString()): ''}
+            rowKey={(_record, index) => (index ? index.toString() : "")}
             pagination={false}
           />
           <div className="mt-3">
-            Tổng tiền: <span className="font-bold">{formatCurrency(totalPrice, 'vnd')}</span>
+            Tổng tiền:{" "}
+            <span className="font-bold">
+              {formatCurrency(totalPrice, "vnd")}
+            </span>
           </div>
         </div>
 

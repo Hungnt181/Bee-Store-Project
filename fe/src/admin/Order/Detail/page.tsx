@@ -32,6 +32,7 @@ import { useForm } from "antd/es/form/Form";
 const { Title, Text } = Typography;
 
 const AdminOrderDetail = () => {
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>("");
   const [dataOrder, setDataOrder] = useState<Order>();
   const [dataItemOrder, setDataItemOrder] = useState<ItemOrder[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +43,8 @@ const AdminOrderDetail = () => {
   const { id } = useParams();
 
   //Thông tin admin
-  const userName = localStorage.getItem("nameUser");
+  const user = localStorage.getItem("user");
+  const userName = user ? JSON.parse(user).name : null;
 
   const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder,receiverInfo`;
   const key = "dataPageOrder";
@@ -126,14 +128,17 @@ const AdminOrderDetail = () => {
       render: (_: unknown, record: ItemOrder) => {
         return (
           <Space>
-            <Text>{record?.id_variant?.id_color?.name}</Text>
+            <Text>{String(record?.nameColor ?? "")}</Text>
             <div
               style={{
-                backgroundColor: record?.id_variant?.id_color?.hexcode,
+                backgroundColor:
+                  typeof record?.color === "string"
+                    ? record.color
+                    : "transparent",
                 width: "20px",
                 height: "20px",
                 border:
-                  record?.id_variant?.id_color?.hexcode === "#ffffff"
+                  record?.color?.type === "#ffffff"
                     ? "1px solid #d9d9d9"
                     : "none",
                 borderRadius: "2px",
@@ -145,25 +150,19 @@ const AdminOrderDetail = () => {
     },
     {
       title: "Kích cỡ",
-      dataIndex: "id_size",
-      key: "id_size",
+      dataIndex: "size",
+      key: "size",
       width: 100,
-      render: (_: unknown, record: ItemOrder) => {
-        return <Tag>{record?.id_variant?.id_size?.name}</Tag>;
-      },
     },
     {
       title: "Giá",
-      dataIndex: "id_product",
-      key: "id_product",
+      dataIndex: "price",
+      key: "price",
       width: 150,
       render: (_: unknown, record: ItemOrder) => {
         return (
           <Text strong>
-            {Number(record?.id_variant?.id_product?.price).toLocaleString(
-              "vi-VN"
-            )}{" "}
-            VNĐ
+            {Number(record?.price).toLocaleString("vi-VN")} VNĐ
           </Text>
         );
       },
@@ -375,6 +374,14 @@ const AdminOrderDetail = () => {
                         </Button>
                       </Space>
                     </Descriptions.Item>
+
+                    {dataOrder?.cancel_reason ? (
+                      <Descriptions.Item label="Lý do" span={2}>
+                        <Text type="danger" strong>
+                          {dataOrder?.cancel_reason}
+                        </Text>
+                      </Descriptions.Item>
+                    ) : null}
                   </Descriptions>
                 </Card>
               </Badge.Ribbon>
@@ -506,7 +513,10 @@ const AdminOrderDetail = () => {
             ]}
           >
             <Select
-              onChange={() => setIsEdit(false)}
+              onChange={(value) => {
+                setSelectedStatus(value);
+                setIsEdit(false);
+              }}
               placeholder="Chọn trạng thái mới"
               style={{ width: "100%" }}
               disabled={availableStatuses.length === 0}
@@ -519,6 +529,41 @@ const AdminOrderDetail = () => {
               ))}
             </Select>
           </Form.Item>
+
+          {/* Chỉ hiển thị khi trạng thái là "ĐÃ HỦY" */}
+
+          {selectedStatus === "Đã hủy" && (
+            <Form.Item
+              label="Lý do hủy"
+              name="cancel_reason"
+              rules={[
+                { required: true, message: "Vui lòng nhập lý do hủy đơn hàng" },
+              ]}
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Nhập lý do hủy đơn hàng..."
+              />
+            </Form.Item>
+          )}
+
+          {selectedStatus === "Giao hàng thất bại" && (
+            <Form.Item
+              label="Lý do giao hàng thất bại"
+              name="cancel_reason"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập lý do giao hàng thất bại",
+                },
+              ]}
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Nhập lý do giao hàng thất bại..."
+              />
+            </Form.Item>
+          )}
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Space>
