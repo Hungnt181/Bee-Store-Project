@@ -5,7 +5,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge } from "antd";
+import { Badge, message } from "antd";
 import { useEffect, useState } from "react";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import axios from "axios";
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
   const [nameUser, setNameUser] = useState("");
+  const [userStatus, setUserStatus] = useState(true);
   const location = useLocation();
 
   const [numberInCart, setNumberInCart] = useState<number>(0);
@@ -67,14 +68,35 @@ export default function Header() {
     enabled: !!idUser,
   });
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setNameUser("");
+    navigate("/signin");
+  };
+
   useEffect(() => {
-    // Cập nhật tên từ API response
-    if (userData?.name) {
-      setNameUser(userData.name);
+    // Cập nhật tên và trạng thái từ API response
+    if (userData) {
+      setNameUser(userData.name || "");
+      setUserStatus(userData.status !== false); // Chuyển đổi status thành boolean
+      console.log(userData.status)
+      // Kiểm tra nếu status là false, thực hiện logout
+      if (userData.status === false) {
+        message.error("Tài khoản đã bị vô hiệu hoá")
+        handleLogout();
+      }
     } else {
       setNameUser("");
+      setUserStatus(true);
     }
   }, [userData, location]);
+
+  useEffect(() => {
+    if (idUser && !userStatus) {
+      handleLogout();
+    }
+  }, [userStatus]);
+
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -153,18 +175,16 @@ export default function Header() {
       </div>
       {/* LINE 2 IN HEADER */}
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "block" : "hidden"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "block" : "hidden"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           <ListitemCateegory isSticky={isSticky} />
         </div>
       </div>
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (

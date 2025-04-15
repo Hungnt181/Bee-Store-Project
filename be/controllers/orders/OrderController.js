@@ -1,12 +1,13 @@
 import Order from "../../models/orders/Order";
 import StatusCodes from "http-status-codes";
-
 import ItemsOrder from "../../models/itemOrder/itemOrder"; //bang itemOrder
 import { orderValidator } from "../../utils/validator/order";
 import Variant from "../../models/variants/variants";
 import Voucher from "../../models/vouchers/Voucher";
 
 import { io } from "../../app.js";
+import { sendOrderCompletedEmail, sendOrderConfirmationEmail, sendOrderDeliveryFailedEmail, sendOrderShippingEmail } from "../../service/emailService.js";
+
 class OrderController {
   async createOrder(req, res) {
     try {
@@ -329,6 +330,98 @@ class OrderController {
         // console.log(order.completedAt);
       }
       await order.save();
+
+      if (status === "Đã xác nhận") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đã xác nhận đơn hàng
+        await sendOrderConfirmationEmail(populatedOrder);
+      }
+
+      if (status === "Đang giao") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderShippingEmail(populatedOrder);
+      }
+
+      if (status === "Hoàn thành") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderCompletedEmail(populatedOrder);
+      }
+
+      if (status === "Giao hàng thất bại") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderDeliveryFailedEmail(populatedOrder);
+      }
 
       return res.status(StatusCodes.OK).json({
         message: "Cập nhật trạng thái đơn hàng thành công",
