@@ -77,6 +77,10 @@ const OrderSchema = new Schema(
       type: String,
       default: null,
     },
+    isComplaint: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

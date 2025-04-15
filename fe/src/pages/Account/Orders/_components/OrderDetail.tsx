@@ -30,6 +30,7 @@ import {
   CarOutlined,
   StopOutlined,
   ShoppingCartOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 
@@ -219,16 +220,15 @@ const OrderDetail = () => {
     }
   };
 
-  // Modal
-  const [form] = useForm();
+  // Modal Hủy đơn hàng
+  const [formCancel] = useForm();
   const user = localStorage.getItem("user");
   const userName = user ? JSON.parse(user).name : "Khách hàng";
-  console.log("userName", userName);
   useEffect(() => {
-    form.setFieldsValue({
+    formCancel.setFieldsValue({
       updatedStatusByClient: userName, // Thiết lập giá trị cho trường "Người hủy"
     });
-  }, [form, userName]);
+  }, [formCancel, userName]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -243,7 +243,7 @@ const OrderDetail = () => {
     setIsModalOpen(false);
   };
 
-  const { mutate } = useMutation({
+  const { mutate: cancelMutate } = useMutation({
     mutationFn: async (formData) => {
       await axios.patch(
         `http://localhost:3000/api/orders/client/${id}`,
@@ -256,6 +256,85 @@ const OrderDetail = () => {
       queryClient.invalidateQueries({ queryKey: [key] });
     },
   });
+
+  // Modal khiếu nại đơn hàng
+  const emailUser = user ? JSON.parse(user).email : "noemail";
+  const id_User = user ? JSON.parse(user)._id : "null";
+  const [formComplaint] = useForm();
+
+  useEffect(() => {
+    formComplaint.setFieldsValue({
+      name: userName,
+      id_order: dataOrder?._id.toString(),
+      id_user: id_User,
+      email: emailUser,
+    });
+  }, [formComplaint, userName, id_User, emailUser, dataOrder]);
+
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+
+  const showModal2 = () => {
+    setIsModalOpen2(true);
+  };
+  const handleOk2 = () => {
+    setIsModalOpen2(false);
+  };
+
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
+  };
+
+  const { mutate: ComplaintMutate } = useMutation({
+    mutationFn: async (formData) => {
+      await axios.post(`http://localhost:3000/api/complaint`, formData);
+    },
+    onSuccess: () => {
+      message.success(
+        "Khiếu nại thành công! Chúng tôi sẽ liên hệ tới bạn sớm nhất để xử lý."
+      );
+      setIsModalOpen2(false);
+      queryClient.invalidateQueries({ queryKey: [key] });
+    },
+
+    onError: (error) => {
+      // Gợi ý thêm: kiểm tra nếu có response từ server
+      if (error?.message) {
+        message.error(`Vui lòng xác nhận đã nhận hàng trước khi khiếu nại`);
+      } else {
+        message.error("Tạo khiếu nại thất bại. Vui lòng thử lại sau.");
+      }
+    },
+  });
+
+  // xét time hết hạn khiếu nại
+  const [remainingTime, setRemainingTime] = useState(0);
+
+  useEffect(() => {
+    if (dataOrder?.completedAt) {
+      const interval = setInterval(() => {
+        const timePassed =
+          Date.now() -
+          (dataOrder?.completedAt
+            ? new Date(dataOrder.completedAt).getTime()
+            : 0);
+        const timeLeft = 3 * 60 * 1000 - timePassed;
+
+        if (timeLeft <= 0) {
+          setRemainingTime(0);
+          clearInterval(interval);
+        } else {
+          setRemainingTime(timeLeft);
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [dataOrder]);
+
+  // if (!dataOrder?.completedAt || remainingTime <= 0) return null;
+
+  // const minutes = Math.floor(remainingTime / 60000);
+  // const seconds = Math.floor((remainingTime % 60000) / 1000);
 
   return (
     <div className="bg-gray-50 p-6 min-h-screen">
@@ -290,18 +369,36 @@ const OrderDetail = () => {
                   </Button>
                 )}
 
+              {dataOrder?.status === "Hoàn thành" &&
+                remainingTime > 0 &&
+                !dataOrder?.isComplaint && (
+                  <div>
+                    <Button
+                      type="primary"
+                      className="mr-2"
+                      danger
+                      icon={<ExclamationCircleFilled />}
+                      onClick={showModal2}
+                    >
+                      Khiếu nại
+                    </Button>
+                  </div>
+                )}
+
               {dataOrder?.status === "Hoàn thành" && !dataOrder?.isConfirm && (
-                <Button
-                  type="primary"
-                  icon={<CheckCircleOutlined />}
-                  onClick={() => handleIsConfirm.mutate()}
-                >
-                  Xác nhận đã nhận hàng
-                </Button>
+                <div>
+                  <Button
+                    type="primary"
+                    icon={<CheckCircleOutlined />}
+                    onClick={() => handleIsConfirm.mutate()}
+                  >
+                    Xác nhận đã nhận hàng
+                  </Button>
+                </div>
               )}
             </Space>
 
-            {/* Modal */}
+            {/* Modal hủy*/}
             <Modal
               title="Lý do hủy đơn hàng"
               open={isModalOpen}
@@ -326,7 +423,7 @@ const OrderDetail = () => {
               </Card>
               <Divider />
               <Form
-                form={form}
+                form={formCancel}
                 labelCol={{
                   span: 8,
                 }}
@@ -340,7 +437,7 @@ const OrderDetail = () => {
                 }}
                 onFinish={(values) => {
                   values.cancel_by = userName;
-                  mutate(values);
+                  cancelMutate(values);
                 }}
               >
                 <Form.Item name="updatedStatusByClient" label="Người hủy">
@@ -366,6 +463,86 @@ const OrderDetail = () => {
                     <Button onClick={handleCancel}>Hủy</Button>
                     <Button type="primary" htmlType="submit">
                       Hủy đơn hàng
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
+            </Modal>
+
+            {/* Modal khiếu nại */}
+            <Modal
+              title="Nội dung khiếu nại đơn hàng"
+              open={isModalOpen2}
+              onOk={handleOk2}
+              onCancel={handleCancel2}
+              footer={null}
+              destroyOnClose
+              maskClosable={false}
+            >
+              <Divider />
+              <Card bordered={false} style={{ backgroundColor: "#f5f5f5" }}>
+                <Space
+                  direction="vertical"
+                  size="small"
+                  style={{ width: "100%" }}
+                >
+                  <Space>
+                    <Text strong>Mã đơn hàng:</Text>
+                    <Text copyable>{dataOrder?._id.toString()}</Text>
+                  </Space>
+                </Space>
+              </Card>
+              <Divider />
+              <Form
+                form={formComplaint}
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                layout="horizontal"
+                style={{
+                  maxWidth: 600,
+                  margin: "0 auto",
+                }}
+                onFinish={(value) => {
+                  value.status = "Chờ xử lý";
+                  ComplaintMutate(value);
+                }}
+              >
+                <Form.Item name="name" label="Họ và tên">
+                  <Input value={userName || ""} readOnly />
+                </Form.Item>
+                <Form.Item name="email" label="email">
+                  <Input value={emailUser || ""} readOnly />
+                </Form.Item>
+                <Form.Item name="id_user" label="id_user" hidden={true}>
+                  <Input value={id_User || ""} readOnly />
+                </Form.Item>
+                <Form.Item name="id_order" label="Mã đơn hàng" hidden={true}>
+                  <Input value={dataOrder?._id.toString()} readOnly />
+                </Form.Item>
+                <Form.Item
+                  label="Nội dung khiếu nại"
+                  name="description"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập nội dung khiếu nại",
+                    },
+                  ]}
+                >
+                  <Input.TextArea
+                    rows={3}
+                    placeholder="Nhập nội dung khiếu nại..."
+                  />
+                </Form.Item>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Space>
+                    <Button onClick={handleCancel2}>Hủy</Button>
+                    <Button type="primary" htmlType="submit">
+                      Khiếu nại
                     </Button>
                   </Space>
                 </Form.Item>
@@ -463,6 +640,16 @@ const OrderDetail = () => {
                       {dataOrder?.isConfirm ? "Đã nhận hàng" : "Chưa nhận hàng"}
                     </Tag>
                   </div>
+                  {dataOrder?.isConfirm && dataOrder?.isComplaint && (
+                    <div className="flex justify-between" color="warning">
+                      <Text>Trạng thái khiếu nại:</Text>
+                      <Tag
+                        color={!dataOrder?.isComplaint ? "success" : "error"}
+                      >
+                        {dataOrder?.isComplaint ? "Đang xử lý khiếu nại" : null}
+                      </Tag>
+                    </div>
+                  )}
                 </div>
               </Card>
             </Col>

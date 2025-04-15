@@ -12,6 +12,7 @@ import {
   AppstoreOutlined,
   ShoppingCartOutlined,
   BellFilled,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, MenuProps } from "antd";
@@ -54,6 +55,13 @@ const items: MenuItem[] = [
   getItem("Banner", "10", <PictureOutlined />, undefined, "banner"),
   getItem("Đơn hàng", "11", <ShoppingCartOutlined />, undefined, "order"),
   getItem("Thông báo", "12", <BellFilled />, undefined, "notification"),
+  getItem(
+    "Khiếu nại",
+    "13",
+    <ExclamationCircleFilled />,
+    undefined,
+    "complaint"
+  ),
 ];
 
 const Sidebar = () => {
@@ -102,7 +110,7 @@ const Sidebar = () => {
   }, [userData]);
 
   const handleLogout = () => {
-    localStorage.clear()
+    localStorage.clear();
     navigate("/signin");
   };
 

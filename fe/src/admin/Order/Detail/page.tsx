@@ -382,6 +382,14 @@ const AdminOrderDetail = () => {
                         </Text>
                       </Descriptions.Item>
                     ) : null}
+
+                    {dataOrder?.isComplaint ? (
+                      <Descriptions.Item label="Trạng thái khiếu nại" span={2}>
+                        <Text type="danger" strong>
+                          Chưa xử lý
+                        </Text>
+                      </Descriptions.Item>
+                    ) : null}
                   </Descriptions>
                 </Card>
               </Badge.Ribbon>

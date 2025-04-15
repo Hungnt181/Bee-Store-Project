@@ -29,6 +29,8 @@ export interface Order {
     | "Đã hủy";
   cancel_reason?: string;
   cancel_by?: string;
+  isComplaint?: boolean;
+  completedAt?: Date;
 }
 
 export interface bestSelling {
