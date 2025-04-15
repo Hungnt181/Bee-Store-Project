@@ -14,7 +14,11 @@ import { receiverRouter } from "./receiverInfor/receiverInfor.js";
 import { bannerRouter } from "./banners/bannerRouters.js";
 import vnpayRouter from "./vnpay/vnpay.js";
 import notiApiRouter from "./notifications/notifications.js";
+<<<<<<< HEAD
 import { cartRouter } from "./carts/cart.js";
+=======
+import complaintRouter from "./complaints/complaint.js";
+>>>>>>> hungnt
 
 const router = Router();
 
@@ -33,6 +37,10 @@ router.use(`/api`, receiverRouter);
 router.use(`/api`, bannerRouter);
 router.use(`/vnpay`, vnpayRouter);
 router.use(`/api`, notiApiRouter);
+<<<<<<< HEAD
 router.use(`/api`, cartRouter);
+=======
+router.use(`/api`, complaintRouter);
+>>>>>>> hungnt
 
 export default router;

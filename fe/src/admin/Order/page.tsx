@@ -54,6 +54,7 @@ const AdminOrderPage = () => {
     "Đã xác nhận",
     "Đang giao",
     "Hoàn thành",
+    "Giao hàng thất bại",
     "Đã hủy",
   ];
 
@@ -151,21 +152,26 @@ const AdminOrderPage = () => {
       key: "status",
       render: (_: unknown, item: Order) => {
         return (
-          <p
-            className={`${
-              item?.status === "Hoàn thành"
-                ? "text-green-500"
-                : item?.status === "Chưa xác nhận"
-                ? "text-yellow-500"
-                : item?.status === "Đang giao"
-                ? "text-purple-500"
-                : item?.status === "Đã hủy"
-                ? "text-red-500"
-                : "text-blue-400"
-            } font-medium`}
-          >
-            {item?.status}
-          </p>
+          <div>
+            <p
+              className={`${
+                item?.status === "Hoàn thành"
+                  ? "text-green-500"
+                  : item?.status === "Chưa xác nhận"
+                  ? "text-yellow-500"
+                  : item?.status === "Đang giao"
+                  ? "text-purple-500"
+                  : item?.status === "Đã hủy"
+                  ? "text-red-500"
+                  : "text-blue-400"
+              } font-medium`}
+            >
+              {item?.status}
+            </p>
+            <div className="text-[12px] font-semibold mt-2">
+              {item?.status === "Đã hủy" ? item?.cancel_by : null}
+            </div>
+          </div>
         );
       },
     },
