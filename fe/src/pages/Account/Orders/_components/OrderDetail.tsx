@@ -346,7 +346,8 @@ const OrderDetail = () => {
             </Title>
             <Space>
               {!dataOrder?.isPaid &&
-                dataOrder?.payment?.name != "Thanh toán khi nhận hàng" && (
+                dataOrder?.payment?.name != "Thanh toán khi nhận hàng" &&
+                dataOrder?.status != "Đã hủy" && (
                   <Button
                     type="primary"
                     disabled={dataOrder?.status == "Giao hàng thất bại"}
@@ -581,7 +582,19 @@ const OrderDetail = () => {
                   style={{ fontSize: "24px", marginRight: "8px" }}
                 />
                 <Text strong style={{ color: "red" }}>
-                  Đơn hàng đã bị hủy
+                  {dataOrder?.cancel_reason ==
+                  "Đơn hàng đã huỷ tự động do quá thời gian thanh toán"
+                    ? "Đơn hàng đã huỷ tự động do quá thời gian thanh toán"
+                    : "Đơn hàng đã bị hủy"}{" "}
+                  {dataOrder?.payment?.name === "Thanh toán qua VNPay" &&
+                    dataOrder?.isPaid &&
+                    dataOrder?.status === "Đã hủy" && (
+                      <span style={{ color: "blue" }}>
+                        {" "}
+                        - Cửa hàng sẽ hoàn tiền cho bạn trong vòng 3-5 ngày làm
+                        việc
+                      </span>
+                    )}
                 </Text>
               </div>
             </Card>
@@ -646,7 +659,7 @@ const OrderDetail = () => {
                       <Tag
                         color={!dataOrder?.isComplaint ? "success" : "error"}
                       >
-                        {dataOrder?.isComplaint ? "Đang xử lý khiếu nại" : null}
+                        {dataOrder?.isComplaint ? "Chờ xử lý" : null}
                       </Tag>
                     </div>
                   )}
