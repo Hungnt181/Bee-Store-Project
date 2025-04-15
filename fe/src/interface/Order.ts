@@ -27,6 +27,10 @@ export interface Order {
     | "Hoàn đơn"
     | "Giao hàng thất bại"
     | "Đã hủy";
+  cancel_reason?: string;
+  cancel_by?: string;
+  isComplaint?: boolean;
+  completedAt?: Date;
 }
 
 export interface bestSelling {

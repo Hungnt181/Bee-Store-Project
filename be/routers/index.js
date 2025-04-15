@@ -15,6 +15,7 @@ import { bannerRouter } from "./banners/bannerRouters.js";
 import vnpayRouter from "./vnpay/vnpay.js";
 import notiApiRouter from "./notifications/notifications.js";
 import { cartRouter } from "./carts/cart.js";
+import complaintRouter from "./complaints/complaint.js";
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use(`/api`, bannerRouter);
 router.use(`/vnpay`, vnpayRouter);
 router.use(`/api`, notiApiRouter);
 router.use(`/api`, cartRouter);
+router.use(`/api`, complaintRouter);
 
 export default router;
