@@ -171,7 +171,7 @@ const AdminAccountPage = () => {
         <Table
           dataSource={data}
           columns={columns}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
         />
 
         <Modal
