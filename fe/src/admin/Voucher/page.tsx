@@ -1,26 +1,15 @@
+
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Flex, Table, TableProps, Tag } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "../../helpers/utils";
+import { Voucher } from "../../interface/Voucher";
+import { Link } from "react-router-dom"; // 👈 Thêm dòng này
 
-interface Voucher {
-  _id: String;
-  title: String;
-  codeName: String;
-  value: Number;
-  maxValue: Number;
-  quantity: Number;
-  description: String;
-  startTime: Date;
-  endTime: Date;
-  createdAt: Date;
-  updatedAt: Date;
-  status: Boolean;
-}
 const columns: TableProps<Voucher>["columns"] = [
   {
-    title: "#",
+    title: "STT",
     dataIndex: "index",
     key: "index",
   },
@@ -28,39 +17,33 @@ const columns: TableProps<Voucher>["columns"] = [
     title: "Tên voucher",
     dataIndex: "title",
     key: "title",
-    render: (text: string) => <a className="pointer-events-none">{text}</a>,
-    width: 150
+    render: (text: string) => <span className="pointer-events-none">{text}</span>, 
+    width: 150,
   },
   {
     title: "Mã voucher",
     dataIndex: "codeName",
     key: "codeName",
-    width: 100
+    width: 100,
   },
   {
-    title:<div className="text-wrap">Giảm (%)</div>,
+    title: <div className="text-wrap">Giảm (%)</div>,
     dataIndex: "value",
     key: "value",
-    render: (text:number)=>(<span>{text}%</span>),
-    width: 100
+    render: (text: number) => <span>{text}%</span>,
+    width: 100,
   },
   {
-    title:<div className="text-wrap">Giảm tối đa (vnđ)</div>,
+    title: <div className="text-wrap">Giảm tối đa (vnđ)</div>,
     dataIndex: "maxValue",
     key: "maxValue",
-    render: (text:number)=>(<span>{formatCurrency(text, 'vnd')}</span>),
-    width: 100
+    render: (text: number) => <span>{formatCurrency(text, "vnd")}</span>,
+    width: 100,
   },
   {
     title: "Số lượng",
     dataIndex: "quantity",
     key: "quantity",
-  },
-  {
-    title: "Mô tả",
-    dataIndex: "description",
-    key: "description",
-    width: 300
   },
   {
     title: "Ngày bắt đầu",
@@ -75,69 +58,48 @@ const columns: TableProps<Voucher>["columns"] = [
     render: (text: Date) => (text ? new Date(text).toLocaleString() : ""),
   },
   {
-    title: "Ngày tạo",
-    dataIndex: "createdAt",
-    key: "createdAt",
-    render: (text: Date) => (text ? new Date(text).toLocaleString() : ""),
-  },
-  {
-    title: "Ngày sửa",
-    dataIndex: "updatedAt",
-    key: "updatedAt",
-    render: (text: Date) => (text ? new Date(text).toLocaleString() : ""),
-    width: 150
-  },
-  {
     title: "Trạng thái",
     dataIndex: "status",
     key: "status",
     render: (text: boolean, record: Voucher) => {
-      let textStatusVoucher= "";
-      let color = 'blue'
+      let textStatusVoucher = "";
+      let color = "";
       const currentTime = new Date();
       const startTime = new Date(record.startTime);
       const endTime = new Date(record.endTime);
-      if (currentTime >= startTime && currentTime <= endTime) {
-        text ? (textStatusVoucher="Đang hoạt động",color ='green') : (textStatusVoucher="Không hoạt động", color ='red');
-      }
-      else if (currentTime < startTime) {
-        textStatusVoucher = "Chưa bắt đầu",
-        color ='yellow'
-      }
-      else if (currentTime > endTime) {
-        textStatusVoucher = "Đã kết thúc"
-        color = 'grey'
-      }
-      return (
-        <Tag color={color}>{textStatusVoucher}</Tag>
-      )
-    }
+    if (currentTime >= startTime && currentTime <= endTime) {
+  if (text) {
+    textStatusVoucher = "Đang hoạt động";
+    color = "green";
+  } else {
+    textStatusVoucher = "Không hoạt động";
+    color = "red";
+  }
+} else if (currentTime < startTime) {
+  textStatusVoucher = "Chưa bắt đầu";
+  color = "yellow";
+} else if (currentTime > endTime) {
+  textStatusVoucher = "Đã kết thúc";
+  color = "grey";
+}
+      return <Tag color={color}>{textStatusVoucher}</Tag>;
+    },
   },
   {
-    title: "#",
+    title: "Thao tác",
     key: "action",
     render: (record: Voucher) => (
-      <div>
-        {/* <button>Xóa</button> */}
-        <Button href={`/admin/voucher/${record._id}/edit`}>Sửa</Button>
-      </div>
+      <Flex gap="small">
+        <Link to={`/admin/voucher/${record._id}`}>
+          <Button type="default">Chi tiết</Button>
+        </Link>
+        <Link to={`/admin/voucher/${record._id}/edit`}>
+          <Button type="primary">Sửa</Button>
+        </Link>
+      </Flex>
     ),
   },
 ];
-
-// const listVoucher: Voucher[] = [
-//     {
-//         id: '1',
-//         title: '111',
-//         codeName: 'CODE123',
-//         value: 100,
-//         quantity: 10,
-//         description: 'Discount Voucher',
-//         startTime: new Date(),
-//         endTime: new Date(),
-//         status: true,
-//     },
-// ];
 
 const modifiedColumns = columns.map((column) => ({
   ...column,
@@ -152,18 +114,15 @@ const VoucherPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = (await axios.get(`http://localhost:3000/api/vouchers`))
-          .data;
-        console.log(response);
-        // console.log(setListVoucher(response.data.data));
-        let list = response.data.map((item: Voucher, index: number) => ({
+        const response = (
+          await axios.get(`http://localhost:3000/api/vouchers`)
+        ).data;
+
+        const list = response.data.map((item: Voucher, index: number) => ({
           ...item,
           index: index + 1,
-          // createdAt: new Date(item.createdAt).toLocaleString(),
-          // updatedAt: new Date(item.updatedAt).toLocaleString(),
         }));
         setListVoucher(list);
-        // setListVoucher(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -178,18 +137,16 @@ const VoucherPage: React.FC = () => {
     <>
       <h1 className="text-3xl mb-5 font-semibold">DANH SÁCH MÃ GIẢM GIÁ</h1>
       <Flex gap={0} style={{ marginBottom: "30px" }} justify="space-between">
-        <Button
-          type="primary"
-          href="/admin/voucher/add"
-          icon={<PlusOutlined />}
-        >
-          Thêm mới
-        </Button>
+        <Link to="/admin/voucher/add">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Thêm mới
+          </Button>
+        </Link>
       </Flex>
       <Table<Voucher>
         columns={modifiedColumns}
         dataSource={listVoucher}
-        rowKey="index"
+        rowKey="_id"
         locale={locale}
       />
     </>

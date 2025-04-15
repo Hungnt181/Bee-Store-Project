@@ -53,6 +53,7 @@ import PrivateRoute, {
 } from "./website/components/PrivateRoute/page";
 import NotificationPage from "./admin/Notification/page";
 import ComplaintPage from "./admin/Complaint/page";
+import VoucherDetailPage from "./admin/Voucher/Detail/page";
 
 export const router = createBrowserRouter([
   {
@@ -195,6 +196,7 @@ export const router = createBrowserRouter([
       { path: "/admin/category", element: <AdminCategory /> },
       { path: "/admin/voucher", element: <VoucherPage /> },
       { path: "/admin/voucher/add", element: <VoucherAddPage /> },
+       { path: "/admin/voucher/:id", element: <VoucherDetailPage /> },
       { path: "/admin/voucher/:id/edit", element: <VoucherEditPage /> },
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
