@@ -36,34 +36,43 @@ export async function sendOrderConfirmationEmail(order) {
     }
 
     // Tạo nội dung chi tiết sản phẩm
-    const orderItems = order.itemsOrder.map(item => {
-      const product = item.id_variant?.id_product?.name || item.name || 'Không xác định';
-      const color = item.id_variant?.id_color?.name || '';
-      const size = item.id_variant?.id_size?.name || '';
+    const orderItems = order.itemsOrder
+      .map((item) => {
+        const product =
+          item.id_variant?.id_product?.name || item.name || "Không xác định";
+        const color = item.id_variant?.id_color?.name || "";
+        const size = item.id_variant?.id_size?.name || "";
 
-      // Lấy giá từ biến thể hoặc sử dụng giá mặc định
-      const variantPrice = item.id_variant?.id_product?.price || 0;
-      const quantity = item.quantity || 0;
+        // Lấy giá từ biến thể hoặc sử dụng giá mặc định
+        const variantPrice = item.id_variant?.id_product?.price || 0;
+        const quantity = item.quantity || 0;
 
-      return `
+        return `
         <tr>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${product}</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${color}</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${size}</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${quantity}</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">${variantPrice.toLocaleString('vi-VN')}đ</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">${(variantPrice * quantity).toLocaleString('vi-VN')}đ</td>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">${variantPrice.toLocaleString(
+            "vi-VN"
+          )}đ</td>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">${(
+            variantPrice * quantity
+          ).toLocaleString("vi-VN")}đ</td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
 
     // Tính toán giảm giá nếu có voucher
-    let discountInfo = '';
+    let discountInfo = "";
     if (order.voucher && order.voucher.discount !== undefined) {
       discountInfo = `
         <tr>
           <td colspan="5" style="text-align: right; padding: 10px;"><strong>Giảm giá:</strong></td>
-          <td style="padding: 10px;">${order.voucher.discount.toLocaleString('vi-VN')}đ</td>
+          <td style="padding: 10px;">${order.voucher.discount.toLocaleString(
+            "vi-VN"
+          )}đ</td>
         </tr>
       `;
     }
@@ -82,22 +91,38 @@ export async function sendOrderConfirmationEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Xác nhận đơn hàng</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name},</p>
+            <p style="font-size: 16px; color: #333;">Chào ${
+              receiverInfo.name
+            },</p>
             <p style="color: #333;">Cảm ơn bạn đã đặt hàng tại BeeStore. Đơn hàng của bạn đã được xác nhận thành công!.
              Bạn sẽ nhận được hàng trong 1 đến 2 ngày. Bạn có thể theo đơn hàng của mình tại Lịch sử đơn hàng trong tài khoản của mình </p>
 
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id}</p>
-              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(order.createdAt).toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Phương thức thanh toán:</strong> ${order.payment?.name || 'Chưa có thông tin'}</p>
-              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
+                order._id
+              }</p>
+              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
+                order.createdAt
+              ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Phương thức thanh toán:</strong> ${
+                order.payment?.name || "Chưa có thông tin"
+              }</p>
+              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${
+                order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+              }</p>
             </div>
 
             <h3 style="color: #333;">Thông tin người nhận</h3>
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-              <p style="margin: 5px 0;"><strong>Họ tên:</strong> ${receiverInfo.name}</p>
-              <p style="margin: 5px 0;"><strong>Địa chỉ:</strong> ${receiverInfo.address}</p>
-              <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${receiverInfo.phone}</p>
+              <p style="margin: 5px 0;"><strong>Họ tên:</strong> ${
+                receiverInfo.name
+              }</p>
+              <p style="margin: 5px 0;"><strong>Địa chỉ:</strong> ${
+                receiverInfo.address
+              }</p>
+              <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${
+                receiverInfo.phone
+              }</p>
               <p style="margin: 5px 0;"><strong>Email:</strong> ${userEmail}</p>
             </div>
 
@@ -120,11 +145,15 @@ export async function sendOrderConfirmationEmail(order) {
                 ${discountInfo}
                 <tr>
                   <td colspan="5" style="text-align: right; padding: 10px;"><strong>Phí vận chuyển:</strong></td>
-                  <td style="padding: 10px;">${shippingFee.toLocaleString('vi-VN')}đ</td>
+                  <td style="padding: 10px;">${shippingFee.toLocaleString(
+                    "vi-VN"
+                  )}đ</td>
                 </tr>
                 <tr style="background-color: #f2f2f2;">
                   <td colspan="5" style="text-align: right; padding: 10px;"><strong>Tổng thanh toán:</strong></td>
-                  <td style="padding: 10px; font-weight: bold;">${total.toLocaleString('vi-VN')}đ</td>
+                  <td style="padding: 10px; font-weight: bold;">${total.toLocaleString(
+                    "vi-VN"
+                  )}đ</td>
                 </tr>
               </tfoot>
             </table>
@@ -144,7 +173,6 @@ export async function sendOrderConfirmationEmail(order) {
 
     await transporter.sendMail(mailOptions);
     console.log("Email xác nhận đơn hàng đã được gửi đến:", userEmail);
-
   } catch (error) {
     console.error("Lỗi khi gửi email xác nhận đơn hàng:", error);
   }
@@ -247,8 +275,10 @@ export async function sendOrderShippingEmail(order) {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email thông báo đơn hàng đang giao đã được gửi đến:", userEmail);
-
+    console.log(
+      "Email thông báo đơn hàng đang giao đã được gửi đến:",
+      userEmail
+    );
   } catch (error) {
     console.error("Lỗi khi gửi email thông báo đơn hàng đang giao:", error);
   }
@@ -287,14 +317,26 @@ export async function sendOrderCancelledEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Đơn hàng đã bị hủy</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name},</p>
-            <p style="color: #333;">Chúng tôi xin thông báo rằng đơn hàng #${order._id} của bạn đã bị hủy.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${
+              receiverInfo.name
+            },</p>
+            <p style="color: #333;">Chúng tôi xin thông báo rằng đơn hàng #${
+              order._id
+            } của bạn đã bị hủy.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id}</p>
-              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(order.createdAt).toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Ngày hủy:</strong> ${new Date().toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Lý do:</strong> ${order.cancelReason || 'Không có thông tin'}</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
+                order._id
+              }</p>
+              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
+                order.createdAt
+              ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Ngày hủy:</strong> ${new Date().toLocaleString(
+                "vi-VN"
+              )}</p>
+              <p style="margin: 5px 0;"><strong>Lý do:</strong> ${
+                order.cancel_reason || "Không có thông tin"
+              }</p>
             </div>
 
             <p style="color: #333;">Nếu đơn hàng của bạn đã được thanh toán, số tiền sẽ được hoàn lại vào phương thức thanh toán ban đầu trong vòng 5-7 ngày làm việc.</p>
@@ -315,7 +357,6 @@ export async function sendOrderCancelledEmail(order) {
 
     await transporter.sendMail(mailOptions);
     console.log("Email thông báo đơn hàng bị hủy đã được gửi đến:", userEmail);
-
   } catch (error) {
     console.error("Lỗi khi gửi email thông báo đơn hàng bị hủy:", error);
   }
@@ -340,7 +381,9 @@ export async function sendOrderCompletedEmail(order) {
     }
 
     if (!userEmail) {
-      console.error("Không tìm thấy email để gửi thông báo đơn hàng giao thành công");
+      console.error(
+        "Không tìm thấy email để gửi thông báo đơn hàng giao thành công"
+      );
       return;
     }
 
@@ -354,14 +397,28 @@ export async function sendOrderCompletedEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Đơn hàng giao thành công</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name},</p>
-            <p style="color: #333;">Chúc mừng! Đơn hàng #${order._id} của bạn đã được giao thành công vào lúc ${new Date(order.completedAt || new Date()).toLocaleString('vi-VN')}.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${
+              receiverInfo.name
+            },</p>
+            <p style="color: #333;">Chúc mừng! Đơn hàng #${
+              order._id
+            } của bạn đã được giao thành công vào lúc ${new Date(
+        order.completedAt || new Date()
+      ).toLocaleString("vi-VN")}.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id}</p>
-              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(order.createdAt).toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Ngày giao hàng:</strong> ${new Date(order.completedAt || new Date()).toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
+                order._id
+              }</p>
+              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
+                order.createdAt
+              ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Ngày giao hàng:</strong> ${new Date(
+                order.completedAt || new Date()
+              ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${
+                order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+              }</p>
             </div>
 
             <p style="color: #333;">Cảm ơn bạn đã mua sắm tại BeeStore. Chúng tôi rất mong nhận được phản hồi của bạn về sản phẩm và trải nghiệm mua sắm.</p>
@@ -387,10 +444,15 @@ export async function sendOrderCompletedEmail(order) {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email thông báo đơn hàng giao thành công đã được gửi đến:", userEmail);
-
+    console.log(
+      "Email thông báo đơn hàng giao thành công đã được gửi đến:",
+      userEmail
+    );
   } catch (error) {
-    console.error("Lỗi khi gửi email thông báo đơn hàng giao thành công:", error);
+    console.error(
+      "Lỗi khi gửi email thông báo đơn hàng giao thành công:",
+      error
+    );
   }
 }
 
@@ -413,7 +475,9 @@ export async function sendOrderDeliveryFailedEmail(order) {
     }
 
     if (!userEmail) {
-      console.error("Không tìm thấy email để gửi thông báo đơn hàng giao thất bại");
+      console.error(
+        "Không tìm thấy email để gửi thông báo đơn hàng giao thất bại"
+      );
       return;
     }
 
@@ -427,16 +491,28 @@ export async function sendOrderDeliveryFailedEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Giao hàng thất bại</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name},</p>
-            <p style="color: #333;">Chúng tôi rất tiếc phải thông báo rằng việc giao hàng cho đơn hàng #${order._id} của bạn không thành công.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${
+              receiverInfo.name
+            },</p>
+            <p style="color: #333;">Chúng tôi rất tiếc phải thông báo rằng việc giao hàng cho đơn hàng #${
+              order._id
+            } của bạn không thành công.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id}</p>
-              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(order.createdAt).toLocaleString('vi-VN')}</p>
-              <p style="margin: 5px 0;"><strong>Lý do giao thất bại:</strong> ${order.failureReason || 'Không có người nhận hàng'}</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
+                order._id
+              }</p>
+              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
+                order.createdAt
+              ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Lý do giao thất bại:</strong> ${
+                order.cancel_reason || "Không có người nhận hàng"
+              }</p>
             </div>
 
-            <p style="color: #333;">Chúng tôi sẽ liên hệ lại với bạn qua số điện thoại ${receiverInfo.phone} để sắp xếp lại thời gian giao hàng hoặc thay đổi địa chỉ nếu cần thiết.</p>
+            <p style="color: #333;">Chúng tôi sẽ liên hệ lại với bạn qua số điện thoại ${
+              receiverInfo.phone
+            } để sắp xếp lại thời gian giao hàng hoặc thay đổi địa chỉ nếu cần thiết.</p>
             
             <p style="color: #333;">Vui lòng đảm bảo thông tin liên hệ của bạn đúng và số điện thoại luôn trong trạng thái liên lạc được.</p>
 
@@ -453,8 +529,10 @@ export async function sendOrderDeliveryFailedEmail(order) {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email thông báo đơn hàng giao thất bại đã được gửi đến:", userEmail);
-
+    console.log(
+      "Email thông báo đơn hàng giao thất bại đã được gửi đến:",
+      userEmail
+    );
   } catch (error) {
     console.error("Lỗi khi gửi email thông báo đơn hàng giao thất bại:", error);
   }
@@ -468,7 +546,7 @@ export async function sendOrderDeliveryFailedEmail(order) {
 export async function sendPasswordResetEmail(email) {
   try {
     // Tạo token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
     // Lưu token và thời gian hết hạn (5 phút)
     const user = await User.findOne({ email });
@@ -539,15 +617,15 @@ export async function sendPasswordResetEmail(email) {
 }
 
 // Đóng kết nối transporter khi ứng dụng dừng
-process.on('SIGTERM', () => {
-  if (transporter && typeof transporter.close === 'function') {
+process.on("SIGTERM", () => {
+  if (transporter && typeof transporter.close === "function") {
     transporter.close();
-    console.log('Email transporter closed');
+    console.log("Email transporter closed");
   }
 });
 
 export default {
   sendOrderConfirmationEmail,
   sendSignupVerificationEmail,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
 };
