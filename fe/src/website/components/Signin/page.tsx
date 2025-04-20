@@ -40,6 +40,24 @@ const Signin = () => {
     }
   }, [navigate]);
 
+  //fnc cart
+  const fncCart = async(idUserLogin:string)=>{
+    const cartItems = localStorage.getItem("cartItems");
+    const {data} = await axios.get(`http://localhost:3000/api/cart/${idUserLogin}`)
+    if(data){
+      if(!cartItems || cartItems.length == 0){
+        localStorage.setItem("cartItems", JSON.stringify(data));
+      }
+      else{
+        const dataUpdateCart = {
+          idUser: idUserLogin,
+          items: cartItems
+        }
+        await axios.patch(`http://localhost:3000/api/cart/${idUserLogin}/update`, dataUpdateCart);
+      }
+    }
+  }
+
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
       try {
@@ -48,12 +66,27 @@ const Signin = () => {
           `http://localhost:3000/api/signin_user`,
           formData
         );
-        localStorage.removeItem("cartItems");
 
         localStorage.setItem("userRole", response.data.data.role);
         localStorage.setItem("nameUser", response.data.data.name);
         localStorage.setItem("idUser", response.data.data._id);
         localStorage.setItem("user", JSON.stringify(response.data.data));
+
+        const checkCart = await axios.get(`http://localhost:3000/api/cart/${response.data.data._id}`)
+        if (checkCart.status == 200) {
+          console.log("Đã có cart");
+          fncCart(response.data.data._id);
+        } else {
+          //chưa có thì tạo mới
+          const newCart = await axios.post(`http://localhost:3000/api/cart/${response.data.data._id}/create`)
+          .then(() => {
+            console.log("Tạo thành công", newCart);
+            fncCart(response.data.data._id);
+          })
+          .catch(() => {
+            console.log("Tạo cart thất bại");
+          });
+        }      
         return response.data.data.role;
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {

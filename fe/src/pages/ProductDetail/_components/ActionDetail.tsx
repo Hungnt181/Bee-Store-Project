@@ -686,10 +686,11 @@ ActionDetail) {
 
       setCartItems(updatedCartItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+      message.success("Thêm sản phẩm thành công", 3);
     } else {
+      message.error("Đã có lỗi xảy ra. Vui lòng tải lại trang", 3);
       // setCartItems([])
     }
-    message.success("Thêm sản phẩm thành công", 3);
     // setIsModalOpen(true);
   };
   // const handleCheckout = () => {

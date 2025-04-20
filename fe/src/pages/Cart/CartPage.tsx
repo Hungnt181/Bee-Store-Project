@@ -32,6 +32,12 @@ interface CartModalItemDetail {
 //     onCheckout: () => void;
 // }
 
+interface CartItemTable {
+  idVariant: string;
+  quantity: number;
+}
+
+
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [cartModalItems, setCartModalItems] = useState<CartModalItemDetail[]>(
@@ -41,17 +47,7 @@ const CartPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Lấy dữ liệu từ localStorage khi component được khởi tạo
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
-  }, []);
 
-  // if (cartItems && cartItems[0]) {
-  //   console.log(cartItems[0]);
-  // }
 
   const getPdts = async (idProduct: string) => {
     try {
@@ -76,29 +72,132 @@ const CartPage: React.FC = () => {
       console.log("ko lấy đc bien the từ id");
     }
   };
+  const getColor = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/colors/" + id
+      );
+      // console.log('mau', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+  const getSize = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/sizes/" + id
+      );
+      // console.log('size', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+
+
+  // Lấy dữ liệu từ localStorage khi component được khởi tạo
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const idUser = localStorage.getItem("idUser");
+        if (!idUser) {
+          console.error("Không tìm thấy idUser trong localStorage.");
+          const storedCartItems = localStorage.getItem("cartItems");
+          if (storedCartItems) {
+            setCartItems(JSON.parse(storedCartItems));
+          }
+          return;
+        }
+  
+        const localCartItems = localStorage.getItem("cartItems");
+        if (localCartItems) {
+          let payLoadforCart = [];
+          try {
+            payLoadforCart = JSON.parse(localCartItems).map((item:CartItemTable) => {
+              const { idVariant, quantity } = item;
+              return { idVariant, quantity };
+            });
+          } catch (error) {
+            console.error("Lỗi khi parse localCartItems");
+            return;
+          }
+  
+          try {
+            await axios.patch(`http://localhost:3000/api/cart/${idUser}/update`, payLoadforCart);
+          } catch (error) {
+            console.error("Lỗi khi cập nhật cart");
+          }
+        }
+  
+        const { data } = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+        console.log(data.data.items);
+  
+        const updatedFromCartDB = [];
+        for (const item of data.data.items) {
+          const variantData = await getVariant(item.idVariant);
+          if (!variantData) {
+            console.error("Không tìm thấy variantData:", item.idVariant);
+            return;
+          }
+          const productData = await getPdts(variantData.id_product);
+          const colorData = await getColor(variantData.id_color);
+          const sizeData = await getSize(variantData.id_size);
+          
+          if (productData) {
+            updatedFromCartDB.push({
+              idProduct: variantData.id_product,
+              idVariant: item.idVariant,
+              nameProduct: productData.name,
+              price: productData.price,
+              color: colorData?.hexcode,
+              nameColor: colorData?.name,
+              size: sizeData?.name,
+              quantity: item.quantity,
+              totalPrice: productData.price * item.quantity,
+            });
+          }
+        }
+  
+        setCartItems(updatedFromCartDB);
+        localStorage.setItem('cartItems', JSON.stringify(updatedFromCartDB));
+      } catch (error) {
+        console.error("Lỗi khi xử lý giỏ hàng");
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  // if (cartItems && cartItems[0]) {
+  //   console.log(cartItems[0]);
+  // }
+
 
   const fetchProducts = async () => {
     const updatedCartModalItems: CartModalItemDetail[] = [];
-    for (const cartItem of cartItems) {
-      const productData = await getPdts(cartItem.idProduct);
-      if (productData) {
-        const newCartModalItem: CartModalItemDetail = {
-          idProduct: cartItem.idProduct,
-          idVariant: cartItem.idVariant,
-          nameProduct: productData.name,
-          price: productData.price,
-          color: cartItem.color,
-          nameColor: cartItem.nameColor,
-          size: cartItem.size,
-          quantity: cartItem.quantity,
-          totalPrice: productData.price * cartItem.quantity,
-        };
-        updatedCartModalItems.push(newCartModalItem);
+    if (cartItems.length > 0) {
+      for (const cartItem of cartItems) {
+        const productData = await getPdts(cartItem.idProduct);
+        if (productData) {
+          const newCartModalItem: CartModalItemDetail = {
+            idProduct: cartItem.idProduct,
+            idVariant: cartItem.idVariant,
+            nameProduct: productData.name,
+            price: productData.price,
+            color: cartItem.color,
+            nameColor: cartItem.nameColor,
+            size: cartItem.size,
+            quantity: cartItem.quantity,
+            totalPrice: productData.price * cartItem.quantity,
+          };
+          updatedCartModalItems.push(newCartModalItem);
+        }
       }
     }
     setCartModalItems(updatedCartModalItems);
     calculateTotalPrice(updatedCartModalItems);
-    // console.log(cartModalItems);
+    console.log(cartItems);
   };
 
   const calculateTotalPrice = (items: CartModalItemDetail[]) => {
