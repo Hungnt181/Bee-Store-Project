@@ -31,10 +31,16 @@ export default function Header() {
   }, []);
 
   // lấy cartItems từ localstorage
-  const updateCartCount = () => {
-    const storedCartItems = localStorage.getItem("cartItems");
+  const updateCartCount = async() => {
+    const idUser = localStorage.getItem("idUser");
+    if(!idUser){
+      return setNumberInCart(0);
+    }
+    const storedCartItems = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+    // console.log(storedCartItems.data.data.items);
+    
     if (storedCartItems) {
-      const cartCount = Object.keys(JSON.parse(storedCartItems)).length;
+      const cartCount = storedCartItems.data.data.items.length;
       setNumberInCart(cartCount);
       console.log("Cập nhật số lượng:", cartCount);
     } else {
@@ -45,14 +51,8 @@ export default function Header() {
   //rerender so luong
   useEffect(() => {
     updateCartCount();
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key == "cartItems") {
-        updateCartCount();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
     // return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [location]);
 
   const idUser = localStorage.getItem("idUser");
   // Thêm query để lấy thông tin user

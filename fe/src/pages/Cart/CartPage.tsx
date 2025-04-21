@@ -32,26 +32,18 @@ interface CartModalItemDetail {
 //     onCheckout: () => void;
 // }
 
+
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [cartModalItems, setCartModalItems] = useState<CartModalItemDetail[]>(
     []
   );
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const idUser = localStorage.getItem("idUser");
 
   const navigate = useNavigate();
 
-  // Lấy dữ liệu từ localStorage khi component được khởi tạo
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
-  }, []);
 
-  // if (cartItems && cartItems[0]) {
-  //   console.log(cartItems[0]);
-  // }
 
   const getPdts = async (idProduct: string) => {
     try {
@@ -76,29 +68,106 @@ const CartPage: React.FC = () => {
       console.log("ko lấy đc bien the từ id");
     }
   };
+  const getColor = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/colors/" + id
+      );
+      // console.log('mau', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+  const getSize = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/sizes/" + id
+      );
+      // console.log('size', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+
+
+  // Lấy dữ liệu từ localStorage khi component được khởi tạo
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const idUser = localStorage.getItem("idUser");
+        if (!idUser) {
+          // console.error("Không tìm thấy idUser trong localStorage.");
+          const storedCartItems = localStorage.getItem("cartItems");
+          if (storedCartItems) {
+            setCartItems(JSON.parse(storedCartItems));
+          }
+          return;
+        }
+
+
+        const { data } = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+        console.log(data.data.items);
+
+        const updatedFromCartDB = [];
+        for (const item of data.data.items) {
+          const productData = await getPdts(item.idProduct);
+
+          if (productData) {
+            updatedFromCartDB.push({
+              idProduct: item.idProduct,
+              idVariant: item.idVariant,
+              nameProduct: productData.name,
+              price: productData.price,
+              color: item.color,
+              nameColor: item.nameColor,
+              size: item.size,
+              quantity: item.quantity,
+              totalPrice: productData.price * item.quantity,
+            });
+          }
+        }
+
+        setCartItems(updatedFromCartDB);
+        localStorage.setItem('cartItems', JSON.stringify(updatedFromCartDB));
+      } catch (error) {
+        console.error("Lỗi khi xử lý giỏ hàng");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // if (cartItems && cartItems[0]) {
+  //   console.log(cartItems[0]);
+  // }
+
 
   const fetchProducts = async () => {
     const updatedCartModalItems: CartModalItemDetail[] = [];
-    for (const cartItem of cartItems) {
-      const productData = await getPdts(cartItem.idProduct);
-      if (productData) {
-        const newCartModalItem: CartModalItemDetail = {
-          idProduct: cartItem.idProduct,
-          idVariant: cartItem.idVariant,
-          nameProduct: productData.name,
-          price: productData.price,
-          color: cartItem.color,
-          nameColor: cartItem.nameColor,
-          size: cartItem.size,
-          quantity: cartItem.quantity,
-          totalPrice: productData.price * cartItem.quantity,
-        };
-        updatedCartModalItems.push(newCartModalItem);
+    if (cartItems.length > 0) {
+      for (const cartItem of cartItems) {
+        const productData = await getPdts(cartItem.idProduct);
+        if (productData) {
+          const newCartModalItem: CartModalItemDetail = {
+            idProduct: cartItem.idProduct,
+            idVariant: cartItem.idVariant,
+            nameProduct: productData.name,
+            price: productData.price,
+            color: cartItem.color,
+            nameColor: cartItem.nameColor,
+            size: cartItem.size,
+            quantity: cartItem.quantity,
+            totalPrice: productData.price * cartItem.quantity,
+          };
+          updatedCartModalItems.push(newCartModalItem);
+        }
       }
     }
     setCartModalItems(updatedCartModalItems);
     calculateTotalPrice(updatedCartModalItems);
-    // console.log(cartModalItems);
+    // console.log(cartItems);
   };
 
   const calculateTotalPrice = (items: CartModalItemDetail[]) => {
@@ -137,9 +206,19 @@ const CartPage: React.FC = () => {
     updatedCartItems[index].quantity = newQuantity;
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    // cập nhật bảng cart
+    if (idUser) {
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/updateQuantity/${cartItems[index].idVariant}`,{quantity: newQuantity});
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
-  const handleRemove = (index: number) => {
+  const handleRemove = async(index: number) => {
     const afterFilterCartModalItems = cartModalItems.filter(
       (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
     );
@@ -151,6 +230,16 @@ const CartPage: React.FC = () => {
     );
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    //cap nhat bảng Cart
+    if(idUser){
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/delete/${cartItems[index].idVariant}`);
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
   const onCheckout = () => {
