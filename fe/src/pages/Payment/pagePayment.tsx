@@ -238,7 +238,7 @@ const PaymentPage = () => {
 
       const updatedListCheckout: ItemCheckout[] = [];
       const updatedListItemOrder: ItemOrder[] = [];
-      console.log("cartItems--", cartItems);
+      // console.log("cartItems--", cartItems);
 
       cartItems.forEach((cartItem, index) => {
         const productData = products[index];
@@ -256,7 +256,7 @@ const PaymentPage = () => {
             quantity: cartItem.quantity,
             totalPrice: productData.price * cartItem.quantity,
           });
-          console.log("nameColor--", cartItem.nameColor);
+          // console.log("nameColor--", cartItem.nameColor);
 
           // Thêm trường uniqueId để đảm bảo tính duy nhất của mỗi item
           updatedListItemOrder.push({
@@ -371,7 +371,7 @@ const PaymentPage = () => {
     }
   };
 
-  console.log("itemOrder---", itemOrder);
+  // console.log("itemOrder---", itemOrder);
 
   // Thanh toán tiền mặt
   const handleShipCodPayment = async () => {
@@ -492,9 +492,16 @@ const PaymentPage = () => {
         );
         //storedCartItems - Tất cả sản phẩm trong cart
         //cartItems - Tất cả sản phẩm để thanh toán
-
+        
         //cập nhật lại cart sau khi thanh toán
         localStorage.setItem("cartItems", JSON.stringify(listItemAfterPay));
+        try {
+          const updateTableCart = await axios.patch(`http://localhost:3000/api/cart/${id}/updateItems`,{items:listItemAfterPay})
+          
+          console.log('Thanh cong');  
+        } catch (error) {
+          console.error("Lỗi khi cập nhật giỏ hàng:", error);
+        }
         localStorage.removeItem("selectedItemArray");
         //clear cart items
         setCartItems([]);

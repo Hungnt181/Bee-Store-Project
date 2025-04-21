@@ -185,6 +185,38 @@ export const updateItemQuantity = async (req, res) => {
   }
 };
 
+//thay thế items
+export const updateCartItems = async (req, res) => {
+  try {
+    const { idUser } = req.params;
+    const { items } = req.body;
+    if (!idUser) {
+      return res.status(400).json({ message: "Thiếu thông tin người dùng." });
+    }
+    const cart = await Cart.findOne({ idUser });
+    if (!cart) {
+      return res.status(404).json({ message: "Giỏ hàng không tồn tại cho người dùng này." });
+    }
+    // Kiểm tra tính hợp lệ của từng item trong mảng
+    items.forEach(({ idProduct, idVariant, color, nameColor, size, quantity }) => {
+      if (!idProduct || !idVariant || typeof quantity !== "number" || quantity <= 0) {
+        throw new Error("Dữ liệu sản phẩm không hợp lệ: thiếu `idProduct`, `idVariant`, hoặc `quantity` không chính xác.");
+      }
+    });
+    cart.items = items;
+    await cart.save();
+    return res.status(200).json({
+      message: "Cập nhật giỏ hàng thành công.",
+      data: cart,
+    });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật giỏ hàng:", error.message);
+    return res.status(500).json({
+      message: "Cập nhật giỏ hàng thất bại.",
+      error: error.message,
+    });
+  }
+};
 
 export const deleteCartItem = async (req, res) => {
   try {
