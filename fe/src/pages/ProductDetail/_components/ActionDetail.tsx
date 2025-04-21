@@ -544,9 +544,6 @@ export default function ActionDetail({
   const [statusVariant, setStatusVariant] = useState(false);
   const [quantityVariant, setQuantityVariant] = useState(false);
   const [isSizeChartVisible, setIsSizeChartVisible] = useState(false);
-  // const handleClickBuy = () => {
-  //   // console.log(quantity);
-  // };
 
   useEffect(() => {
     if (variants.length > 0) {
@@ -631,6 +628,11 @@ export default function ActionDetail({
   };
   const { id } = useParams();
   const handleClickBuy = async () => {
+    const idUser = localStorage.getItem('idUser')
+    if(!idUser){
+      message.error("Vui lòng đăng nhập để thêm sản phẩm", 3);
+      return;
+    }
     // Lấy các mặt hàng giỏ hàng từ localStorage
     const storedCartItems = localStorage.getItem("cartItems");
     const initialCartItems = storedCartItems ? JSON.parse(storedCartItems) : [];
@@ -687,7 +689,6 @@ export default function ActionDetail({
       } else {
         updatedCartItems = [...initialCartItems, newItem];
       }
-      const idUser = localStorage.getItem('idUser')
       if (idUser) {
         //cick thêm newItem vô cart
         console.log(updatedCartItems);

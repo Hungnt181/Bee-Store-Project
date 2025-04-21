@@ -98,7 +98,7 @@ const CartPage: React.FC = () => {
       try {
         const idUser = localStorage.getItem("idUser");
         if (!idUser) {
-          console.error("Không tìm thấy idUser trong localStorage.");
+          // console.error("Không tìm thấy idUser trong localStorage.");
           const storedCartItems = localStorage.getItem("cartItems");
           if (storedCartItems) {
             setCartItems(JSON.parse(storedCartItems));
