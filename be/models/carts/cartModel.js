@@ -4,10 +4,24 @@ const cartSchema = new mongoose.Schema(
   {
     items: [
       {
+        idProduct:{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
         idVariant: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Variant",
           required: true,
+        },
+        color:{
+          type: String,
+        },
+        nameColor:{
+          type: String,
+        },
+        size:{
+          type: String,
         },
         quantity: {
           type: Number,

@@ -32,11 +32,6 @@ interface CartModalItemDetail {
 //     onCheckout: () => void;
 // }
 
-interface CartItemTable {
-  idVariant: string;
-  quantity: number;
-}
-
 
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
@@ -44,6 +39,7 @@ const CartPage: React.FC = () => {
     []
   );
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const idUser = localStorage.getItem("idUser");
 
   const navigate = useNavigate();
 
@@ -109,63 +105,37 @@ const CartPage: React.FC = () => {
           }
           return;
         }
-  
-        const localCartItems = localStorage.getItem("cartItems");
-        if (localCartItems) {
-          let payLoadforCart = [];
-          try {
-            payLoadforCart = JSON.parse(localCartItems).map((item:CartItemTable) => {
-              const { idVariant, quantity } = item;
-              return { idVariant, quantity };
-            });
-          } catch (error) {
-            console.error("Lỗi khi parse localCartItems");
-            return;
-          }
-  
-          try {
-            await axios.patch(`http://localhost:3000/api/cart/${idUser}/update`, payLoadforCart);
-          } catch (error) {
-            console.error("Lỗi khi cập nhật cart");
-          }
-        }
-  
+
+
         const { data } = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
         console.log(data.data.items);
-  
+
         const updatedFromCartDB = [];
         for (const item of data.data.items) {
-          const variantData = await getVariant(item.idVariant);
-          if (!variantData) {
-            console.error("Không tìm thấy variantData:", item.idVariant);
-            return;
-          }
-          const productData = await getPdts(variantData.id_product);
-          const colorData = await getColor(variantData.id_color);
-          const sizeData = await getSize(variantData.id_size);
-          
+          const productData = await getPdts(item.idProduct);
+
           if (productData) {
             updatedFromCartDB.push({
-              idProduct: variantData.id_product,
+              idProduct: item.idProduct,
               idVariant: item.idVariant,
               nameProduct: productData.name,
               price: productData.price,
-              color: colorData?.hexcode,
-              nameColor: colorData?.name,
-              size: sizeData?.name,
+              color: item.color,
+              nameColor: item.nameColor,
+              size: item.size,
               quantity: item.quantity,
               totalPrice: productData.price * item.quantity,
             });
           }
         }
-  
+
         setCartItems(updatedFromCartDB);
         localStorage.setItem('cartItems', JSON.stringify(updatedFromCartDB));
       } catch (error) {
         console.error("Lỗi khi xử lý giỏ hàng");
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -197,7 +167,7 @@ const CartPage: React.FC = () => {
     }
     setCartModalItems(updatedCartModalItems);
     calculateTotalPrice(updatedCartModalItems);
-    console.log(cartItems);
+    // console.log(cartItems);
   };
 
   const calculateTotalPrice = (items: CartModalItemDetail[]) => {
@@ -236,9 +206,19 @@ const CartPage: React.FC = () => {
     updatedCartItems[index].quantity = newQuantity;
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    // cập nhật bảng cart
+    if (idUser) {
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/updateQuantity/${cartItems[index].idVariant}`,{quantity: newQuantity});
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
-  const handleRemove = (index: number) => {
+  const handleRemove = async(index: number) => {
     const afterFilterCartModalItems = cartModalItems.filter(
       (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
     );
@@ -250,6 +230,16 @@ const CartPage: React.FC = () => {
     );
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    //cap nhat bảng Cart
+    if(idUser){
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/delete/${cartItems[index].idVariant}`);
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
   const onCheckout = () => {

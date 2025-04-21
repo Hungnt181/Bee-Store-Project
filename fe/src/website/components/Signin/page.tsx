@@ -46,12 +46,12 @@ const Signin = () => {
     const {data} = await axios.get(`http://localhost:3000/api/cart/${idUserLogin}`)
     if(data){
       if(!cartItems || cartItems.length == 0){
-        localStorage.setItem("cartItems", JSON.stringify(data));
+        localStorage.setItem("cartItems", JSON.stringify(data.data.items));
       }
       else{
         const dataUpdateCart = {
           idUser: idUserLogin,
-          items: cartItems
+          items: JSON.parse(cartItems)
         }
         await axios.patch(`http://localhost:3000/api/cart/${idUserLogin}/update`, dataUpdateCart);
       }
@@ -65,13 +65,7 @@ const Signin = () => {
         const response = await axios.post(
           `http://localhost:3000/api/signin_user`,
           formData
-        );
-
-        localStorage.setItem("userRole", response.data.data.role);
-        localStorage.setItem("nameUser", response.data.data.name);
-        localStorage.setItem("idUser", response.data.data._id);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-
+        )
         const checkCart = await axios.get(`http://localhost:3000/api/cart/${response.data.data._id}`)
         if (checkCart.status == 200) {
           console.log("Đã có cart");
@@ -86,7 +80,12 @@ const Signin = () => {
           .catch(() => {
             console.log("Tạo cart thất bại");
           });
-        }      
+        }  
+
+        localStorage.setItem("userRole", response.data.data.role);
+        localStorage.setItem("nameUser", response.data.data.name);
+        localStorage.setItem("idUser", response.data.data._id);
+        localStorage.setItem("user", JSON.stringify(response.data.data));    
         return response.data.data.role;
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -124,10 +123,25 @@ const Signin = () => {
       message.error("Không nhận được thông tin từ Google");
       return;
     }
+    
 
     try {
       const res = await requestLoginGoogle(credential);
-      localStorage.removeItem("cartItems");
+      const checkCart = await axios.get(`http://localhost:3000/api/cart/${res.user._id}`)
+      if (checkCart.data.data != null) {
+        // console.log("Đã có cart");
+        fncCart(res.user._id);
+      } else {
+        //chưa có thì tạo mới
+        try {
+          const newCart = await axios.post(`http://localhost:3000/api/cart/${res.user._id}/create`);
+          // console.log("Tạo thành công", newCart.data);
+          fncCart(res.user._id);
+        } catch (error) {
+          console.error("Tạo cart thất bại");
+        }
+      }  
+      // localStorage.removeItem("cartItems");
 
       localStorage.setItem("idUser", res.user._id);
       localStorage.setItem("userRole", res.user.role);
