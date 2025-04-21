@@ -47,13 +47,22 @@ import OrderDetail from "./pages/Account/Orders/_components/OrderDetail";
 import AdminBannerList from "./admin/Banner/page";
 import AdminBannerAdd from "./admin/Banner/Add/page";
 import VoucherPageBee from "./pages/Vouchers/VoucherPage";
-import PrivateRoute, { AdminForbiddenRoute, PublicRoute } from "./website/components/PrivateRoute/page";
+import PrivateRoute, {
+  AdminForbiddenRoute,
+  PublicRoute,
+} from "./website/components/PrivateRoute/page";
 import NotificationPage from "./admin/Notification/page";
+import ComplaintPage from "./admin/Complaint/page";
+import VoucherDetailPage from "./admin/Voucher/Detail/page";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <AdminForbiddenRoute><ClientLayout /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <ClientLayout />
+      </AdminForbiddenRoute>
+    ),
     errorElement: <Navigate to={"/"} />,
     children: [
       { index: true, element: <HomePage /> },
@@ -64,17 +73,29 @@ export const router = createBrowserRouter([
       { path: "/payment", element: <PaymentPage /> },
       {
         path: "/signin",
-        element: <PublicRoute><Signin /></PublicRoute>
+        element: (
+          <PublicRoute>
+            <Signin />
+          </PublicRoute>
+        ),
       },
       {
         path: "/signup",
-        element: <PublicRoute><Signup /></PublicRoute>
+        element: (
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        ),
       },
       { path: "/reset/:token", element: <ResetPassword /> },
       { path: "/forgot", element: <ForgotPassword /> },
       {
         path: "/account",
-        element: <PrivateRoute requiredRole="user" adminForbidden={true}><AccountLayout /></PrivateRoute>,
+        element: (
+          <PrivateRoute requiredRole="user" adminForbidden={true}>
+            <AccountLayout />
+          </PrivateRoute>
+        ),
         children: [
           {
             index: true,
@@ -98,23 +119,43 @@ export const router = createBrowserRouter([
   },
   {
     path: "/invoice",
-    element: <AdminForbiddenRoute><OrderConfirmation /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <OrderConfirmation />
+      </AdminForbiddenRoute>
+    ),
   },
   {
     path: "/VnPayQR",
-    element: <AdminForbiddenRoute><PaymentPageOl /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <PaymentPageOl />
+      </AdminForbiddenRoute>
+    ),
   },
   {
     path: "/notify",
-    element: <AdminForbiddenRoute><PaymentSuccess /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <PaymentSuccess />
+      </AdminForbiddenRoute>
+    ),
   },
   {
     path: "/notify2",
-    element: <AdminForbiddenRoute><PaymentSuccess2 /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <PaymentSuccess2 />
+      </AdminForbiddenRoute>
+    ),
   },
   {
     path: "/cancel",
-    element: <AdminForbiddenRoute><OrderCancelled /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <OrderCancelled />
+      </AdminForbiddenRoute>
+    ),
   },
 
   {
@@ -123,7 +164,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/success",
-    element: <AdminForbiddenRoute><Success /></AdminForbiddenRoute>,
+    element: (
+      <AdminForbiddenRoute>
+        <Success />
+      </AdminForbiddenRoute>
+    ),
   },
   {
     path: "/admin",
@@ -151,6 +196,7 @@ export const router = createBrowserRouter([
       { path: "/admin/category", element: <AdminCategory /> },
       { path: "/admin/voucher", element: <VoucherPage /> },
       { path: "/admin/voucher/add", element: <VoucherAddPage /> },
+       { path: "/admin/voucher/:id", element: <VoucherDetailPage /> },
       { path: "/admin/voucher/:id/edit", element: <VoucherEditPage /> },
       { path: "/admin/admin_account", element: <AdminAccountPage /> },
       { path: "/admin/user_account", element: <UserAccountPage /> },
@@ -160,6 +206,7 @@ export const router = createBrowserRouter([
       { path: "/admin/banner", element: <AdminBannerList /> },
       { path: "/admin/banner/add", element: <AdminBannerAdd /> },
       { path: "/admin/notification", element: <NotificationPage /> },
+      { path: "/admin/complaint", element: <ComplaintPage /> },
     ],
   },
 ]);

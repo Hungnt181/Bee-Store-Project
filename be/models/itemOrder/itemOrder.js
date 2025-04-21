@@ -12,6 +12,22 @@ const ItemOrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    nameColor: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: String,
+      required: true,
+    },
     id_variant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Variant",

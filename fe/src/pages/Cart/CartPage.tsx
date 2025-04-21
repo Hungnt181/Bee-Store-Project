@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Button, message, Modal, Table } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import type { TableRowSelection } from 'antd/es/table/interface';
+import type { TableRowSelection } from "antd/es/table/interface";
 import { formatCurrency } from "../../helpers/utils";
-
 
 interface CartItemDetail {
   idProduct: string;
   idVariant: string;
   color: string;
+  nameColor: string;
   size: string;
   quantity: number;
 }
@@ -19,6 +19,7 @@ interface CartModalItemDetail {
   nameProduct: string;
   price: number;
   color: string;
+  nameColor: string;
   size: string;
   quantity: number;
   totalPrice: number;
@@ -31,26 +32,18 @@ interface CartModalItemDetail {
 //     onCheckout: () => void;
 // }
 
+
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemDetail[]>([]);
   const [cartModalItems, setCartModalItems] = useState<CartModalItemDetail[]>(
     []
   );
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const idUser = localStorage.getItem("idUser");
 
   const navigate = useNavigate();
 
-  // Lấy dữ liệu từ localStorage khi component được khởi tạo
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
-  }, []);
 
-  // if (cartItems && cartItems[0]) {
-  //   console.log(cartItems[0]);
-  // }
 
   const getPdts = async (idProduct: string) => {
     try {
@@ -75,28 +68,106 @@ const CartPage: React.FC = () => {
       console.log("ko lấy đc bien the từ id");
     }
   };
+  const getColor = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/colors/" + id
+      );
+      // console.log('mau', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+  const getSize = async (id: string) => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/sizes/" + id
+      );
+      // console.log('size', data);
+      return data.data;
+    } catch (error) {
+      console.log("ko lấy đc bien the từ id");
+    }
+  }
+
+
+  // Lấy dữ liệu từ localStorage khi component được khởi tạo
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const idUser = localStorage.getItem("idUser");
+        if (!idUser) {
+          // console.error("Không tìm thấy idUser trong localStorage.");
+          const storedCartItems = localStorage.getItem("cartItems");
+          if (storedCartItems) {
+            setCartItems(JSON.parse(storedCartItems));
+          }
+          return;
+        }
+
+
+        const { data } = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+        console.log(data.data.items);
+
+        const updatedFromCartDB = [];
+        for (const item of data.data.items) {
+          const productData = await getPdts(item.idProduct);
+
+          if (productData) {
+            updatedFromCartDB.push({
+              idProduct: item.idProduct,
+              idVariant: item.idVariant,
+              nameProduct: productData.name,
+              price: productData.price,
+              color: item.color,
+              nameColor: item.nameColor,
+              size: item.size,
+              quantity: item.quantity,
+              totalPrice: productData.price * item.quantity,
+            });
+          }
+        }
+
+        setCartItems(updatedFromCartDB);
+        localStorage.setItem('cartItems', JSON.stringify(updatedFromCartDB));
+      } catch (error) {
+        console.error("Lỗi khi xử lý giỏ hàng");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // if (cartItems && cartItems[0]) {
+  //   console.log(cartItems[0]);
+  // }
+
 
   const fetchProducts = async () => {
     const updatedCartModalItems: CartModalItemDetail[] = [];
-    for (const cartItem of cartItems) {
-      const productData = await getPdts(cartItem.idProduct);
-      if (productData) {
-        const newCartModalItem: CartModalItemDetail = {
-          idProduct: cartItem.idProduct,
-          idVariant: cartItem.idVariant,
-          nameProduct: productData.name,
-          price: productData.price,
-          color: cartItem.color,
-          size: cartItem.size,
-          quantity: cartItem.quantity,
-          totalPrice: productData.price * cartItem.quantity,
-        };
-        updatedCartModalItems.push(newCartModalItem);
+    if (cartItems.length > 0) {
+      for (const cartItem of cartItems) {
+        const productData = await getPdts(cartItem.idProduct);
+        if (productData) {
+          const newCartModalItem: CartModalItemDetail = {
+            idProduct: cartItem.idProduct,
+            idVariant: cartItem.idVariant,
+            nameProduct: productData.name,
+            price: productData.price,
+            color: cartItem.color,
+            nameColor: cartItem.nameColor,
+            size: cartItem.size,
+            quantity: cartItem.quantity,
+            totalPrice: productData.price * cartItem.quantity,
+          };
+          updatedCartModalItems.push(newCartModalItem);
+        }
       }
     }
     setCartModalItems(updatedCartModalItems);
     calculateTotalPrice(updatedCartModalItems);
-    // console.log(cartModalItems);
+    // console.log(cartItems);
   };
 
   const calculateTotalPrice = (items: CartModalItemDetail[]) => {
@@ -135,9 +206,19 @@ const CartPage: React.FC = () => {
     updatedCartItems[index].quantity = newQuantity;
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    // cập nhật bảng cart
+    if (idUser) {
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/updateQuantity/${cartItems[index].idVariant}`,{quantity: newQuantity});
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
-  const handleRemove = (index: number) => {
+  const handleRemove = async(index: number) => {
     const afterFilterCartModalItems = cartModalItems.filter(
       (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
     );
@@ -149,17 +230,25 @@ const CartPage: React.FC = () => {
     );
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
+
+    //cap nhat bảng Cart
+    if(idUser){
+      try {
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/delete/${cartItems[index].idVariant}`);
+        console.log("Đã cập nhật giỏ hàng");
+      } catch (error) {
+        console.error("Lỗi cập nhật giỏ hàng");
+      }
+    }
   };
 
   const onCheckout = () => {
-    if ((selectedItemArray) && (selectedItemArray.length > 0)) {
+    if (selectedItemArray && selectedItemArray.length > 0) {
       navigate("/payment");
-    }
-    else {
-      if (cartItems && cartItems.length > 0){
+    } else {
+      if (cartItems && cartItems.length > 0) {
         message.error("Cần chọn sản phẩm để thanh toán", 3);
-      }
-      else{
+      } else {
         message.error("Không có sản phẩm để thanh toán", 3);
       }
       return;
@@ -172,15 +261,17 @@ const CartPage: React.FC = () => {
       dataIndex: "nameProduct",
       key: "nameProduct",
       render: (nameProduct: string, record: CartModalItemDetail) => (
-        <Link to={`/products/${record.idProduct}`} ><span className="text-black">{nameProduct}</span></Link>
+        <Link to={`/products/${record.idProduct}`}>
+          <span className="text-black">{nameProduct}</span>
+        </Link>
       ),
     },
     {
       title: "Giá",
       dataIndex: "price",
       key: "price",
-      render: (_text:string, record: CartModalItemDetail) => (
-        <span>{formatCurrency(record.price, 'vnd')}</span>
+      render: (_text: string, record: CartModalItemDetail) => (
+        <span>{formatCurrency(record.price, "vnd")}</span>
       ),
     },
     {
@@ -213,11 +304,15 @@ const CartPage: React.FC = () => {
           >
             -
           </Button>
-          <div className="quantity mx-2 w-[20px] text-center">{record.quantity}</div>
+          <div className="quantity mx-2 w-[20px] text-center">
+            {record.quantity}
+          </div>
           <Button
             onClick={() => handleQuantityChange(index, 1)}
             style={{ height: "30px", width: "30px" }}
-          >+</Button>
+          >
+            +
+          </Button>
         </div>
       ),
     },
@@ -226,13 +321,15 @@ const CartPage: React.FC = () => {
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (_text: string, record: CartModalItemDetail) => (
-        <span className="font-bold">{formatCurrency(record.price * record.quantity, 'vnd')}</span>
+        <span className="font-bold">
+          {formatCurrency(record.price * record.quantity, "vnd")}
+        </span>
       ),
     },
     {
       title: "#",
       key: "action",
-      render: (_text:string, _record: CartModalItemDetail, index: number) => (
+      render: (_text: string, _record: CartModalItemDetail, index: number) => (
         <Button onClick={() => handleRemove(index)}>Xóa</Button>
       ),
     },
@@ -240,23 +337,22 @@ const CartPage: React.FC = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
 
-  const [selectedItemArray, setSelectedItemArray] = useState<any>([])
+  const [selectedItemArray, setSelectedItemArray] = useState<any>([]);
   useEffect(() => {
     if (selectedRowKeys.length > 0) {
-      const newSelectedItemArray = selectedRowKeys.map((index) =>
-        cartModalItems[Number(index)]
+      const newSelectedItemArray = selectedRowKeys.map(
+        (index) => cartModalItems[Number(index)]
       );
       //cartModalItems.map(index => selectedRowKeys[Number(index)])
-      setSelectedItemArray(newSelectedItemArray)
-    }
-    else {
+      setSelectedItemArray(newSelectedItemArray);
+    } else {
       setSelectedItemArray([]);
     }
   }, [selectedRowKeys, cartModalItems]);
@@ -264,7 +360,10 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     // console.log("selectedItemArray updated:", selectedItemArray);
     if (selectedItemArray.length > 0) {
-      localStorage.setItem("selectedItemArray", JSON.stringify(selectedItemArray));
+      localStorage.setItem(
+        "selectedItemArray",
+        JSON.stringify(selectedItemArray)
+      );
     } else {
       localStorage.removeItem("selectedItemArray");
     }
@@ -278,11 +377,14 @@ const CartPage: React.FC = () => {
             rowSelection={rowSelection}
             dataSource={cartModalItems}
             columns={columns}
-            rowKey={(_record, index) => (index)?(index.toString()): ''}
+            rowKey={(_record, index) => (index ? index.toString() : "")}
             pagination={false}
           />
           <div className="mt-3">
-            Tổng tiền: <span className="font-bold">{formatCurrency(totalPrice, 'vnd')}</span>
+            Tổng tiền:{" "}
+            <span className="font-bold">
+              {formatCurrency(totalPrice, "vnd")}
+            </span>
           </div>
         </div>
 

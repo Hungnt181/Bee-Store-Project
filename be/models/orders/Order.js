@@ -69,6 +69,18 @@ const OrderSchema = new Schema(
       ],
       default: "Chưa xác nhận",
     },
+    cancel_reason: {
+      type: String,
+      default: null,
+    },
+    cancel_by: {
+      type: String,
+      default: null,
+    },
+    isComplaint: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

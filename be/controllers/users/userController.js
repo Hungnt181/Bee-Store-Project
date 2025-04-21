@@ -18,6 +18,7 @@ import {
 } from "../../utils/validator/user.js";
 import emailExistence from "email-existence";
 import { jwtDecode } from "jwt-decode";
+import { sendSignupVerificationEmail } from "../../service/emailService.js";
 
 class UserController {
   async listUserAccount(req, res) {
@@ -412,44 +413,7 @@ class UserController {
         isVerified: false,
       });
 
-      // ✅ You should store the token for verification
-      const verificationToken = crypto.randomBytes(32).toString("hex");
-
-      // Optionally save token in DB or map user ID for future reference
-      // You could store it temporarily with expiry (e.g. in Redis or DB)
-      // For now, we'll just use user._id as token in the URL
-
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: process.env.EMAIL_USERNAME || "beestore1802@gmail.com",
-          pass: process.env.EMAIL_PASSWORD || "jqst iupd chwk tnsx", // 🔒 Ideally stored in .env
-        },
-      });
-
-      const mailOptions = {
-        from: "Bee-Store <beestore1802@gmail.com>",
-        to: email,
-        subject: "BeeStore - Xác nhận tài khoản khách hàng",
-        html: `
-          <div style="font-family:'Segoe UI'; background-color: #f4f4f4; padding: 20px;">
-            <div style="max-width: 700px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px;">
-              <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
-              <p style="font-size: 16px; color: #333;">Chào mừng bạn đến với BeeStore!</p>
-              <p style="color: #333;">Để kích hoạt tài khoản của bạn, vui lòng nhấn vào nút bên dưới:</p>
-              <div style="text-align: center; margin-top: 20px;">
-                <a href="http://${req.headers.host}/api/verify-email?token=${user._id}" 
-                  style="padding: 10px 20px; background-color: yellow; color: black; 
-                  border: none; border-radius: 4px; text-decoration: none; font-weight: bold;">
-                  Kích hoạt tài khoản
-                </a>
-              </div>
-            </div>
-          </div>
-        `,
-      };
-
-      await transporter.sendMail(mailOptions);
+      await sendSignupVerificationEmail(user, req.headers.host);
 
       return res.status(200).json({
         message: "Đăng ký thành công. Vui lòng kiểm tra email.",
@@ -572,6 +536,7 @@ class UserController {
           role: user.role,
           tel: user.tel,
           isVerified: user.isVerified,
+          status: user.status
         },
       });
     } catch (error) {

@@ -1,150 +1,115 @@
-import Voucher from "../../models/vouchers/Voucher";
+import Voucher from "../../models/vouchers/Voucher.js";
+import { voucherJoi } from "../../utils/validator/voucher.js";
+ // Đường dẫn tùy thuộc vào cấu trúc project
 
 class VoucherController {
-  //API controllers
+  // Lấy tất cả voucher (admin)
   async apiList(req, res) {
     try {
-      //truy vấn danh sách sản phẩm
       const vouchers = await Voucher.find();
-
       res.status(200).json({
-        //trả dữ liệu dưới dạng json
         message: "Danh sách vouchers",
         data: vouchers,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Something went wrong",
-      });
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 
+  // Lấy voucher active (client)
   async apiListClient(req, res) {
     try {
-      //truy vấn danh sách sản phẩm
       const vouchers = await Voucher.find({ status: true });
-
       res.status(200).json({
-        //trả dữ liệu dưới dạng json
         message: "Danh sách vouchers",
         data: vouchers,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Something went wrong",
-      });
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 
+  // Chi tiết voucher
   async apiDetail(req, res) {
     try {
       const id = req.params.id;
-
       const voucher = await Voucher.findById(id);
-
       res.status(200).json({
         message: "Thành công",
         data: voucher,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Something went wrong",
-      });
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 
-  // async apiDelete(req,res) {
-  //     try {
-  //         // //B1: lấy id bản ghi cần xóa
-  //         // const id = req.params.id;
-  //         // //B2: gửi id lên để truy vấn
-  //         // const deletedVoucher = await Voucher.findByIdAndUpdate(id);
-  //         // //B3: trả dữ liệu về
-  //         // res.status(200).json({
-  //         //     'message': 'Xóa thành công',
-  //         //     'data': deletedVoucher
-  //         // })
-  //          //B1: lấy id bản ghi cần sửa
-  //          const id = req.params.id;
-  //          //B2: lấy dữ liệu mới
-  //          const data = req.body;
-  //          //B3: đẩy dữ liệu lưu vào DB
-  //          const voucher = await Voucher.findByIdAndUpdate(id,data);
-  //          //B4: trả về dữ liệu
-  //          res.status(200).json({
-  //              'message': 'Xóa thành công',
-  //              'data': voucher
-  //          })
-  //     } catch (error) {
-  //         res.status(400).json({
-  //             'message': 'Something went wrong'
-  //         })
-  //     }
-  // }
-
+  // Tạo mới voucher
   async apiCreate(req, res) {
     try {
-      // Kiểm tra unique, kiểm tra số
-      const { codeName, value, maxValue } = req.body;
+      // Validate dữ liệu đầu vào
+      const { error } = voucherJoi.validate(req.body, { abortEarly: false });
+      if (error) {
+        return res.status(400).json({
+          message: "Dữ liệu không hợp lệ",
+          errors: error.details.map((err) => err.message),
+        });
+      }
+
+      const { codeName } = req.body;
+
+      // Kiểm tra trùng mã code
       const existingCodeName = await Voucher.findOne({ codeName });
       if (existingCodeName) {
-        return res.status(400).json({ message: "CodeName này đã tồn tại" });
-      }
-      if (typeof value !== "number") {
-        return res.status(400).json({ message: "Value phải là kiểu số" });
-      }
-      if (typeof maxValue !== "number") {
-        return res.status(400).json({ message: "MaxValue phải là kiểu số" });
+        return res.status(400).json({ message: "Mã voucher này đã tồn tại" });
       }
 
-      const data = req.body;
-
-      const newVoucher = await Voucher.create(data);
+      const newVoucher = await Voucher.create(req.body);
 
       res.status(200).json({
         message: "Thêm mới thành công",
         data: newVoucher,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Something went wrong",
-      });
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 
+  // Cập nhật voucher
   async apiUpdate(req, res) {
     try {
       const id = req.params.id;
 
-      const data = req.body;
+      // Validate dữ liệu đầu vào
+      const { error } = voucherJoi.validate(req.body, { abortEarly: false });
+      if (error) {
+        return res.status(400).json({
+          message: "Dữ liệu không hợp lệ",
+          errors: error.details.map((err) => err.message),
+        });
+      }
 
-      // Kiểm tra unique, kiểm tra số
-      const { codeName, value, maxValue } = req.body;
+      const { codeName } = req.body;
+
+      // Kiểm tra trùng mã code (ngoại trừ chính nó)
       const existingCodeName = await Voucher.findOne({
         codeName,
-        _id: { $ne: id }
+        _id: { $ne: id },
       });
+
       if (existingCodeName) {
-        return res.status(400).json({ message: "CodeName này đã tồn tại" });
-      }
-      if (typeof value !== "number") {
-        return res.status(400).json({ message: "Value phải là kiểu số" });
-      }
-      if (typeof maxValue !== "number") {
-        return res.status(400).json({ message: "MaxValue phải là kiểu số" });
+        return res.status(400).json({ message: "Mã voucher này đã tồn tại" });
       }
 
-      const voucher = await Voucher.findByIdAndUpdate(id, data);
+      const voucher = await Voucher.findByIdAndUpdate(id, req.body, { new: true });
 
       res.status(200).json({
         message: "Chỉnh sửa thành công",
         data: voucher,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Something went wrong",
-      });
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 }
+
 export default VoucherController;

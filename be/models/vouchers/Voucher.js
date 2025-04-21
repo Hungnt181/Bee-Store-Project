@@ -16,6 +16,12 @@ const VoucherSchema = new Schema(
     value: {
       type: Number,
       required: true,
+      validate: {
+        validator: function (v) {
+          return this.maxValue ? v <= this.maxValue : true;
+        },
+        message: props => `Giá trị value (${props.value}) không được lớn hơn maxValue.`,
+      },
     },
     maxValue: {
       type: Number,
@@ -23,15 +29,25 @@ const VoucherSchema = new Schema(
     },
     quantity: {
       type: Number,
+      required: true,
+      min: 0,
     },
     description: {
       type: String,
     },
     startTime: {
       type: Date,
+      required: true,
     },
     endTime: {
       type: Date,
+      required: true,
+      validate: {
+        validator: function (v) {
+          return this.startTime ? v > this.startTime : true;
+        },
+        message: 'Thời gian kết thúc phải sau thời gian bắt đầu.',
+      },
     },
     status: {
       type: Boolean,
@@ -40,6 +56,7 @@ const VoucherSchema = new Schema(
   },
   { timestamps: true }
 );
+
 const Voucher = mongoose.model("Voucher", VoucherSchema);
 
 export default Voucher;
