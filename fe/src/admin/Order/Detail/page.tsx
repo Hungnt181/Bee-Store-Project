@@ -186,8 +186,7 @@ const AdminOrderDetail = () => {
       width: 150,
       render: (_: unknown, record: ItemOrder) => {
         const total =
-          Number(record?.id_variant?.id_product?.price || 0) *
-          Number(record?.quantity || 0);
+          Number(record?.price || 0) * Number(record?.quantity || 0);
         return (
           <Text type="danger" strong>
             {total.toLocaleString("vi-VN")} VNĐ
@@ -431,9 +430,8 @@ const AdminOrderDetail = () => {
             bordered
             summary={(pageData) => {
               let totalPrice = 0;
-              pageData.forEach(({ quantity, id_variant }) => {
-                totalPrice +=
-                  Number(id_variant?.id_product?.price ?? 0) * Number(quantity);
+              pageData.forEach(({ quantity, price }) => {
+                totalPrice += Number(price ?? 0) * Number(quantity);
               });
 
               return (

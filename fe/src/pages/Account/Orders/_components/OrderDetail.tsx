@@ -124,10 +124,7 @@ const OrderDetail = () => {
       render: (_: unknown, record: ItemOrder) => {
         return (
           <Text type="danger" strong>
-            {new Intl.NumberFormat("vi-VN").format(
-              record?.id_variant?.id_product?.price
-            )}{" "}
-            ₫
+            {new Intl.NumberFormat("vi-VN").format(Number(record?.price) || 0)}
           </Text>
         );
       },
@@ -728,7 +725,7 @@ const OrderDetail = () => {
                         dataItemOrder.reduce(
                           (sum, item) =>
                             sum +
-                            Number(item?.id_variant?.id_product?.price ?? 0) *
+                            Number(item?.price ?? 0) *
                               Number(item?.quantity ?? 0),
                           0
                         )
