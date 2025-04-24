@@ -1,10 +1,13 @@
 import Order from "../../models/orders/Order";
 import StatusCodes from "http-status-codes";
-
 import ItemsOrder from "../../models/itemOrder/itemOrder"; //bang itemOrder
 import { orderValidator } from "../../utils/validator/order";
 import Variant from "../../models/variants/variants";
 import Voucher from "../../models/vouchers/Voucher";
+
+import { io } from "../../app.js";
+import { sendOrderCompletedEmail, sendOrderConfirmationEmail, sendOrderDeliveryFailedEmail, sendOrderShippingEmail } from "../../service/emailService.js";
+
 class OrderController {
   async createOrder(req, res) {
     try {
@@ -88,6 +91,18 @@ class OrderController {
       }
       // có thể ko cần thiết check phần này
 
+      // check status voucher
+
+      if (req.body.voucher) {
+        const voucher = await Voucher.findById(req.body.voucher);
+        if (voucher.quantity === 0 || voucher.status === false) {
+          return res.status(400).json({
+            message:
+              "Xin lỗi quý khách voucher hiện tại không thể dùng. Vui lòng tải lại trang và thực hiện lại thanh toán",
+          });
+        }
+      }
+
       //  Nếu không quá số lượng tồn kho, tạo order
       const order = await Order.create(req.body);
 
@@ -109,6 +124,8 @@ class OrderController {
           $inc: { quantity: -1 },
         });
       }
+
+      io.emit("newOrder", order); // Phát sự kiện đến tất cả client
 
       res.status(201).json({
         ok: true,
@@ -251,8 +268,8 @@ class OrderController {
       const validTransitions = {
         "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
         "Đã xác nhận": ["Đang giao", "Đã hủy"],
-        "Đang giao": ["Hoàn thành"],
-        "Hoàn thành": ["Đã hủy"],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        "Hoàn thành": [],
         "Đã hủy": [],
       };
 
@@ -271,6 +288,38 @@ class OrderController {
         });
       }
 
+      // Kiểm tra nếu chuyển trạng thái là "Đã hủy" => Thêm lý do hủy đơn hàng
+      if (status == "Đã hủy" || status == "Giao hàng thất bại") {
+        const { cancel_reason } = req.body;
+        if (!cancel_reason || cancel_reason.trim() === "") {
+          return res.status(400).json({
+            message: `Vui lòng nhập lý do!`,
+          });
+        }
+        order.cancel_reason = cancel_reason + ` - ` + updatedStatusByAdmin;
+        // Cập nhật số lượng tồn kho của biến thể
+        let itemsOrder = await ItemsOrder.find({
+          _id: { $in: order.itemsOrder },
+        });
+        for (let item of itemsOrder) {
+          const itemOrder = await ItemsOrder.findById(item);
+          const variantQuantity = await Variant.findById(itemOrder.id_variant);
+          await Variant.findByIdAndUpdate(itemOrder.id_variant, {
+            $inc: { quantity: +itemOrder.quantity },
+          });
+        }
+
+        // Cập nhật lại số lượng voucher nếu có
+        if (order.voucher) {
+          await Voucher.findByIdAndUpdate(order.voucher, {
+            $inc: { quantity: +1 },
+          });
+        }
+
+        if (status === "Đã hủy") {
+          order.cancel_by = updatedStatusByAdmin; // Lưu tên người hủy đơn hàng
+        }
+      }
       // Cập nhật trạng thái
       order.status = status;
       order.updatedStatusByAdmin = updatedStatusByAdmin || "Admin"; // Lưu tên người cập nhật
@@ -282,8 +331,100 @@ class OrderController {
       }
       await order.save();
 
+      if (status === "Đã xác nhận") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đã xác nhận đơn hàng
+        await sendOrderConfirmationEmail(populatedOrder);
+      }
+
+      if (status === "Đang giao") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderShippingEmail(populatedOrder);
+      }
+
+      if (status === "Hoàn thành") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderCompletedEmail(populatedOrder);
+      }
+
+      if (status === "Giao hàng thất bại") {
+        // Lấy thông tin chi tiết đơn hàng để gửi email
+        const populatedOrder = await Order.findById(order._id)
+          .populate({
+            path: 'itemsOrder',
+            populate: {
+              path: 'id_variant',
+              select: 'price status',
+              populate: [
+                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
+                { path: 'id_color', select: 'name' },
+                { path: 'id_size', select: 'name' }
+              ]
+            }
+          })
+          .populate('receiverInfo')
+          .populate('payment')
+          .populate('voucher');
+
+        // Gửi email thông báo đơn đang được giao
+        await sendOrderDeliveryFailedEmail(populatedOrder);
+      }
+
       return res.status(StatusCodes.OK).json({
-        message: "Cập nhật trạng thái đươn hàng thành công",
+        message: "Cập nhật trạng thái đơn hàng thành công",
         data: order,
       });
     } catch (error) {
@@ -297,7 +438,7 @@ class OrderController {
   async updateStatusByClient(req, res) {
     try {
       const { id } = req.params;
-
+      const { cancel_reason, updatedStatusByClient } = req.body;
       const order = await Order.findById(id);
       if (!order) {
         return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
@@ -321,6 +462,32 @@ class OrderController {
       // Chỉ cho phép khách hàng cập nhật theo quy tắc
       if (order.status === "Chưa xác nhận" || order.status === "Đã xác nhận") {
         order.status = "Đã hủy";
+        if (!cancel_reason || cancel_reason.trim() === "") {
+          return res.status(400).json({
+            message: `Vui lòng nhập lý do hủy đơn hàng!`,
+          });
+        }
+        order.cancel_reason = cancel_reason + ` - ` + updatedStatusByClient;
+        // Cập nhật số lượng tồn kho của biến thể
+        let itemsOrder = await ItemsOrder.find({
+          _id: { $in: order.itemsOrder },
+        });
+        for (let item of itemsOrder) {
+          const itemOrder = await ItemsOrder.findById(item);
+          const variantQuantity = await Variant.findById(itemOrder.id_variant);
+          await Variant.findByIdAndUpdate(itemOrder.id_variant, {
+            $inc: { quantity: +itemOrder.quantity },
+          });
+        }
+
+        // Cập nhật lại số lượng voucher nếu có
+        if (order.voucher) {
+          await Voucher.findByIdAndUpdate(order.voucher, {
+            $inc: { quantity: +1 },
+          });
+        }
+
+        order.cancel_by = updatedStatusByClient;
       } else if (order.status === "Hoàn thành" && order.isConfirm) {
         order.status = "Đã hủy";
       } else {
@@ -365,6 +532,26 @@ class OrderController {
     }
   }
 
+  //cập nhật thanh toán đơn hàng
+  async updatePaymentStatus(req, res) {
+    try {
+      const { id } = req.params;
+
+      const order = await Order.findById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
+      }
+      order.isPaid = true;
+      await order.save();
+      return res.status(200).json({
+        message: "Cập nhật trạng thái thanh toán đơn hàng thành công",
+        data: order,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
   // Thống kê doanh thu của SHOP
 
   async getRevenueStatisticsasync(req, res) {
@@ -391,7 +578,10 @@ class OrderController {
         end.setDate(end.getDate() + 1);
       }
 
-      match.createdAt = { $gte: start, $lt: end };
+      const revenueMatch = {
+        createdAt: { $gte: start, $lt: end },
+        status: "Hoàn thành", // Chỉ lấy đơn hoàn thành
+      };
 
       // Nhóm theo type
       let groupFormat = "%Y-%m-%d";
@@ -404,7 +594,7 @@ class OrderController {
       }
 
       const data = await Order.aggregate([
-        { $match: match },
+        { $match: revenueMatch },
         {
           $group: {
             _id: { $dateToString: { format: groupFormat, date: "$createdAt" } },
@@ -460,10 +650,13 @@ class OrderController {
         return res.status(400).json({ message: "Invalid 'type' param" });
       }
 
-      match.createdAt = { $gte: start, $lt: end };
+      const revenueMatch = {
+        createdAt: { $gte: start, $lt: end },
+        status: "Hoàn thành", // Chỉ lấy đơn hoàn thành
+      };
 
       const data = await Order.aggregate([
-        { $match: match },
+        { $match: revenueMatch },
         {
           $lookup: {
             from: "itemorders",

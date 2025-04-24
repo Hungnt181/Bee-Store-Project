@@ -64,10 +64,22 @@ const OrderSchema = new Schema(
         "Đã xác nhận",
         "Đang giao",
         "Hoàn thành",
-        "Hoàn đơn",
+        "Giao hàng thất bại",
         "Đã hủy",
       ],
       default: "Chưa xác nhận",
+    },
+    cancel_reason: {
+      type: String,
+      default: null,
+    },
+    cancel_by: {
+      type: String,
+      default: null,
+    },
+    isComplaint: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

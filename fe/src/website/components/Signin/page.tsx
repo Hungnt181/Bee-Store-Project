@@ -11,7 +11,7 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import beeImage from "./anhong.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Rule } from "antd/es/form";
 // --- VALIDATION RULES ---
 const validationRules = {
@@ -31,6 +31,33 @@ const Signin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    const userRole = localStorage.getItem("userRole");
+
+    if (user) {
+      navigate(userRole === "admin" ? "/admin" : "/");
+    }
+  }, [navigate]);
+
+  //fnc cart
+  const fncCart = async(idUserLogin:string)=>{
+    const cartItems = localStorage.getItem("cartItems");
+    const {data} = await axios.get(`http://localhost:3000/api/cart/${idUserLogin}`)
+    if(data){
+      if(!cartItems || cartItems.length == 0){
+        localStorage.setItem("cartItems", JSON.stringify(data.data.items));
+      }
+      else{
+        const dataUpdateCart = {
+          idUser: idUserLogin,
+          items: JSON.parse(cartItems)
+        }
+        await axios.patch(`http://localhost:3000/api/cart/${idUserLogin}/update`, dataUpdateCart);
+      }
+    }
+  }
+
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
       try {
@@ -38,11 +65,27 @@ const Signin = () => {
         const response = await axios.post(
           `http://localhost:3000/api/signin_user`,
           formData
-        );
+        )
+        const checkCart = await axios.get(`http://localhost:3000/api/cart/${response.data.data._id}`)
+        if (checkCart.status == 200) {
+          console.log("Đã có cart");
+          fncCart(response.data.data._id);
+        } else {
+          //chưa có thì tạo mới
+          const newCart = await axios.post(`http://localhost:3000/api/cart/${response.data.data._id}/create`)
+          .then(() => {
+            console.log("Tạo thành công", newCart);
+            fncCart(response.data.data._id);
+          })
+          .catch(() => {
+            console.log("Tạo cart thất bại");
+          });
+        }  
+
         localStorage.setItem("userRole", response.data.data.role);
         localStorage.setItem("nameUser", response.data.data.name);
         localStorage.setItem("idUser", response.data.data._id);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("user", JSON.stringify(response.data.data));    
         return response.data.data.role;
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -80,9 +123,26 @@ const Signin = () => {
       message.error("Không nhận được thông tin từ Google");
       return;
     }
+    
 
     try {
       const res = await requestLoginGoogle(credential);
+      const checkCart = await axios.get(`http://localhost:3000/api/cart/${res.user._id}`)
+      if (checkCart.data.data != null) {
+        // console.log("Đã có cart");
+        fncCart(res.user._id);
+      } else {
+        //chưa có thì tạo mới
+        try {
+          const newCart = await axios.post(`http://localhost:3000/api/cart/${res.user._id}/create`);
+          // console.log("Tạo thành công", newCart.data);
+          fncCart(res.user._id);
+        } catch (error) {
+          console.error("Tạo cart thất bại");
+        }
+      }  
+      // localStorage.removeItem("cartItems");
+
       localStorage.setItem("idUser", res.user._id);
       localStorage.setItem("userRole", res.user.role);
       localStorage.setItem("user", JSON.stringify(res.user));

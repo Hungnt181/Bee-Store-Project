@@ -13,5 +13,21 @@ export interface ItemOrder {
     type: number;
     required: true;
   };
+  price: {
+    type: number;
+    required: true;
+  };
+  color: {
+    type: string;
+    required: true;
+  };
+  nameColor: {
+    type: string;
+    required: true;
+  };
+  size: {
+    type: string;
+    required: true;
+  }
   id_variant: Variant
 }

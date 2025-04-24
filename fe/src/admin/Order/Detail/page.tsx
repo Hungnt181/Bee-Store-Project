@@ -13,6 +13,14 @@ import {
   Table,
   TableProps,
   Tag,
+  Typography,
+  Divider,
+  Row,
+  Col,
+  Space,
+  Badge,
+  Descriptions,
+  BadgeProps,
 } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Order } from "../../../interface/Order";
@@ -21,7 +29,10 @@ import dayjs from "dayjs";
 import { ItemOrder } from "../../../interface/ItemOrder";
 import { useForm } from "antd/es/form/Form";
 
+const { Title, Text } = Typography;
+
 const AdminOrderDetail = () => {
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>("");
   const [dataOrder, setDataOrder] = useState<Order>();
   const [dataItemOrder, setDataItemOrder] = useState<ItemOrder[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +43,8 @@ const AdminOrderDetail = () => {
   const { id } = useParams();
 
   //Thông tin admin
-  const userName = localStorage.getItem("nameUser");
+  const user = localStorage.getItem("user");
+  const userName = user ? JSON.parse(user).name : null;
 
   const url = `http://localhost:3000/api/orders/${id}?_embed=user,voucher,payment,itemsOrder,receiverInfo`;
   const key = "dataPageOrder";
@@ -41,8 +53,6 @@ const AdminOrderDetail = () => {
     queryKey: [key],
     queryFn: async () => {
       const response = await axios.get(url);
-      console.log("response", response);
-
       return response.data;
     },
   });
@@ -55,34 +65,52 @@ const AdminOrderDetail = () => {
         status: orderDetail.status,
       });
       if (
-        orderDetail?.status === "Đã hủy" ||
-        orderDetail?.status === "Hoàn đơn"
+        orderDetail.status === "Đã hủy" ||
+        orderDetail.status === "Hoàn thành" ||
+        orderDetail.status === "Giao hàng thất bại"
       ) {
         setIsDisabled(true);
+      } else {
+        setIsDisabled(false);
       }
     }
   }, [orderDetail, form]);
 
-  // console.log("dataItemOrder", dataItemOrder);
-  useEffect(() => {
-    setIsDisabled(
-      orderDetail?.status === "Đã hủy" || orderDetail?.status === "Hoàn đơn"
-    );
-  }, [orderDetail?.status]);
+  // Get status color
+
+  const getStatusColor = (status: string | undefined): BadgeProps["status"] => {
+    switch (status) {
+      case "Hoàn thành":
+        return "success";
+      case "Chưa xác nhận":
+        return "warning";
+      case "Đang giao":
+        return "processing";
+      case "Đã hủy":
+        return "error";
+      case "Đã xác nhận":
+        return "processing";
+      default:
+        return "warning";
+    }
+  };
+
   //colums
   const columns: TableProps<ItemOrder>["columns"] = [
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      width: 50,
+      width: 80,
       render: (_: unknown, record: ItemOrder) => {
         return (
           <Image
             src={record?.id_variant?.image[0]}
-            width={50}
-            height={50}
-          ></Image>
+            width={60}
+            height={60}
+            style={{ objectFit: "cover", borderRadius: "4px" }}
+            preview={true}
+          />
         );
       },
     },
@@ -90,63 +118,52 @@ const AdminOrderDetail = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      width: 50,
+      ellipsis: true,
     },
     {
       title: "Màu sắc",
       dataIndex: "id_color",
       key: "id_color",
-      width: 50,
+      width: 120,
       render: (_: unknown, record: ItemOrder) => {
         return (
-          <>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p style={{ minWidth: "40px" }}>
-                {record?.id_variant?.id_color?.name}
-              </p>
-              <div
-                style={{
-                  marginLeft: "5px",
-                  backgroundColor: record?.id_variant?.id_color?.hexcode,
-                  width: "20px",
-                  height: "20px",
-                  border:
-                    record?.id_variant?.id_color?.hexcode == "#ffffff"
-                      ? "1px solid gray"
-                      : "none",
-                }}
-              ></div>
-            </div>
-          </>
+          <Space>
+            <Text>{String(record?.nameColor ?? "")}</Text>
+            <div
+              style={{
+                backgroundColor:
+                  typeof record?.color === "string"
+                    ? record.color
+                    : "transparent",
+                width: "20px",
+                height: "20px",
+                border:
+                  record?.color?.type === "#ffffff"
+                    ? "1px solid #d9d9d9"
+                    : "none",
+                borderRadius: "2px",
+              }}
+            />
+          </Space>
         );
       },
     },
     {
       title: "Kích cỡ",
-      dataIndex: "id_size",
-      key: "id_size",
-      width: 50,
-      render: (_: unknown, record: ItemOrder) => {
-        return (
-          <>
-            <span>{record?.id_variant?.id_size?.name}</span>
-          </>
-        );
-      },
+      dataIndex: "size",
+      key: "size",
+      width: 100,
     },
     {
       title: "Giá",
-      dataIndex: "id_product",
-      key: "id_product",
-      width: 50,
+      dataIndex: "price",
+      key: "price",
+      width: 150,
       render: (_: unknown, record: ItemOrder) => {
         return (
-          <>
-            {Number(record?.id_variant?.id_product?.price).toLocaleString(
-              "vi-VN"
-            )}{" "}
-            VNĐ
-          </>
+          <Text strong>
+            {Number(record?.price).toLocaleString("vi-VN")} VNĐ
+          </Text>
         );
       },
     },
@@ -154,12 +171,32 @@ const AdminOrderDetail = () => {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
-      width: 50,
+      width: 100,
+      render: (quantity) => (
+        <Badge
+          count={quantity}
+          showZero
+          style={{ backgroundColor: "#52c41a" }}
+        />
+      ),
+    },
+    {
+      title: "Thành tiền",
+      key: "total",
+      width: 150,
+      render: (_: unknown, record: ItemOrder) => {
+        const total =
+          Number(record?.price || 0) * Number(record?.quantity || 0);
+        return (
+          <Text type="danger" strong>
+            {total.toLocaleString("vi-VN")} VNĐ
+          </Text>
+        );
+      },
     },
   ];
 
   // Modal edit status
-
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -174,18 +211,34 @@ const AdminOrderDetail = () => {
 
   const [availableStatuses, setAvailableStatuses] = useState<string[]>([]);
   useEffect(() => {
-    const validTransitions: Record<string, string[]> = {
-      "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
-      "Đã xác nhận": ["Đang giao", "Đã hủy"],
-      "Đang giao": ["Hoàn thành"],
-      "Hoàn thành": ["Đã hủy"],
-      "Đã hủy": [],
-    };
+    // Tạo bảng chuyển đổi trạng thái dựa trên điều kiện hiện tại
+    let validTransitions: Record<string, string[]> = {};
+
+    // Kiểm tra nếu khách hàng đã xác nhận nhận hàng
+    if (dataOrder?.isConfirm) {
+      // Nếu đã xác nhận, không cho phép chuyển sang trạng thái "Đã hủy" từ "Hoàn thành"
+      validTransitions = {
+        "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
+        "Đã xác nhận": ["Đang giao", "Đã hủy"],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        // "Hoàn thành": [],
+        // "Đã hủy": [],
+      };
+    } else {
+      // Cấu hình chuyển đổi ban đầu nếu khách chưa xác nhận
+      validTransitions = {
+        "Chưa xác nhận": ["Đã xác nhận", "Đã hủy"],
+        "Đã xác nhận": ["Đang giao", "Đã hủy"],
+        "Đang giao": ["Hoàn thành", "Giao hàng thất bại"],
+        // "Hoàn thành": [],
+        // "Đã hủy": [],
+      };
+    }
 
     // Lấy trạng thái hiện tại của đơn hàng từ form
     const currentStatus = form.getFieldValue("status") || orderDetail?.status;
     setAvailableStatuses(validTransitions[currentStatus] || []);
-  }, [form, orderDetail?.status]);
+  }, [form, orderDetail?.status, dataOrder?.isConfirm]);
 
   const { mutate } = useMutation({
     mutationFn: async (formData) => {
@@ -200,178 +253,338 @@ const AdminOrderDetail = () => {
   });
 
   return (
-    <div>
-      <h1 className="mb-2 text-[24px]">CHI TIẾT ĐƠN HÀNG</h1>
-      <Skeleton loading={isLoading}>
-        <div className="w-full">
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Mã đơn hàng:</p>
-            <p>{dataOrder?._id.toString()}</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Ngày tạo:</p>
-            <p>{dayjs(dataOrder?.createdAt).format("DD/MM/YYYY HH:mm:ss")}</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Khách hàng: </p>
-            <p>{dataOrder?.user?.name}</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Thông tin người nhận: </p>
-            <Card style={{ width: 600, backgroundColor: "#f5f2e5" }}>
-              <p className="mb-1">{dataOrder?.receiverInfo?.name.toString()}</p>
-              <p className="mb-1">
-                {dataOrder?.receiverInfo?.phone.toString()}
-              </p>
-              <p>{dataOrder?.receiverInfo?.address.toString()}</p>
-            </Card>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Xác nhận của khách </p>
-            <p>
-              {dataOrder?.isConfirm ? (
-                <Tag color="green">Đã nhận</Tag>
-              ) : (
-                <Tag color="red">Chưa nhận</Tag>
-              )}
-            </p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Phí vận chuyển: </p>
-            <p>{dataOrder?.shippingFee} VNĐ</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Mã giảm giá: </p>
-            <p>{dataOrder?.voucher?.value} </p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Tổng hóa hóa đơn: </p>
-            <p>{dataOrder?.total} VNĐ</p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Thanh toán:</p>
-            <p>
-              {dataOrder?.isPaid ? (
-                <Tag color="green">Đã thanh toán</Tag>
-              ) : (
-                <Tag color="red">Chưa thanh toán</Tag>
-              )}
-            </p>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]"> Phương thức TT:</p>
-            <p> {dataOrder?.payment?.name}</p>
-          </div>
-          <div className="flex m-1 text-[16px] items-center">
-            <p className="min-w-[200px]">Trạng thái đơn hàng:</p>
-            <p
-              className={`${
-                dataOrder?.status === "Hoàn thành"
-                  ? "text-green-500"
-                  : dataOrder?.status === "Chưa xác nhận"
-                  ? "text-yellow-500"
-                  : dataOrder?.status === "Đang giao"
-                  ? "text-purple-500"
-                  : dataOrder?.status === "Đã hủy"
-                  ? "text-red-500"
-                  : "text-blue-400"
-              } font-medium`}
-            >
-              {dataOrder?.status}
-            </p>
-            <div className="mt-2 ml-2">
-              <Button type="primary" onClick={showModal} disabled={isDisabled}>
-                Cập nhật trạng thái
-              </Button>
-              <Modal
-                title="Cập nhật trạng thái đơn hàng"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                footer={null}
+    <div className="p-4 bg-white rounded-lg shadow">
+      <Title level={2} style={{ marginBottom: 24 }}>
+        CHI TIẾT ĐƠN HÀNG
+      </Title>
+
+      <Skeleton loading={isLoading} active paragraph={{ rows: 10 }}>
+        <Card bordered={false} className="mb-6">
+          <Row gutter={[24, 16]}>
+            <Col span={24}>
+              <Badge.Ribbon
+                text={dataOrder?.status}
+                color={getStatusColor(dataOrder?.status ?? "")}
+                style={{ fontSize: "14px", fontWeight: "bold" }}
               >
-                <div>
-                  <div className="flex mb-3 ml-2">
-                    <p className="min-w-[100px]">Mã đơn hàng:</p>
-                    <p>{dataOrder?._id.toString()}</p>
-                  </div>
-                  <div>
-                    <Form
-                      form={form}
-                      initialValues={dataItemOrder}
-                      labelCol={{
-                        span: 4,
-                      }}
-                      wrapperCol={{
-                        span: 14,
-                      }}
-                      layout="horizontal"
-                      style={{
-                        maxWidth: 600,
-                        margin: "0 auto",
-                      }}
-                      onFinish={(values) => {
-                        values.updatedStatusByAdmin = userName;
-                        mutate(values);
-                      }}
-                    >
-                      <Form.Item name="updatedStatusByAdmin" hidden>
-                        <Input value={userName || ""} readOnly />
-                      </Form.Item>
-                      <Form.Item
-                        label="Trạng thái"
-                        name="status"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Vui lòng chọn trạng thái",
-                          },
-                        ]}
-                      >
-                        <Select onChange={() => setIsEdit(false)}>
-                          {availableStatuses?.map((item: string) => (
-                            <Select.Option value={item}>{item}</Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
+                <Card
+                  title={
+                    <Space>
+                      <Text strong>Mã đơn hàng:</Text>
+                      <Text copyable>{dataOrder?._id.toString()}</Text>
+                    </Space>
+                  }
+                  style={{ backgroundColor: "#f9f9f9" }}
+                >
+                  <Descriptions column={{ xs: 1, sm: 2 }} bordered>
+                    <Descriptions.Item label="Ngày tạo" span={2}>
+                      {dayjs(dataOrder?.createdAt).format(
+                        "DD/MM/YYYY HH:mm:ss"
+                      )}
+                    </Descriptions.Item>
 
-                      <Form.Item
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Button htmlType="submit" disabled={isEdit}>
-                          Cập nhật
+                    <Descriptions.Item label="Khách hàng" span={2}>
+                      {dataOrder?.user?.name}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Thanh toán" span={2}>
+                      <Space>
+                        {dataOrder?.isPaid ? (
+                          <Tag color="success">Đã thanh toán</Tag>
+                        ) : (
+                          <Tag color="error">Chưa thanh toán</Tag>
+                        )}
+                        <Text type="secondary">
+                          ({dataOrder?.payment?.name})
+                        </Text>
+                      </Space>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Xác nhận của khách" span={2}>
+                      {dataOrder?.isConfirm ? (
+                        <Tag color="success">Đã nhận</Tag>
+                      ) : (
+                        <Tag color="error">Chưa nhận</Tag>
+                      )}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Phí vận chuyển" span={2}>
+                      <Text>
+                        {Number(dataOrder?.shippingFee).toLocaleString("vi-VN")}{" "}
+                        VNĐ
+                      </Text>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Mã giảm giá" span={2}>
+                      {dataOrder?.voucher?.value ? (
+                        <Tag color="volcano">{dataOrder?.voucher?.value}</Tag>
+                      ) : (
+                        <Text type="secondary">Không sử dụng</Text>
+                      )}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Tổng hóa đơn" span={2}>
+                      <Text strong type="danger" style={{ fontSize: 16 }}>
+                        {Number(dataOrder?.total).toLocaleString("vi-VN")} VNĐ
+                      </Text>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Cập nhật bởi" span={2}>
+                      {dataOrder?.updatedStatusByAdmin ? (
+                        <Tag color="blue">
+                          {dataOrder?.updatedStatusByAdmin}
+                        </Tag>
+                      ) : (
+                        <Text type="secondary">Chưa được cập nhật</Text>
+                      )}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Trạng thái đơn hàng" span={2}>
+                      <Space>
+                        <Badge
+                          status={getStatusColor(dataOrder?.status)}
+                          text={
+                            <Text
+                              strong
+                              style={{
+                                color:
+                                  dataOrder?.status === "Hoàn thành"
+                                    ? "#52c41a"
+                                    : dataOrder?.status === "Chưa xác nhận"
+                                    ? "#faad14"
+                                    : dataOrder?.status === "Đang giao"
+                                    ? "#722ed1"
+                                    : dataOrder?.status === "Đã hủy"
+                                    ? "#f5222d"
+                                    : "#1890ff",
+                              }}
+                            >
+                              {dataOrder?.status}
+                            </Text>
+                          }
+                        />
+                        <Button
+                          type="primary"
+                          onClick={showModal}
+                          disabled={isDisabled}
+                          size="small"
+                        >
+                          Cập nhật trạng thái
                         </Button>
-                      </Form.Item>
-                    </Form>
-                  </div>
-                </div>
-              </Modal>
-            </div>
-          </div>
-          <div className="flex m-1 text-[16px]">
-            <p className="min-w-[200px]">Cập nhật trạng thái đơn : </p>
-            <p>
-              {dataOrder?.updatedStatusByAdmin
-                ? dataOrder?.updatedStatusByAdmin
-                : "Chưa được cập nhật"}
-            </p>
-          </div>
-          <div className="flex">
-            <p className="min-w-[200px] text-[18px]">
-              Thông tin sản phẩm đã mua{" "}
-            </p>
-          </div>
+                      </Space>
+                    </Descriptions.Item>
 
-          <div className="mt-4">
-            <Table
-              dataSource={dataItemOrder}
-              columns={columns}
-              pagination={false}
-              scroll={{ y: 55 * 3 }}
-            />
-          </div>
-        </div>
+                    {dataOrder?.cancel_reason ? (
+                      <Descriptions.Item label="Lý do" span={2}>
+                        <Text type="danger" strong>
+                          {dataOrder?.cancel_reason}
+                        </Text>
+                      </Descriptions.Item>
+                    ) : null}
+
+                    {dataOrder?.isComplaint ? (
+                      <Descriptions.Item label="Trạng thái khiếu nại" span={2}>
+                        <Text type="danger" strong>
+                          Chưa xử lý
+                        </Text>
+                      </Descriptions.Item>
+                    ) : null}
+                  </Descriptions>
+                </Card>
+              </Badge.Ribbon>
+            </Col>
+          </Row>
+        </Card>
+
+        <Card
+          title="Thông tin người nhận"
+          bordered={false}
+          className="mb-6"
+          style={{ backgroundColor: "#f9f9f9" }}
+        >
+          <Descriptions bordered column={1}>
+            <Descriptions.Item label="Họ tên">
+              <Text strong>{String(dataOrder?.receiverInfo?.name ?? "")}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Số điện thoại">
+              <Text copyable>
+                {String(dataOrder?.receiverInfo?.phone ?? "")}
+              </Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Địa chỉ">
+              <Text>{String(dataOrder?.receiverInfo?.address ?? "")}</Text>
+            </Descriptions.Item>
+          </Descriptions>
+        </Card>
+
+        <Card
+          title={<Title level={4}>Thông tin sản phẩm đã mua</Title>}
+          bordered={false}
+        >
+          <Table
+            dataSource={dataItemOrder}
+            columns={columns}
+            pagination={false}
+            scroll={{ x: "max-content" }}
+            rowKey="_id"
+            bordered
+            summary={(pageData) => {
+              let totalPrice = 0;
+              pageData.forEach(({ quantity, price }) => {
+                totalPrice += Number(price ?? 0) * Number(quantity);
+              });
+
+              return (
+                <Table.Summary fixed="bottom">
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={5} align="right">
+                      <Text strong>Tổng cộng:</Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} colSpan={2}>
+                      <Text type="danger" strong style={{ fontSize: 16 }}>
+                        {totalPrice.toLocaleString("vi-VN")} VNĐ
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              );
+            }}
+          />
+        </Card>
       </Skeleton>
+
+      <Modal
+        title="Cập nhật trạng thái đơn hàng"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+        destroyOnClose
+        maskClosable={false}
+      >
+        <Divider />
+        <Card bordered={false} style={{ backgroundColor: "#f5f5f5" }}>
+          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+            <Space>
+              <Text strong>Mã đơn hàng:</Text>
+              <Text copyable>{dataOrder?._id.toString()}</Text>
+            </Space>
+            <Space>
+              <Text strong>Trạng thái hiện tại:</Text>
+              <Badge
+                status={getStatusColor(dataOrder?.status)}
+                text={dataOrder?.status}
+              />
+            </Space>
+            <Space>
+              <Text strong>Xác nhận của khách:</Text>
+              {dataOrder?.isConfirm ? (
+                <Tag color="success">Đã nhận</Tag>
+              ) : (
+                <Tag color="error">Chưa nhận</Tag>
+              )}
+            </Space>
+          </Space>
+        </Card>
+        <Divider />
+        <Form
+          form={form}
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          layout="horizontal"
+          style={{
+            maxWidth: 600,
+            margin: "0 auto",
+          }}
+          onFinish={(values) => {
+            values.updatedStatusByAdmin = userName;
+            mutate(values);
+          }}
+        >
+          <Form.Item name="updatedStatusByAdmin" hidden>
+            <Input value={userName || ""} readOnly />
+          </Form.Item>
+          <Form.Item
+            label="Trạng thái mới"
+            name="status"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn trạng thái",
+              },
+            ]}
+          >
+            <Select
+              onChange={(value) => {
+                setSelectedStatus(value);
+                setIsEdit(false);
+              }}
+              placeholder="Chọn trạng thái mới"
+              style={{ width: "100%" }}
+              disabled={availableStatuses.length === 0}
+              notFoundContent="Không có trạng thái khả dụng"
+            >
+              {availableStatuses?.map((item: string) => (
+                <Select.Option key={item} value={item}>
+                  <Badge status={getStatusColor(item)} text={item} />
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          {/* Chỉ hiển thị khi trạng thái là "ĐÃ HỦY" */}
+
+          {selectedStatus === "Đã hủy" && (
+            <Form.Item
+              label="Lý do hủy"
+              name="cancel_reason"
+              rules={[
+                { required: true, message: "Vui lòng nhập lý do hủy đơn hàng" },
+              ]}
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Nhập lý do hủy đơn hàng..."
+              />
+            </Form.Item>
+          )}
+
+          {selectedStatus === "Giao hàng thất bại" && (
+            <Form.Item
+              label="Lý do giao hàng thất bại"
+              name="cancel_reason"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập lý do giao hàng thất bại",
+                },
+              ]}
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Nhập lý do giao hàng thất bại..."
+              />
+            </Form.Item>
+          )}
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Space>
+              <Button onClick={handleCancel}>Hủy</Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={isEdit || availableStatuses.length === 0}
+              >
+                Cập nhật
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

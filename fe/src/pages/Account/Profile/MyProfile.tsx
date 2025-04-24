@@ -180,16 +180,6 @@ export default function MyProfile() {
             label="Địa chỉ"
             value={userDataApi?.address || "Chưa cập nhật"}
           />
-          <div className="pt-4 border-t border-gray-200">
-            <ChangePasswordModal>
-              <button
-                type="button"
-                className="text-indigo-600 hover:text-indigo-800 font-semibold"
-              >
-                🔒 Đổi mật khẩu
-              </button>
-            </ChangePasswordModal>
-          </div>
         </div>
       </div>
 

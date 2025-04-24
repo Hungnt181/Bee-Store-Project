@@ -1,13 +1,14 @@
-interface Voucher {
-    id: String;
-    title: Date;
-    codeName: String;
-    value: number; 
-    quantity:  Number;
-    description:  String;
-    startTime: Date;
-    endTime: Date;
-    status: Boolean
+export interface Voucher {
+  _id: string;
+  title: string;
+  codeName: string;
+  value: number;
+  maxValue: number;
+  quantity: number;
+  description: string;
+  startTime: Date;
+  endTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  status: boolean;
 }
-
-export type VoucherInput = Omit<Voucher, "id">;

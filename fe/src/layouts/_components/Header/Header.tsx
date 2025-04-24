@@ -5,7 +5,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge } from "antd";
+import { Badge, message } from "antd";
 import { useEffect, useState } from "react";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import axios from "axios";
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
   const [nameUser, setNameUser] = useState("");
+  const [userStatus, setUserStatus] = useState(true);
   const location = useLocation();
 
   const [numberInCart, setNumberInCart] = useState<number>(0);
@@ -30,10 +31,16 @@ export default function Header() {
   }, []);
 
   // lấy cartItems từ localstorage
-  const updateCartCount = () => {
-    const storedCartItems = localStorage.getItem("cartItems");
+  const updateCartCount = async() => {
+    const idUser = localStorage.getItem("idUser");
+    if(!idUser){
+      return setNumberInCart(0);
+    }
+    const storedCartItems = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+    // console.log(storedCartItems.data.data.items);
+    
     if (storedCartItems) {
-      const cartCount = Object.keys(JSON.parse(storedCartItems)).length;
+      const cartCount = storedCartItems.data.data.items.length;
       setNumberInCart(cartCount);
       console.log("Cập nhật số lượng:", cartCount);
     } else {
@@ -44,14 +51,8 @@ export default function Header() {
   //rerender so luong
   useEffect(() => {
     updateCartCount();
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key == "cartItems") {
-        updateCartCount();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
     // return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [location]);
 
   const idUser = localStorage.getItem("idUser");
   // Thêm query để lấy thông tin user
@@ -67,14 +68,35 @@ export default function Header() {
     enabled: !!idUser,
   });
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setNameUser("");
+    navigate("/signin");
+  };
+
   useEffect(() => {
-    // Cập nhật tên từ API response
-    if (userData?.name) {
-      setNameUser(userData.name);
+    // Cập nhật tên và trạng thái từ API response
+    if (userData) {
+      setNameUser(userData.name || "");
+      setUserStatus(userData.status !== false); // Chuyển đổi status thành boolean
+      console.log(userData.status)
+      // Kiểm tra nếu status là false, thực hiện logout
+      if (userData.status === false) {
+        message.error("Tài khoản đã bị vô hiệu hoá")
+        handleLogout();
+      }
     } else {
       setNameUser("");
+      setUserStatus(true);
     }
   }, [userData, location]);
+
+  useEffect(() => {
+    if (idUser && !userStatus) {
+      handleLogout();
+    }
+  }, [userStatus]);
+
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -87,9 +109,6 @@ export default function Header() {
       <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center justify-between mt-6">
         {/* BOX 1 IN HEADER */}
         <Link to={"/"} className="flex-1">
-          {/* <h3 className="font-bold font-sans text-2xl text-yellow-700">
-            BEE<span className="text-black"> - STORE</span>
-          </h3> */}
           <img className="w-58" src={logoImage} alt="" />
         </Link>
         {/* BOX 2 IN HEADER */}
@@ -156,18 +175,16 @@ export default function Header() {
       </div>
       {/* LINE 2 IN HEADER */}
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "block" : "hidden"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "block" : "hidden"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           <ListitemCateegory isSticky={isSticky} />
         </div>
       </div>
       <div
-        className={` w-full transition-all duration-300 ${
-          isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
-        }`}
+        className={` w-full transition-all duration-300 ${isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
+          }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (

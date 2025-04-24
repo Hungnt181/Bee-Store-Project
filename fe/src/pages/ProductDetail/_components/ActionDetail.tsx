@@ -6,6 +6,7 @@ import Size from "../../../interface/Size";
 import CartModalbox from "./CartModalbox";
 import { useParams } from "react-router-dom";
 import { Modal, Tabs } from "antd";
+import axios from "axios";
 interface SizeChartProps {
   isVisible: boolean;
   onClose: () => void;
@@ -23,6 +24,7 @@ interface CartItemDetail {
   idVariant: string;
   color: string;
   size: string;
+  nameColor: string;
   quantity: number;
 }
 const SizeChart = ({ isVisible, onClose }: SizeChartProps) => {
@@ -534,7 +536,7 @@ export default function ActionDetail({
   sizes,
   newImage,
 }: // onVariantChange,
-ActionDetail) {
+  ActionDetail) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeOfColor, setSizeOfColor] = useState<string[] | null>(null);
@@ -542,9 +544,6 @@ ActionDetail) {
   const [statusVariant, setStatusVariant] = useState(false);
   const [quantityVariant, setQuantityVariant] = useState(false);
   const [isSizeChartVisible, setIsSizeChartVisible] = useState(false);
-  // const handleClickBuy = () => {
-  //   // console.log(quantity);
-  // };
 
   useEffect(() => {
     if (variants.length > 0) {
@@ -628,7 +627,12 @@ ActionDetail) {
     setIsModalOpen(false);
   };
   const { id } = useParams();
-  const handleClickBuy = () => {
+  const handleClickBuy = async () => {
+    const idUser = localStorage.getItem('idUser')
+    if(!idUser){
+      message.error("Vui lòng đăng nhập để thêm sản phẩm", 3);
+      return;
+    }
     // Lấy các mặt hàng giỏ hàng từ localStorage
     const storedCartItems = localStorage.getItem("cartItems");
     const initialCartItems = storedCartItems ? JSON.parse(storedCartItems) : [];
@@ -638,23 +642,29 @@ ActionDetail) {
       selectedVariant._id &&
       id &&
       selectedVariant.id_color.hexcode &&
+      selectedVariant.id_color.name &&
       selectedVariant?.id_size.name
     ) {
       const newItem = {
         idProduct: id,
         idVariant: selectedVariant._id.toString(),
         color: selectedVariant.id_color.hexcode,
+        nameColor: selectedVariant.id_color.name,
         size: selectedVariant?.id_size.name,
         quantity: quantity,
       };
 
+      console.log(initialCartItems);
       const existingItemIndex = initialCartItems.findIndex(
         (item: CartItemDetail) =>
           item.idProduct === newItem.idProduct &&
           item.idVariant === newItem.idVariant &&
           item.color === newItem.color &&
+          item.nameColor === newItem.nameColor &&
           item.size === newItem.size
       );
+
+
 
       let updatedCartItems;
 
@@ -679,13 +689,24 @@ ActionDetail) {
       } else {
         updatedCartItems = [...initialCartItems, newItem];
       }
+      if (idUser) {
+        //cick thêm newItem vô cart
+        console.log(updatedCartItems);
+        const {data} = await axios.patch(`http://localhost:3000/api/cart/${idUser}/update2`, updatedCartItems)
+        // console.log(data.data.items);
+        
 
-      setCartItems(updatedCartItems);
-      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+      }
+      else {
+        setCartItems(updatedCartItems);
+        console.log('cartItemsLocal',cartItems);
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+      }
+      message.success("Thêm sản phẩm thành công", 3);
     } else {
+      message.error("Đã có lỗi xảy ra. Vui lòng tải lại trang", 3);
       // setCartItems([])
     }
-    message.success("Thêm sản phẩm thành công", 3);
     // setIsModalOpen(true);
   };
   // const handleCheckout = () => {
@@ -705,9 +726,8 @@ ActionDetail) {
             Sản phầm đã dừng bán
           </p>
           <p
-            className={`text-red-700 ${
-              quantityVariant && !statusVariant ? "block " : "hidden"
-            }`}
+            className={`text-red-700 ${quantityVariant && !statusVariant ? "block " : "hidden"
+              }`}
           >
             Hết hàng
           </p>
@@ -760,11 +780,10 @@ ActionDetail) {
                   }}
                   className={`
               border
-              ${
-                item.name === selectedColor
-                  ? "ring-2 ring-gray-500 shadow-lg"
-                  : "border-gray-200 shadow-sm hover:shadow"
-              }
+              ${item.name === selectedColor
+                      ? "ring-2 ring-gray-500 shadow-lg"
+                      : "border-gray-200 shadow-sm hover:shadow"
+                    }
             `}
                 />
                 {isDisabled && (
@@ -828,14 +847,12 @@ ActionDetail) {
                 key={item.name}
                 className={`flex justify-center items-center w-10 h-10 rounded-md
               text-sm font-medium uppercase cursor-pointer transition-all duration-300
-              ${
-                item.name === selectedSize
-                  ? "bg-gray-700 text-white shadow-md scale-105"
-                  : "border border-gray-300 text-gray-700 hover:border-gray-500 hover:bg-gray-100 hover:scale-95"
-              }
-              ${
-                isDisabled ? "opacity-50 pointer-events-none bg-gray-200" : ""
-              }`}
+              ${item.name === selectedSize
+                    ? "bg-gray-700 text-white shadow-md scale-105"
+                    : "border border-gray-300 text-gray-700 hover:border-gray-500 hover:bg-gray-100 hover:scale-95"
+                  }
+              ${isDisabled ? "opacity-50 pointer-events-none bg-gray-200" : ""
+                  }`}
                 onClick={() => !isDisabled && handleSelectSize(item.name)}
               >
                 <span>{item.name}</span>
@@ -872,9 +889,8 @@ ActionDetail) {
               }}
             >
               <span
-                className={`text-lg ${
-                  quantity === 1 ? "text-gray-400" : "text-gray-800"
-                }`}
+                className={`text-lg ${quantity === 1 ? "text-gray-400" : "text-gray-800"
+                  }`}
               >
                 −
               </span>
@@ -920,12 +936,11 @@ ActionDetail) {
               }}
             >
               <span
-                className={`text-lg ${
-                  !selectedVariant ||
-                  quantity >= (selectedVariant?.quantity || 0)
+                className={`text-lg ${!selectedVariant ||
+                    quantity >= (selectedVariant?.quantity || 0)
                     ? "text-gray-400"
                     : "text-gray-800"
-                }`}
+                  }`}
               >
                 +
               </span>
@@ -934,13 +949,12 @@ ActionDetail) {
 
           {/* Availability Indicator with Status */}
           <div
-            className={`flex items-center py-1.5 px-3 rounded-full text-sm ${
-              selectedVariant?.quantity === 0
+            className={`flex items-center py-1.5 px-3 rounded-full text-sm ${selectedVariant?.quantity === 0
                 ? "bg-red-50 text-red-700"
                 : selectedVariant?.quantity && selectedVariant.quantity < 5
-                ? "bg-amber-50 text-amber-700"
-                : "bg-green-50 text-green-700"
-            }`}
+                  ? "bg-amber-50 text-amber-700"
+                  : "bg-green-50 text-green-700"
+              }`}
           >
             {selectedVariant?.quantity === 0 ? (
               <>
@@ -1019,7 +1033,7 @@ ActionDetail) {
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
-            Đặt mua
+            Thêm vào giỏ hàng
           </button>
         </div>
 

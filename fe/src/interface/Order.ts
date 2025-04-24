@@ -25,7 +25,12 @@ export interface Order {
     | "Đang giao"
     | "Hoàn thành"
     | "Hoàn đơn"
+    | "Giao hàng thất bại"
     | "Đã hủy";
+  cancel_reason?: string;
+  cancel_by?: string;
+  isComplaint?: boolean;
+  completedAt?: Date;
 }
 
 export interface bestSelling {
@@ -39,4 +44,10 @@ export interface bestSelling {
   productPrice: number;
   slug: string;
   status: boolean;
+}
+
+export interface PaymentMethod {
+  _id: string;
+  name: string;
+  status: boolean | string;
 }

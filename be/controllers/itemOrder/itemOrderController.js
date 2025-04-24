@@ -1,10 +1,19 @@
 import StatusCodes from "http-status-codes";
 import ItemOrder from "../../models/itemOrder/itemOrder";
+import { itemOrderValidator } from "../../utils/validator/itemOrder";
 class ItemOrderController {
   // Add a new item in the order
   async addItemOrder(req, res) {
     try {
-      const data = await ItemOrder.create(req.body);
+      const { error, value } = itemOrderValidator.validate(req.body, {
+        abortEarly: false,
+      });
+      if (error) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: error.details[0].message });
+      }
+      const data = await ItemOrder.create(value);
       return res.status(StatusCodes.CREATED).json({
         message: "Thêm thành công itemOrder",
         data,

@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
-import { Button, Form, Input, message } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, Form, Input, message, Result } from "antd";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../../assets/Css/Website/Signup/style.css";
 import { LockOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 interface ResetPasswordForm {
   password: string;
@@ -11,17 +12,34 @@ interface ResetPasswordForm {
 }
 
 const ResetPassword = () => {
-  const { id } = useParams();
+  const { token } = useParams();
   const navigate = useNavigate();
+  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
+
+  // Kiểm tra token có hợp lệ không
+  const { isLoading } = useQuery({
+    queryKey: ["verifyToken", token],
+    queryFn: async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/reset-password/verify/${token}`);
+        setIsTokenValid(response.data.valid);
+        return response.data;
+      } catch (error) {
+        setIsTokenValid(false);
+        throw error;
+      }
+    },
+    retry: false
+  });
 
   const { mutate } = useMutation<boolean, Error, ResetPasswordForm>({
     mutationFn: async (formData) => {
-      if (!id) throw new Error("Liên kết không hợp lệ hoặc đã hết hạn");
+      if (!token) throw new Error("Liên kết không hợp lệ hoặc đã hết hạn");
 
       try {
-        await axios.put(
-          `http://localhost:3000/api/reset_password/${id}`,
-          formData
+        await axios.post(
+          `http://localhost:3000/api/reset-password/reset/${token}`,
+          { password: formData.password }
         );
         return true;
       } catch (error: unknown) {
@@ -40,6 +58,30 @@ const ResetPassword = () => {
       message.error(error.message);
     },
   });
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-[70vh]">Đang kiểm tra...</div>;
+  }
+
+  if (isTokenValid === false) {
+    return (
+      <Result
+        status="error"
+        title="Liên kết đã hết hạn"
+        subTitle="Liên kết đặt lại mật khẩu của bạn không hợp lệ hoặc đã hết hạn (5 phút)."
+        extra={[
+          <Button
+            type="primary"
+            key="console"
+            onClick={() => navigate("/forgot-password")}
+            className="bg-blue-500"
+          >
+            Yêu cầu lại
+          </Button>,
+        ]}
+      />
+    );
+  }
 
   return (
     <div className="flex justify-center items-center w-full h-[70vh] bg-gray-100">

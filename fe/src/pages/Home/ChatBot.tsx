@@ -17,7 +17,7 @@ const Chatbot = () => {
       if (window.CozeWebSDK) {
         new window.CozeWebSDK.WebChatClient({
           config: {
-            bot_id: "7483879418537263111",
+            bot_id: "7486025748881686546",
           },
           componentProps: {
             title: "Trợ lý ảo Bee-Store",
@@ -27,7 +27,7 @@ const Chatbot = () => {
             type: "token",
             token: import.meta.env.VITE_TOKEN_CHATBOT,
             onRefreshToken: function (): string {
-              return "pat_fB3KnO7GNTNV8nQ2EHuJhe6xIVq3iQFq9fLFHVezyVTGse2S9NOS0fs0emIBRIbM";
+              return "pat_5VRMaKd39LNaBpjxmnPSzXbjVeM4bngdnN8cLuahTAAODS28jyRqzehoUuxjBQSh";
             },
           },
         });

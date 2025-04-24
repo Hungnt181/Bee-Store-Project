@@ -272,7 +272,7 @@ const AdminDashboardPage = () => {
               />
 
               <Button type="primary" onClick={handleFetchData}>
-                Xem thống kê
+                Thống kê
               </Button>
             </Space>
 
