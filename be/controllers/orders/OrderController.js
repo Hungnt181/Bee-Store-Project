@@ -6,7 +6,12 @@ import Variant from "../../models/variants/variants";
 import Voucher from "../../models/vouchers/Voucher";
 
 import { io } from "../../app.js";
-import { sendOrderCompletedEmail, sendOrderConfirmationEmail, sendOrderDeliveryFailedEmail, sendOrderShippingEmail } from "../../service/emailService.js";
+import {
+  sendOrderCompletedEmail,
+  sendOrderConfirmationEmail,
+  sendOrderDeliveryFailedEmail,
+  sendOrderShippingEmail,
+} from "../../service/emailService.js";
 
 class OrderController {
   async createOrder(req, res) {
@@ -335,20 +340,20 @@ class OrderController {
         // Lấy thông tin chi tiết đơn hàng để gửi email
         const populatedOrder = await Order.findById(order._id)
           .populate({
-            path: 'itemsOrder',
+            path: "itemsOrder",
             populate: {
-              path: 'id_variant',
-              select: 'price status',
+              path: "id_variant",
+              select: "price status",
               populate: [
-                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
-                { path: 'id_color', select: 'name' },
-                { path: 'id_size', select: 'name' }
-              ]
-            }
+                { path: "id_product", select: "name status price" }, // Đảm bảo có trường price
+                { path: "id_color", select: "name" },
+                { path: "id_size", select: "name" },
+              ],
+            },
           })
-          .populate('receiverInfo')
-          .populate('payment')
-          .populate('voucher');
+          .populate("receiverInfo")
+          .populate("payment")
+          .populate("voucher");
 
         // Gửi email thông báo đã xác nhận đơn hàng
         await sendOrderConfirmationEmail(populatedOrder);
@@ -358,20 +363,20 @@ class OrderController {
         // Lấy thông tin chi tiết đơn hàng để gửi email
         const populatedOrder = await Order.findById(order._id)
           .populate({
-            path: 'itemsOrder',
+            path: "itemsOrder",
             populate: {
-              path: 'id_variant',
-              select: 'price status',
+              path: "id_variant",
+              select: "price status",
               populate: [
-                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
-                { path: 'id_color', select: 'name' },
-                { path: 'id_size', select: 'name' }
-              ]
-            }
+                { path: "id_product", select: "name status price" }, // Đảm bảo có trường price
+                { path: "id_color", select: "name" },
+                { path: "id_size", select: "name" },
+              ],
+            },
           })
-          .populate('receiverInfo')
-          .populate('payment')
-          .populate('voucher');
+          .populate("receiverInfo")
+          .populate("payment")
+          .populate("voucher");
 
         // Gửi email thông báo đơn đang được giao
         await sendOrderShippingEmail(populatedOrder);
@@ -381,20 +386,20 @@ class OrderController {
         // Lấy thông tin chi tiết đơn hàng để gửi email
         const populatedOrder = await Order.findById(order._id)
           .populate({
-            path: 'itemsOrder',
+            path: "itemsOrder",
             populate: {
-              path: 'id_variant',
-              select: 'price status',
+              path: "id_variant",
+              select: "price status",
               populate: [
-                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
-                { path: 'id_color', select: 'name' },
-                { path: 'id_size', select: 'name' }
-              ]
-            }
+                { path: "id_product", select: "name status price" }, // Đảm bảo có trường price
+                { path: "id_color", select: "name" },
+                { path: "id_size", select: "name" },
+              ],
+            },
           })
-          .populate('receiverInfo')
-          .populate('payment')
-          .populate('voucher');
+          .populate("receiverInfo")
+          .populate("payment")
+          .populate("voucher");
 
         // Gửi email thông báo đơn đang được giao
         await sendOrderCompletedEmail(populatedOrder);
@@ -404,20 +409,20 @@ class OrderController {
         // Lấy thông tin chi tiết đơn hàng để gửi email
         const populatedOrder = await Order.findById(order._id)
           .populate({
-            path: 'itemsOrder',
+            path: "itemsOrder",
             populate: {
-              path: 'id_variant',
-              select: 'price status',
+              path: "id_variant",
+              select: "price status",
               populate: [
-                { path: 'id_product', select: 'name status price' }, // Đảm bảo có trường price
-                { path: 'id_color', select: 'name' },
-                { path: 'id_size', select: 'name' }
-              ]
-            }
+                { path: "id_product", select: "name status price" }, // Đảm bảo có trường price
+                { path: "id_color", select: "name" },
+                { path: "id_size", select: "name" },
+              ],
+            },
           })
-          .populate('receiverInfo')
-          .populate('payment')
-          .populate('voucher');
+          .populate("receiverInfo")
+          .populate("payment")
+          .populate("voucher");
 
         // Gửi email thông báo đơn đang được giao
         await sendOrderDeliveryFailedEmail(populatedOrder);
@@ -581,6 +586,7 @@ class OrderController {
       const revenueMatch = {
         createdAt: { $gte: start, $lt: end },
         status: "Hoàn thành", // Chỉ lấy đơn hoàn thành
+        isComplaint: !true, // Chỉ lấy đơn chưa khiếu nại,
       };
 
       // Nhóm theo type
@@ -653,6 +659,7 @@ class OrderController {
       const revenueMatch = {
         createdAt: { $gte: start, $lt: end },
         status: "Hoàn thành", // Chỉ lấy đơn hoàn thành
+        isComplaint: !true, // Chỉ lấy đơn chưa khiếu nại,
       };
 
       const data = await Order.aggregate([
