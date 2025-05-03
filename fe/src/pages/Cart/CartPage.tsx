@@ -355,7 +355,7 @@ const CartPage: React.FC = () => {
     selectedRowKeys,
     onChange: onSelectChange,
     getCheckboxProps: (record) => ({
-      disabled: stopSellArray.includes(record.idVariant) || outStockArray.includes(record.idVariant),
+      disabled: stopSellArray.includes(record.idVariant) || stopSellArray.includes(record.idProduct) || outStockArray.includes(record.idVariant),
     }),
 
   };
