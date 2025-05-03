@@ -15,7 +15,7 @@ import {
   ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Menu, MenuProps } from "antd";
+import { Menu, MenuProps, message } from "antd";
 import Sider from "antd/es/layout/Sider";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -69,6 +69,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [nameUser, setNameUser] = useState("");
   const [emailUser, setEmailUser] = useState("");
+  const [userStatus, setUserStatus] = useState(true);
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "logout") {
@@ -98,21 +99,39 @@ const Sidebar = () => {
     enabled: !!idUser,
   });
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setNameUser("");
+    setEmailUser("");
+    navigate("/signin");
+  };
+
   useEffect(() => {
-    // Cập nhật tên từ API response
-    if (userData?.name) {
-      setNameUser(userData.name);
-      setEmailUser(userData.email);
+    // Cập nhật tên, email và trạng thái từ API response
+    if (userData) {
+      setNameUser(userData.name || "");
+      setEmailUser(userData.email || "");
+      setUserStatus(userData.status !== false); // Chuyển đổi status thành boolean
+      console.log("Admin status:", userData.status);
+
+      // Kiểm tra nếu status là false, thực hiện logout
+      if (userData.status === false) {
+        message.error("Tài khoản admin đã bị vô hiệu hoá");
+        handleLogout();
+      }
     } else {
       setNameUser("");
       setEmailUser("");
+      setUserStatus(true);
     }
-  }, [userData]);
+  }, [userData, location]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/signin");
-  };
+  // Kiểm tra status khi component render và sau khi navigation
+  useEffect(() => {
+    if (idUser && !userStatus) {
+      handleLogout();
+    }
+  }, [userStatus]);
 
   return (
     <>
