@@ -256,7 +256,7 @@ const AdminVariantList = () => {
             Thêm biển thể mới
           </Button>
 
-          <h3>Thông tin biến thể</h3>
+          <h3 className="mt-4">Thông tin biến thể</h3>
 
           <Table
             dataSource={data}
