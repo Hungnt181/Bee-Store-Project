@@ -1,7 +1,6 @@
 import {
   BankFilled,
   PhoneFilled,
-  SearchOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -31,14 +30,16 @@ export default function Header() {
   }, []);
 
   // lấy cartItems từ localstorage
-  const updateCartCount = async() => {
+  const updateCartCount = async () => {
     const idUser = localStorage.getItem("idUser");
-    if(!idUser){
+    if (!idUser) {
       return setNumberInCart(0);
     }
-    const storedCartItems = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
+    const storedCartItems = await axios.get(
+      `http://localhost:3000/api/cart/${idUser}`
+    );
     // console.log(storedCartItems.data.data.items);
-    
+
     if (storedCartItems) {
       const cartCount = storedCartItems.data.data.items.length;
       setNumberInCart(cartCount);
@@ -79,10 +80,10 @@ export default function Header() {
     if (userData) {
       setNameUser(userData.name || "");
       setUserStatus(userData.status !== false); // Chuyển đổi status thành boolean
-      console.log(userData.status)
+      console.log(userData.status);
       // Kiểm tra nếu status là false, thực hiện logout
       if (userData.status === false) {
-        message.error("Tài khoản đã bị vô hiệu hoá")
+        message.error("Tài khoản đã bị vô hiệu hoá");
         handleLogout();
       }
     } else {
@@ -114,13 +115,13 @@ export default function Header() {
         {/* BOX 2 IN HEADER */}
         <div className="flex items-center justify-between flex-1/2 text-sm">
           {/* SEARCH BOX */}
-          <div className="border-[1px] border-[#cccccccc] py-1.5 w-[25%] justify-between px-4 rounded-full flex items-center">
-            <input
+          <div className=" py-1.5 w-[10%] justify-between px-4 rounded-full flex items-center">
+            {/* <input
               className="outline-none w-[70%] placeholder-black text-sm"
               type="text"
               placeholder="Bạn cần tìm gì?"
             />
-            <SearchOutlined className="cursor-pointer" />
+            <SearchOutlined className="cursor-pointer" /> */}
           </div>
           {/* PHONE BOX */}
           <div className="flex items-center gap-1">
@@ -175,16 +176,18 @@ export default function Header() {
       </div>
       {/* LINE 2 IN HEADER */}
       <div
-        className={` w-full transition-all duration-300 ${isSticky ? "block" : "hidden"
-          }`}
+        className={` w-full transition-all duration-300 ${
+          isSticky ? "block" : "hidden"
+        }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           <ListitemCateegory isSticky={isSticky} />
         </div>
       </div>
       <div
-        className={` w-full transition-all duration-300 ${isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
-          }`}
+        className={` w-full transition-all duration-300 ${
+          isSticky ? "fixed top-0 left-0 bg-black shadow-lg z-50" : "mt-4"
+        }`}
       >
         <div className="max-w-[1240px] mx-6 xl:mx-auto flex items-center">
           {isSticky && (

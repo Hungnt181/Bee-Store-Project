@@ -28,7 +28,7 @@ const AdminAccountAdd = () => {
     },
 
     onSuccess: () => {
-      message.success("Thêm thành công");
+      message.success("Thêm thành công, vùi lòng kiểm tra hòm thư để kích hoạt tài khoản");
       queryClient.invalidateQueries({
         queryKey: ["ADMINACCOUNTS"],
       });

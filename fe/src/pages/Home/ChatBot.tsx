@@ -27,7 +27,7 @@ const Chatbot = () => {
             type: "token",
             token: import.meta.env.VITE_TOKEN_CHATBOT,
             onRefreshToken: function (): string {
-              return "pat_5VRMaKd39LNaBpjxmnPSzXbjVeM4bngdnN8cLuahTAAODS28jyRqzehoUuxjBQSh";
+              return "pat_7YPwInq829pLGKw6u2c1iprOCiT9y1yQtA381LLGlcjy8QBimYECqluJgn1tRwzd";
             },
           },
         });
