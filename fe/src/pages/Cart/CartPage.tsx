@@ -68,6 +68,7 @@ const CartPage: React.FC = () => {
   };
 
   const [outStockArray, setOutStockArray] = useState<string[]>([])
+  const [stopSellArray, setStopSellArray] = useState<string[]>([])
 
   // Lấy dữ liệu từ localStorage khi component được khởi tạo
   useEffect(() => {
@@ -88,6 +89,7 @@ const CartPage: React.FC = () => {
         console.log(data.data.items);
 
         let idOutStock = [];
+        let idStopSell = [];
         const updatedFromCartDB = [];
         for (const item of data.data.items) {
           const productData = await getPdts(item.idProduct);
@@ -104,15 +106,19 @@ const CartPage: React.FC = () => {
               quantity: item.quantity,
               totalPrice: productData.price * item.quantity,
             });
-            console.log('so luong ton ', variantData.quantity);
+            // console.log('so luong ton ', variantData.quantity);
             //tạo mảng id het hang
             if (variantData.quantity <= 0) {
               idOutStock.push(item.idVariant)
             }
-            setOutStockArray(idOutStock);
-            console.log('id ', idOutStock);
+            if (variantData.status == false) {
+              idStopSell.push(item.idVariant)
+            }
           }
         }
+        setStopSellArray(idStopSell);
+        setOutStockArray(idOutStock);
+        console.log('id ', idOutStock);
 
         setCartItems(updatedFromCartDB);
         localStorage.setItem('cartItems', JSON.stringify(updatedFromCartDB));
@@ -280,8 +286,15 @@ const CartPage: React.FC = () => {
       dataIndex: "quantity",
       key: "quantity",
       render: (_text: string, record: CartModalItemDetail, index: number) => {
-        if ( outStockArray.includes(record.idVariant)) {
-          return(
+        if (stopSellArray.includes(record.idVariant)) {
+          return (
+            <div>
+              <Tag color="red">Sản phẩm dừng bán</Tag>
+            </div>
+          )
+        }
+        else if (outStockArray.includes(record.idVariant)) {
+          return (
             <div>
               <Tag color="red">Hết hàng trong kho</Tag>
             </div>
@@ -338,7 +351,7 @@ const CartPage: React.FC = () => {
     selectedRowKeys,
     onChange: onSelectChange,
     getCheckboxProps: (record) => ({
-      disabled: outStockArray.includes(record.idVariant),
+      disabled: stopSellArray.includes(record.idVariant) || outStockArray.includes(record.idVariant),
     }),
 
   };
@@ -380,7 +393,7 @@ const CartPage: React.FC = () => {
             rowKey={(_record, index) => (index ? index.toString() : "")}
             pagination={false}
           />
-          <div className="mt-3">
+          <div className="mt-3 text-right">
             Tổng tiền:{" "}
             <span className="font-bold">
               {formatCurrency(totalPrice, "vnd")}
