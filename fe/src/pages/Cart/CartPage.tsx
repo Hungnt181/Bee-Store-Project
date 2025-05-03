@@ -111,6 +111,10 @@ const CartPage: React.FC = () => {
             if (variantData.quantity <= 0) {
               idOutStock.push(item.idVariant)
             }
+            console.log(productData.status);
+            if (productData.status == false){
+              idStopSell.push(item.idProduct)
+            }
             if (variantData.status == false) {
               idStopSell.push(item.idVariant)
             }
@@ -286,7 +290,7 @@ const CartPage: React.FC = () => {
       dataIndex: "quantity",
       key: "quantity",
       render: (_text: string, record: CartModalItemDetail, index: number) => {
-        if (stopSellArray.includes(record.idVariant)) {
+        if (stopSellArray.includes(record.idVariant) || stopSellArray.includes(record.idProduct)) {
           return (
             <div>
               <Tag color="red">Sản phẩm dừng bán</Tag>
