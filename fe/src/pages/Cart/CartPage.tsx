@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Modal, Table } from "antd";
+import { Button, message, Modal, Table, Tag } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import type { TableRowSelection } from "antd/es/table/interface";
@@ -43,8 +43,6 @@ const CartPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-
-
   const getPdts = async (idProduct: string) => {
     try {
       const { data } = await axios.get(
@@ -68,29 +66,8 @@ const CartPage: React.FC = () => {
       console.log("ko lấy đc bien the từ id");
     }
   };
-  const getColor = async (id: string) => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/colors/" + id
-      );
-      // console.log('mau', data);
-      return data.data;
-    } catch (error) {
-      console.log("ko lấy đc bien the từ id");
-    }
-  }
-  const getSize = async (id: string) => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/sizes/" + id
-      );
-      // console.log('size', data);
-      return data.data;
-    } catch (error) {
-      console.log("ko lấy đc bien the từ id");
-    }
-  }
 
+  const [outStockArray, setOutStockArray] = useState<string[]>([])
 
   // Lấy dữ liệu từ localStorage khi component được khởi tạo
   useEffect(() => {
@@ -110,10 +87,11 @@ const CartPage: React.FC = () => {
         const { data } = await axios.get(`http://localhost:3000/api/cart/${idUser}`);
         console.log(data.data.items);
 
+        let idOutStock = [];
         const updatedFromCartDB = [];
         for (const item of data.data.items) {
           const productData = await getPdts(item.idProduct);
-
+          const variantData = await getVariant(item.idVariant)
           if (productData) {
             updatedFromCartDB.push({
               idProduct: item.idProduct,
@@ -126,6 +104,13 @@ const CartPage: React.FC = () => {
               quantity: item.quantity,
               totalPrice: productData.price * item.quantity,
             });
+            console.log('so luong ton ', variantData.quantity);
+            //tạo mảng id het hang
+            if (variantData.quantity <= 0) {
+              idOutStock.push(item.idVariant)
+            }
+            setOutStockArray(idOutStock);
+            console.log('id ', idOutStock);
           }
         }
 
@@ -138,7 +123,6 @@ const CartPage: React.FC = () => {
 
     fetchData();
   }, []);
-
   // if (cartItems && cartItems[0]) {
   //   console.log(cartItems[0]);
   // }
@@ -210,7 +194,7 @@ const CartPage: React.FC = () => {
     // cập nhật bảng cart
     if (idUser) {
       try {
-        await axios.patch(`http://localhost:3000/api/cart/${idUser}/updateQuantity/${cartItems[index].idVariant}`,{quantity: newQuantity});
+        await axios.patch(`http://localhost:3000/api/cart/${idUser}/updateQuantity/${cartItems[index].idVariant}`, { quantity: newQuantity });
         console.log("Đã cập nhật giỏ hàng");
       } catch (error) {
         console.error("Lỗi cập nhật giỏ hàng");
@@ -218,7 +202,7 @@ const CartPage: React.FC = () => {
     }
   };
 
-  const handleRemove = async(index: number) => {
+  const handleRemove = async (index: number) => {
     const afterFilterCartModalItems = cartModalItems.filter(
       (_cartModalItem, cartModalItemIndex) => cartModalItemIndex !== index
     );
@@ -232,7 +216,7 @@ const CartPage: React.FC = () => {
     setCartItems(updatedCartItems);
 
     //cap nhat bảng Cart
-    if(idUser){
+    if (idUser) {
       try {
         await axios.patch(`http://localhost:3000/api/cart/${idUser}/delete/${cartItems[index].idVariant}`);
         console.log("Đã cập nhật giỏ hàng");
@@ -295,26 +279,37 @@ const CartPage: React.FC = () => {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
-      render: (_text: string, record: CartModalItemDetail, index: number) => (
-        <div className="quantity-control flex items-center">
-          <Button
-            onClick={() => handleQuantityChange(index, -1)}
-            disabled={record.quantity <= 1}
-            style={{ height: "30px", width: "30px" }}
-          >
-            -
-          </Button>
-          <div className="quantity mx-2 w-[20px] text-center">
-            {record.quantity}
-          </div>
-          <Button
-            onClick={() => handleQuantityChange(index, 1)}
-            style={{ height: "30px", width: "30px" }}
-          >
-            +
-          </Button>
-        </div>
-      ),
+      render: (_text: string, record: CartModalItemDetail, index: number) => {
+        if ( outStockArray.includes(record.idVariant)) {
+          return(
+            <div>
+              <Tag color="red">Hết hàng trong kho</Tag>
+            </div>
+          )
+        }
+        else {
+          return (
+            <div className="quantity-control flex items-center">
+              <Button
+                onClick={() => handleQuantityChange(index, -1)}
+                disabled={record.quantity <= 1}
+                style={{ height: "30px", width: "30px" }}
+              >
+                -
+              </Button>
+              <div className="quantity mx-2 w-[20px] text-center">
+                {record.quantity}
+              </div>
+              <Button
+                onClick={() => handleQuantityChange(index, 1)}
+                style={{ height: "30px", width: "30px" }}
+              >
+                +
+              </Button>
+            </div>
+          )
+        }
+      }
     },
     {
       title: "Thành tiền",
@@ -342,7 +337,12 @@ const CartPage: React.FC = () => {
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
+    getCheckboxProps: (record) => ({
+      disabled: outStockArray.includes(record.idVariant),
+    }),
+
   };
+  // console.log('out ',outStockArray);
 
   const [selectedItemArray, setSelectedItemArray] = useState<any>([]);
   useEffect(() => {
