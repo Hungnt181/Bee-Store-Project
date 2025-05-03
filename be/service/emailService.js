@@ -54,8 +54,8 @@ export async function sendOrderConfirmationEmail(order) {
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${size}</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${quantity}</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${variantPrice.toLocaleString(
-            "vi-VN"
-          )}đ</td>
+          "vi-VN"
+        )}đ</td>
           <td style="padding: 10px; border-bottom: 1px solid #ddd;">${(
             variantPrice * quantity
           ).toLocaleString("vi-VN")}đ</td>
@@ -64,15 +64,54 @@ export async function sendOrderConfirmationEmail(order) {
       })
       .join("");
 
+    // Tính toán tổng giá trị sản phẩm (trước khi áp dụng giảm giá)
+    const subtotal = order.itemsOrder.reduce((total, item) => {
+      const price = item.id_variant?.id_product?.price || 0;
+      const quantity = item.quantity || 0;
+      return total + (price * quantity);
+    }, 0);
+
     // Tính toán giảm giá nếu có voucher
     let discountInfo = "";
-    if (order.voucher && order.voucher.discount !== undefined) {
+    let voucherInfo = "";
+
+    if (order.voucher) {
+      const voucher = order.voucher;
+      let discountAmount = 0;
+
+      // Nếu có thông tin discount từ server
+      if (voucher.discount !== undefined) {
+        discountAmount = voucher.discount;
+      } else {
+        // Tính toán giảm giá dựa trên quy tắc voucher
+        if (voucher.value < 100) {
+          // Trường hợp giảm theo phần trăm
+          discountAmount = (subtotal * voucher.value) / 100;
+          // Kiểm tra nếu vượt quá giá trị tối đa
+          if (discountAmount > voucher.maxValue) {
+            discountAmount = voucher.maxValue;
+          }
+        } else {
+          // Trường hợp giảm giá cố định
+          discountAmount = Math.min(voucher.value, voucher.maxValue);
+        }
+      }
+
+      // Thông tin voucher để hiển thị ở phần tổng quan đơn hàng
+      voucherInfo = `
+        <p style="margin: 5px 0;"><strong>Mã giảm giá:</strong> ${voucher.codeName} - ${voucher.title || ''}
+          ${voucher.value < 100 ? `(Giảm ${voucher.value}% tối đa ${voucher.maxValue.toLocaleString("vi-VN")}đ)` :
+          `(Giảm ${voucher.value.toLocaleString("vi-VN")}đ)`}
+        </p>
+      `;
+
+      // Thông tin giảm giá để hiển thị ở phần tổng đơn hàng
       discountInfo = `
         <tr>
           <td colspan="5" style="text-align: right; padding: 10px;"><strong>Giảm giá:</strong></td>
-          <td style="padding: 10px;">${order.voucher.discount.toLocaleString(
-            "vi-VN"
-          )}đ</td>
+          <td style="padding: 10px; color: #e91e63;">-${discountAmount.toLocaleString(
+        "vi-VN"
+      )}đ</td>
         </tr>
       `;
     }
@@ -91,38 +130,32 @@ export async function sendOrderConfirmationEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Xác nhận đơn hàng</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${
-              receiverInfo.name
-            },</p>
+            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name
+        },</p>
             <p style="color: #333;">Cảm ơn bạn đã đặt hàng tại BeeStore. Đơn hàng của bạn đã được xác nhận thành công!.
              Bạn sẽ nhận được hàng trong 1 đến 2 ngày. Bạn có thể theo đơn hàng của mình tại Lịch sử đơn hàng trong tài khoản của mình </p>
 
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
-                order._id
-              }</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id
+        }</p>
               <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
-                order.createdAt
-              ).toLocaleString("vi-VN")}</p>
-              <p style="margin: 5px 0;"><strong>Phương thức thanh toán:</strong> ${
-                order.payment?.name || "Chưa có thông tin"
-              }</p>
-              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${
-                order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
-              }</p>
+          order.createdAt
+        ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Phương thức thanh toán:</strong> ${order.payment?.name || "Chưa có thông tin"
+        }</p>
+              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+        }</p>
+              ${order.voucher ? voucherInfo : ''}
             </div>
 
             <h3 style="color: #333;">Thông tin người nhận</h3>
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-              <p style="margin: 5px 0;"><strong>Họ tên:</strong> ${
-                receiverInfo.name
-              }</p>
-              <p style="margin: 5px 0;"><strong>Địa chỉ:</strong> ${
-                receiverInfo.address
-              }</p>
-              <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${
-                receiverInfo.phone
-              }</p>
+              <p style="margin: 5px 0;"><strong>Họ tên:</strong> ${receiverInfo.name
+        }</p>
+              <p style="margin: 5px 0;"><strong>Địa chỉ:</strong> ${receiverInfo.address
+        }</p>
+              <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${receiverInfo.phone
+        }</p>
               <p style="margin: 5px 0;"><strong>Email:</strong> ${userEmail}</p>
             </div>
 
@@ -142,18 +175,22 @@ export async function sendOrderConfirmationEmail(order) {
                 ${orderItems}
               </tbody>
               <tfoot>
+                <tr>
+                  <td colspan="5" style="text-align: right; padding: 10px;"><strong>Tổng tiền sản phẩm:</strong></td>
+                  <td style="padding: 10px;">${subtotal.toLocaleString("vi-VN")}đ</td>
+                </tr>
                 ${discountInfo}
                 <tr>
                   <td colspan="5" style="text-align: right; padding: 10px;"><strong>Phí vận chuyển:</strong></td>
                   <td style="padding: 10px;">${shippingFee.toLocaleString(
-                    "vi-VN"
-                  )}đ</td>
+          "vi-VN"
+        )}đ</td>
                 </tr>
                 <tr style="background-color: #f2f2f2;">
                   <td colspan="5" style="text-align: right; padding: 10px;"><strong>Tổng thanh toán:</strong></td>
                   <td style="padding: 10px; font-weight: bold;">${total.toLocaleString(
-                    "vi-VN"
-                  )}đ</td>
+          "vi-VN"
+        )}đ</td>
                 </tr>
               </tfoot>
             </table>
@@ -285,7 +322,7 @@ export async function sendOrderShippingEmail(order) {
 }
 
 /**
- * Gửi email thông báo đơn hàng đã bị hủy
+ * Gửi email thông báo giao hàng thất bại
  * @param {Object} order - Thông tin đơn hàng đã được populate
  */
 export async function sendOrderCancelledEmail(order) {
@@ -317,26 +354,22 @@ export async function sendOrderCancelledEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Đơn hàng đã bị hủy</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${
-              receiverInfo.name
-            },</p>
-            <p style="color: #333;">Chúng tôi xin thông báo rằng đơn hàng #${
-              order._id
-            } của bạn đã bị hủy.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name
+        },</p>
+            <p style="color: #333;">Chúng tôi xin thông báo rằng đơn hàng #${order._id
+        } của bạn đã bị hủy.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
-                order._id
-              }</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id
+        }</p>
               <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
-                order.createdAt
-              ).toLocaleString("vi-VN")}</p>
+          order.createdAt
+        ).toLocaleString("vi-VN")}</p>
               <p style="margin: 5px 0;"><strong>Ngày hủy:</strong> ${new Date().toLocaleString(
-                "vi-VN"
-              )}</p>
-              <p style="margin: 5px 0;"><strong>Lý do:</strong> ${
-                order.cancel_reason || "Không có thông tin"
-              }</p>
+          "vi-VN"
+        )}</p>
+              <p style="margin: 5px 0;"><strong>Lý do:</strong> ${order.cancel_reason || "Không có thông tin"
+        }</p>
             </div>
 
             <p style="color: #333;">Nếu đơn hàng của bạn đã được thanh toán, số tiền sẽ được hoàn lại vào phương thức thanh toán ban đầu trong vòng 5-7 ngày làm việc.</p>
@@ -397,37 +430,33 @@ export async function sendOrderCompletedEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Đơn hàng giao thành công</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${
-              receiverInfo.name
-            },</p>
-            <p style="color: #333;">Chúc mừng! Đơn hàng #${
-              order._id
-            } của bạn đã được giao thành công vào lúc ${new Date(
-        order.completedAt || new Date()
-      ).toLocaleString("vi-VN")}.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name
+        },</p>
+            <p style="color: #333;">Chúc mừng! Đơn hàng #${order._id
+        } của bạn đã được giao thành công vào lúc ${new Date(
+          order.completedAt || new Date()
+        ).toLocaleString("vi-VN")}.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
-                order._id
-              }</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id
+        }</p>
               <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
-                order.createdAt
-              ).toLocaleString("vi-VN")}</p>
+          order.createdAt
+        ).toLocaleString("vi-VN")}</p>
               <p style="margin: 5px 0;"><strong>Ngày giao hàng:</strong> ${new Date(
-                order.completedAt || new Date()
-              ).toLocaleString("vi-VN")}</p>
-              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${
-                order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
-              }</p>
+          order.completedAt || new Date()
+        ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Trạng thái thanh toán:</strong> ${order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+        }</p>
             </div>
 
             <p style="color: #333;">Cảm ơn bạn đã mua sắm tại BeeStore. Chúng tôi rất mong nhận được phản hồi của bạn về sản phẩm và trải nghiệm mua sắm.</p>
             
             <div style="text-align: center; margin-top: 20px;">
-              <a href="http://localhost:5173/danh-gia" 
+              <a href="http://localhost:5173/" 
                 style="padding: 10px 20px; background-color: yellow; color: black; 
                 border: none; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block;">
-                Đánh giá sản phẩm
+                Tiếp tục mua hàng
               </a>
             </div>
 
@@ -491,28 +520,23 @@ export async function sendOrderDeliveryFailedEmail(order) {
             <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
             <p style="font-size: 18px; text-align: center; font-weight: bold;">Giao hàng thất bại</p>
 
-            <p style="font-size: 16px; color: #333;">Chào ${
-              receiverInfo.name
-            },</p>
-            <p style="color: #333;">Chúng tôi rất tiếc phải thông báo rằng việc giao hàng cho đơn hàng #${
-              order._id
-            } của bạn không thành công.</p>
+            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name
+        },</p>
+            <p style="color: #333;">Chúng tôi rất tiếc phải thông báo rằng việc giao hàng cho đơn hàng #${order._id
+        } của bạn không thành công.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${
-                order._id
-              }</p>
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id
+        }</p>
               <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
-                order.createdAt
-              ).toLocaleString("vi-VN")}</p>
-              <p style="margin: 5px 0;"><strong>Lý do giao thất bại:</strong> ${
-                order.cancel_reason || "Không có người nhận hàng"
-              }</p>
+          order.createdAt
+        ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Lý do giao thất bại:</strong> ${order.cancel_reason || "Không có người nhận hàng"
+        }</p>
             </div>
 
-            <p style="color: #333;">Chúng tôi sẽ liên hệ lại với bạn qua số điện thoại ${
-              receiverInfo.phone
-            } để sắp xếp lại thời gian giao hàng hoặc thay đổi địa chỉ nếu cần thiết.</p>
+            <p style="color: #333;">Chúng tôi sẽ liên hệ lại với bạn qua số điện thoại ${receiverInfo.phone
+        } để sắp xếp lại thời gian giao hàng hoặc thay đổi địa chỉ nếu cần thiết.</p>
             
             <p style="color: #333;">Vui lòng đảm bảo thông tin liên hệ của bạn đúng và số điện thoại luôn trong trạng thái liên lạc được.</p>
 
@@ -535,6 +559,83 @@ export async function sendOrderDeliveryFailedEmail(order) {
     );
   } catch (error) {
     console.error("Lỗi khi gửi email thông báo đơn hàng giao thất bại:", error);
+  }
+}
+
+/**
+ * Gửi email thông báo đơn hàng đã bị hủy bởi người dùng
+ * @param {Object} order - Thông tin đơn hàng đã được populate
+ */
+export async function sendOrderCancelledByUserEmail(order) {
+  try {
+    // Lấy thông tin người nhận và email
+    const receiverInfo = order.receiverInfo;
+    let userEmail = receiverInfo.email;
+
+    // Nếu đơn hàng có user ID, lấy email từ tài khoản user
+    if (order.user) {
+      const user = await User.findById(order.user);
+      if (user && user.email) {
+        userEmail = user.email;
+      }
+    }
+
+    if (!userEmail) {
+      console.error(
+        "Không tìm thấy email để gửi thông báo đơn hàng đã bị hủy"
+      );
+      return;
+    }
+
+    const mailOptions = {
+      from: "Bee-Store <beestore1802@gmail.com>",
+      to: userEmail,
+      subject: "BeeStore - Đơn hàng đã bị hủy #" + order._id,
+      html: `
+        <div style="font-family:'Segoe UI'; background-color: #f4f4f4; padding: 20px;">
+          <div style="max-width: 700px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px;">
+            <h2 style="color: rgb(245, 245, 14); text-align: center;">BEESTORE</h2>
+            <p style="font-size: 18px; text-align: center; font-weight: bold;">Đơn hàng đã bị hủy</p>
+
+            <p style="font-size: 16px; color: #333;">Chào ${receiverInfo.name},</p>
+            <p style="color: #333;">Chúng tôi đã nhận được yêu cầu hủy đơn hàng #${order._id} của bạn.</p>
+            
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p style="margin: 5px 0;"><strong>Mã đơn hàng:</strong> #${order._id}</p>
+              <p style="margin: 5px 0;"><strong>Ngày đặt hàng:</strong> ${new Date(
+        order.createdAt
+      ).toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Ngày hủy đơn:</strong> ${new Date().toLocaleString("vi-VN")}</p>
+              <p style="margin: 5px 0;"><strong>Lý do hủy:</strong> ${order.cancel_reason || "Không có lý do cụ thể"}</p>
+            </div>
+
+            <p style="color: #333;">Đơn hàng của bạn đã được hủy thành công. Nếu bạn đã thanh toán trước cho đơn hàng này, vui lòng liên hệ với chúng tôi để được hỗ trợ hoàn tiền.</p>
+            
+            <p style="color: #333;">Chúng tôi rất tiếc vì sự bất tiện này và hy vọng sẽ được phục vụ bạn trong tương lai.</p>
+
+            <div style="margin-top: 30px; text-align: center;">
+              <a href="https://beestore.com/products" style="background-color: rgb(245, 245, 14); color: #000; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Tiếp tục mua sắm</a>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+              <p style="color: #666;">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email: <a href="mailto:beestore1802@gmail.com">beestore1802@gmail.com</a></p>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="color: #999; font-size: 14px;">© 2025 BeeStore. Tất cả các quyền được bảo lưu.</p>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(
+      "Email thông báo đơn hàng đã bị hủy đã được gửi đến:",
+      userEmail
+    );
+  } catch (error) {
+    console.error("Lỗi khi gửi email thông báo đơn hàng đã bị hủy:", error);
   }
 }
 

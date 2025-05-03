@@ -88,14 +88,7 @@ const AdminAccountEditPage = () => {
             { type: "email", message: "Không đúng định dạng email" },
           ]}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Mật khẩu"
-          name="password"
-          rules={[{ min: 6, message: "Mật khẩu phải có ít nhất 6 kí tự" }]}
-        >
-          <Input.Password maxLength={100} />
+          <Input disabled />
         </Form.Item>
         <Button htmlType="submit">Cập nhật</Button>
       </Form>
